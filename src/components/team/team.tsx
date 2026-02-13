@@ -101,7 +101,7 @@ export default function TeamSection() {
           {/* Navigation Buttons */}
           <motion.button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300 hover:cursor-pointer"
             whileHover={{
               scale: 1.1,
               boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",
@@ -121,7 +121,7 @@ export default function TeamSection() {
 
           <motion.button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300 hover:cursor-pointer"
             whileHover={{
               scale: 1.1,
               boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",

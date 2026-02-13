@@ -8,7 +8,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function contactEmail(data: {
   name: string;
   email: string;
-  phone: string;
   message: string;
 }) {
   const parsed = contactSchema.safeParse(data);
@@ -17,7 +16,7 @@ export async function contactEmail(data: {
     return { success: false };
   }
 
-  const { name, email, phone, message } = parsed.data;
+  const { name, email, message } = parsed.data;
 
   try {
     await resend.emails.send({
@@ -29,7 +28,6 @@ export async function contactEmail(data: {
         <h2>[Web] Nuevo contacto</h2>
         <p><b>Nombre:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
-        <p><b>Teléfono:</b> ${phone}</p>
         <p>${message.replace(/\n/g, "<br/>")}</p>
       `,
     });

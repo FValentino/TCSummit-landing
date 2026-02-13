@@ -9,6 +9,15 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
+import { Saira } from "next/font/google";
+
+const saira = Saira({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+
 export default function Hero() {
 
   const router = useRouter();
@@ -40,7 +49,7 @@ export default function Hero() {
             </motion.p>
 
             <motion.h1
-              className="text-6xl lg:text-7xl font-bold text-white leading-tight text-center"
+              className={`${saira.className} text-6xl lg:text-7xl font-bold text-white leading-tight text-center font-saira`}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}

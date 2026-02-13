@@ -24,7 +24,7 @@ export default function SocialNetworks(){
           return (
             <motion.button
               key={social.name}
-              className="bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/10 cursor-pointer"
+              className="bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/10 cursor-pointer hover:cursor-pointer"
               whileHover={{
                 scale: 1.05,
                 borderColor: social.color,
