@@ -31,9 +31,8 @@ export default function Menu(){
   }
 
   function getLink(name: string){
-    const href = "/inicio#" + name
     return (
-      <Link href={href} onClick={toggleMenu}
+      <Link href={`#${name}`} onClick={toggleMenu}
         className="text-2xl cursor-pointer text-white capitalize lg:text-lg hover:border-b hover:border-white">
           {name}
       </Link>
