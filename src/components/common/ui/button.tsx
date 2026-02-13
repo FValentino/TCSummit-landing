@@ -1,0 +1,46 @@
+'use client';
+
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "ghost" | "outline" | "secondary"
+  size?: "default" | "sm" | "lg" | "icon"
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = "default", size = "default", className = "", asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    
+    const baseClasses =
+      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+
+    const variants = {
+      default: "bg-[#0242fd] text-[#fcfef9] hover:bg-[#012967] focus-visible:ring-[#0242fd]",
+      ghost: "hover:bg-[#d7e8f9] hover:text-[#0242fd] focus-visible:ring-[#0242fd]",
+      outline: "border border-[#0242fd] text-[#0242fd] hover:bg-[#0242fd] hover:text-white focus-visible:ring-[#0242fd]",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:ring-gray-500",
+    }
+
+    const sizes = {
+      default: "h-10 px-4 py-2",
+      sm: "h-8 px-3 text-sm",
+      lg: "h-12 px-8",
+      icon: "h-10 w-10",
+    }
+
+    const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`
+
+    return (
+      <Comp
+        className={classes}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button }

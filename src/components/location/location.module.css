@@ -1,0 +1,26 @@
+@keyframes spin-y {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+@layer utilities {
+    .animateSpinY {
+        animation: spin-y 5s linear infinite;
+    }
+
+    .preserve3d {
+        transform-style: preserve-3d;
+    }
+
+    .perspective {
+        perspective: 1000px;
+    }
+
+    .rotateYReverse {
+        transform: rotateY(-360deg);
+    }
+}

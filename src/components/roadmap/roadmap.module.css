@@ -1,0 +1,8 @@
+.timeElement {
+  transition: background 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0; /* Oculta los elementos al inicio */
+}
+
+.timeElement.visible {
+  opacity: 1; /* Aparece cuando entra en pantalla */
+}
