@@ -187,8 +187,8 @@ export default function TeamSection() {
                         }}
                         transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                     >
-                    <div className="w-full h-48 relative">
-                      <Image src={member.img} alt={member.name} fill style={{ objectFit: 'cover' }} />
+                    <div className="w-full h-32 relative">
+                      <Image src={member.img} alt={member.name} fill className="cover" />
                     </div>
                       </motion.div>
 

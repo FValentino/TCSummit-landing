@@ -61,8 +61,8 @@ export default function Location(){
               }}
               className="w-full aspect-square rounded-full overflow-hidden p-4 shadow-lg shadow-[#03f5ff]/20 border border-[#05045ccc]"
             >
-              <div className="relative w-full h-full rounded-full overflow-hidden border border-white/10" style={{ minHeight: '200px' }}>
-                <Image src={logo} alt="Gala Hotel & Convenciones Logo" fill style={{ objectFit: 'contain' }} />
+              <div className="relative w-full h-full rounded-full overflow-hidden border border-white/10" >
+                <Image src={logo} alt="Gala Hotel & Convenciones Logo" fill />
               </div>
             </motion.div>
           </div>
