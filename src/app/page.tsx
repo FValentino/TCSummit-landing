@@ -2,6 +2,7 @@ import About from "@/components/about/about";
 import ActivitiesSection from "@/components/activities/activities";
 import Header from "@/components/header/header";
 import Introduction from "@/components/introduction/introduction";
+import MarketingIntro from "@/components/marketing/marketingIntro";
 import Roadmap from "@/components/roadmap/roadmap";
 import Team from "@/components/team/team";
 import Location from "@/components/location/location";
@@ -14,6 +15,7 @@ export default function Home() {
       <Header/>
       <ParticlesBackground dots={100} lines={120}>
         <Introduction/>
+        <MarketingIntro/>
       </ParticlesBackground>
       <ActivitiesSection/>
       <ParticlesBackground dots={100} lines={120}>
