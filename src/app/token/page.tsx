@@ -1,47 +1,55 @@
-"use client"
+"use client";
+import React, { useEffect, useState } from 'react';
+import Card from '@/components/activities/card/card';
+import ParticlesBackground from '@/components/utils/ParticlesBackground';
 
-import { useEffect, useState } from 'react'
-import TokenUseCases from '@/components/token/useCases'
-import ParticlesBackground from '@/components/utils/ParticlesBackground'
+// Simple ICO phase data (static for now)
+const ICO_PHASES = [
+  { phase: 'Friends & Family', tokens: 5000, price: '$0.01' },
+  { phase: 'Private Sale', tokens: 10000, price: '$0.02' },
+  { phase: 'Public Sale', tokens: 20000, price: '$0.03' },
+];
 
+// Use cases data for student-style cards (adapted for token page use cases)
+const USE_CASES = [
+  { title: '🎟 Acceso VIP', description: 'Acceso a áreas y eventos' },
+  { title: '🎤 Votación de speakers', description: 'Participa en la selección de speakers' },
+  { title: '🎁 Recompensas por referidos', description: 'Recompensas por invitar a otros' },
+  { title: '🖼 Compra de NFTs del evento', description: 'NFTs coleccionables del evento' },
+  { title: '📉 Descuentos progresivos en entradas', description: 'Descuentos por fases' },
+  { title: '🔒 Staking (próximamente)', description: 'Staking de TCST' },
+];
 
 export default function TokenPage() {
-  const [icoActive, setIcoActive] = useState(true)
-  const [start] = useState<number>(Date.now())
-  const [now, setNow] = useState<number>(Date.now())
+  // ICO counter (simulado)
+  const [start] = useState<number>(Date.now());
+  const [now, setNow] = useState<number>(Date.now());
   useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(t)
-  }, [])
-  const remaining = icoActive ? Math.max(0, Math.floor((3600) - ((now - start) / 1000))) : 0
-
-  const ICO_PHASES = [
-    { phase: 'Friends & Family', tokens: 5000, price: '$0.01' },
-    { phase: 'Private Sale', tokens: 10000, price: '$0.02' },
-    { phase: 'Public Sale', tokens: 20000, price: '$0.03' },
-  ]
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const remaining = Math.max(0, Math.floor((3600 - ((now - start) / 1000))));
 
   return (
     <main className="min-h-screen p-6 bg-linear-to-b from-black/90 to-black/60 text-white">
-      <ParticlesBackground dots={200} lines={150}>
-        {/* HERO */}
-        <section id="hero" className=" relative py-12 px-6 text-center">
-          <div className="text-5xl font-extrabold">TCST</div>
-          <div className="text-2xl md:text-3xl font-semibold mt-2">El Token Oficial del Tecno Crypto Summit</div>
-          <p className="mt-4 max-w-2xl mx-auto">Impulsando la economía Web3 del evento tecnológico más innovador de Latinoamérica.</p>
-          <div className="mt-4 flex justify-center gap-4 flex-wrap">
-            <a href="/assets/TCST-White-Paper.pdf" download className="px-4 py-2 rounded bg-white/20">📄 Leer White Paper</a>
-            <a href="#ico" className="px-4 py-2 rounded bg-linear-to-r from-[#3b82f6] to-[#0ea5e9]">🚀 Participar en la ICO</a>
-            <a href="#contract" className="px-4 py-2 rounded bg-black/40">🔗 Ver contrato en Algorand</a>
-          </div>
-          <div className="mt-6 flex justify-center items-center gap-8">
-            <div className="w-40 h-40 rounded-full border-8 border-white/20" aria-label="visual token"></div>
-            <div className="text-6xl font-bold">100,000</div>
-            <span className="text-lg font-semibold">Supply Fijo</span>
-          </div>
-        </section>
+      {/* HERO */}
+      <section id="hero-token" className="py-12 px-6 text-center bg-linear-to-r from-slate-800 to-slate-900 rounded-xl shadow-xl mb-8">
+        <h1 className="text-5xl font-bold mb-2">TCST</h1>
+        <div className="text-2xl md:text-3xl font-semibold mb-4">El Token Oficial del Tecno Crypto Summit</div>
+        <p className="max-w-2xl mx-auto mb-4">Impulsando la economía Web3 del evento tecnológico más innovador de Latinoamérica.</p>
+        <div className="flex justify-center gap-4 flex-wrap mb-6">
+          <a href="/assets/TCST-White-Paper.pdf" download className="px-4 py-2 rounded bg-white/20">📄 Leer White Paper</a>
+          <a href="#ico" className="px-4 py-2 rounded bg-linear-to-r from-[#3b82f6] to-[#0ea5e9]">🚀 Participar en la ICO</a>
+          <a href="#contract" className="px-4 py-2 rounded bg-black/40">🔗 Ver contrato en Algorand</a>
+        </div>
+        <div className="mt-6 flex justify-center items-center gap-8">
+          <div className="h-40 w-72 border-2 border-dashed border-white/30 rounded-lg flex items-center justify-center text-sm text-white/70">Imagen 1</div>
+          <div className="text-6xl font-bold">100,000</div>
+        </div>
+      </section>
 
-        {/* ¿Qué es TCST? */}
+      {/* 2) ¿Qué es TCST? */}
+      <ParticlesBackground dots={200} lines={100}>
         <section id="que-es" className="relative py-12 px-6">
           <h2 className="text-3xl font-bold text-center mb-4">¿Qué es TCST?</h2>
           <p className="text-center max-w-3xl mx-auto">El Tecno Crypto Summit Token (TCST) es un token utilitario desarrollado para potenciar la participación, el engagement y la economía interna del evento.</p>
@@ -55,7 +63,7 @@ export default function TokenPage() {
           </div>
         </section>
 
-        {/* Tokenomics */}
+        {/* 3) Tokenomics */}
         <section id="tokenomics" className="relative py-12 px-6">
           <h2 className="text-3xl font-bold text-center mb-4">Tokenomics</h2>
           <div className="flex justify-center mb-6">
@@ -74,7 +82,7 @@ export default function TokenPage() {
               </div>
             ))}
           </div>
-          <div className="mt-6 mx-auto max-w-3xl">
+          <div className="mt-6 max-w-3xl mx-auto">
             <div className="bg-black/40 rounded p-4 border border-white/10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-left text-sm text-gray-200">
                 {ICO_PHASES.map((p)=> (
@@ -86,35 +94,40 @@ export default function TokenPage() {
               </div>
             </div>
           </div>
-          {icoActive && (
-            <div className="text-center mt-4" id="ico-counter">
-              <span className="inline-flex items-center px-2 py-1 rounded-full bg-black/40">ICO activo</span>
-              <span className="ml-3" id="ico-count">{remaining}s</span>
-            </div>
+          {true && (
+            <div className="text-center mt-4" id="ico-counter">ICO activo</div>
           )}
         </section>
 
-        {/* Casos de Uso Reales */}
+        {/* 4) Casos de Uso Reales */}
         <section id="use-cases" className="relative py-12 px-6">
           <h2 className="text-3xl font-bold text-center mb-6">Casos de Uso Reales</h2>
-          <TokenUseCases />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+            {USE_CASES.map((u)=> (
+              <Card key={u.title} title={u.title} description={u.description} />
+            ))}
+          </div>
         </section>
 
-        {/* Seguridad & Transparencia y Advertencias */}
-        <section id="security" className="py-12 px-6">
+        {/* 5) Seguridad & Transparencia */}
+        <section id="security" className="relative py-12 px-6">
           <h3 className="text-xl font-bold text-center mb-2">Seguridad & Transparencia</h3>
           <ul className="max-w-xl mx-auto list-disc pl-5 text-sm text-gray-200 text-left">
-            <li>✔ Contrato verificable en Algorand</li>
+            <li>✔ Contrato verificado en Algorand</li>
             <li>✔ Supply fijo</li>
             <li>✔ Sin minteo adicional</li>
             <li>✔ Billeteras multisig</li>
             <li>✔ Transparencia comunitaria</li>
           </ul>
         </section>
-        <section id="legal" className="py-8 px-6 text-center">
+
+        {/* 6) Advertencia Legal */}
+        <section id="legal" className="relative py-8 px-6 text-center">
           <h3 className="text-xl font-bold mb-2">Advertencia Legal</h3>
           <p className="text-sm text-gray-300">TCST es un token utilitario. No representa acciones, dividendos ni derechos financieros. Su uso se limita al ecosistema del Tecno Crypto Summit. Esto es importante para regulación en Argentina.</p>
         </section>
+
+        {/* 7) CTA Final */}
         <section id="cta" className="py-8 px-6 text-center">
           <div className="flex flex-wrap justify-center gap-4">
             <a href="#comprar" className="inline-flex items-center px-4 py-2 rounded bg-linear-to-r from-[#10b981] to-[#059669]">Comprar TCST</a>
