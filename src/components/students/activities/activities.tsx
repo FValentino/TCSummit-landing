@@ -9,10 +9,10 @@ export default function Activities(){
   // In case there is a circular import, fallback to an empty array
   const items = activitiesData ?? []
   return (
-    <section className="py-8 px-6" aria-label="Actividades para estudiantes">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {items.map((a: any) => (
-          <Card key={a.id} title={a.name} description={a.description} />
+    <section className="py-8 px-6 border" aria-label="Actividades para estudiantes">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+        {items.map((activity) => (
+          <Card key={activity.id} title={activity.name} description={activity.description} />
         ))}
       </div>
     </section>
