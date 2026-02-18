@@ -23,7 +23,7 @@ export const NODES: Node[] = [
   { id: 10, year: "En ejecución", description: "10. Desarrollo y lanzamiento del Token Oficial TCST", icon: Coins, status: "current" },
   { id: 11, year: "En ejecución", description: "11. Stands en instituciones, shopping y sponsors", icon: Store, status: "current" },
   { id: 12, year: "En ejecución", description: "12. Programa de TV y Redes", icon: Tv, status: "current" },
-  { id: 13, year: "En ejecución", description: "13. Conexiones para desarrollar evento en Uruguay y Chile", icon: Globe, status: "current" }  
+  { id: 13, year: "En ejecución", description: "13. Conexiones para desarrollar evento en Paraguay, Uruguay y Chile", icon: Globe, status: "current" }  
 
 ];
 
