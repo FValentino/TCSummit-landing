@@ -17,7 +17,7 @@ export const teamData = [
   },
   {
     id: 2,
-    name: "Giorgio Adrian Pfefer",
+    name: "Giorgio Pfefer",
     role: "CTO",
     img: profileJorge,
     neonColor: "#b5bbef"
