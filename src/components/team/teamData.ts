@@ -1,5 +1,5 @@
 import profileDardo from "@/assets/images/team/Dardo.webp"
-import profileJorge from "@/assets/images/team/Jorge.webp"
+import profileLuis from "@/assets/images/team/Luis.webp"
 import profileJoy from "@/assets/images/team/Joy.webp"
 import profileNoelia from "@/assets/images/team/Noelia.webp"
 import profileRuben from "@/assets/images/team/Ruben.webp"
@@ -17,9 +17,9 @@ export const teamData = [
   },
   {
     id: 2,
-    name: "Giorgio Pfefer",
-    role: "CTO",
-    img: profileJorge,
+    name: "Luis Alberto Bahia",
+    role: "Head of Sales",
+    img: profileLuis,
     neonColor: "#b5bbef"
   },
   {

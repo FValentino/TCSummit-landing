@@ -4,7 +4,6 @@ import Header from "@/components/header/header";
 import Introduction from "@/components/introduction/introduction";
 import Roadmap from "@/components/roadmap/roadmap";
 import Team from "@/components/team/team";
-import Location from "@/components/location/location";
 import ParticlesBackground from "@/components/utils/ParticlesBackground";
 import Contact from "@/components/contact/contact";
 
@@ -23,7 +22,6 @@ export default function Home() {
       <div className="w-full mx-auto text-white relative min-h-screen  mb-16 mt-32">
         <ParticlesBackground dots={100} lines={120}>
           <Roadmap/>
-          <Location/>
           <Contact />
         </ParticlesBackground>
       </div>
