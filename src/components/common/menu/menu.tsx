@@ -78,9 +78,9 @@ return (
               <li className="my-1">
                 {getLink("roadmap")}
               </li>
-              <li className="my-1">
+              {/* <li className="my-1">
                 {getLink("ubicacion")}
-              </li>
+              </li> */}
               <li className="my-1">
                 {getLink("contacto")}
               </li>
