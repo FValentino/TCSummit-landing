@@ -18,7 +18,7 @@ export const teamData = [
   {
     id: 2,
     name: "Luis Alberto Bahia",
-    role: "Head of Sales",
+    role: "Sales Manager",
     img: profileLuis,
     neonColor: "#b5bbef"
   },
