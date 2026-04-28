@@ -66,7 +66,7 @@ export default function Hero() {
                     ¡Viví el futuro en el
                   </motion.span>{" "}
                   <br className="hidden md:block" />
-                  <span className="text-[#03f5ff] font-bold">Technocrypto Summit 2025!</span>
+                  <span className="text-[#03f5ff] font-bold">Technocrypto Summit 2026!</span>
                 </motion.h2>
               </motion.div>
             </div>
