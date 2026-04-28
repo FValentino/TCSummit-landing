@@ -15,7 +15,7 @@ export const NODES: Node[] = [
   { id: 2, year: "2024", description: "2. Registro Dominio y Publicación de página web", icon: Globe, status: "completed" },
   { id: 3, year: "2024", description: "3. Creación y Registro de Logo y Marca Registrada", icon: Palette, status: "completed" },
   { id: 4, year: "2024", description: "4. Creación de Equipo Organizador", icon: Users, status: "completed" },
-  { id: 5, year: "2025", description: "5. Locación: GALA centro de convenciones", icon: MapPin, status: "completed" },
+  { id: 5, year: "2025", description: "5. Locación: Resistencia - Chaco, Argentina", icon: MapPin, status: "current" },
   { id: 6, year: "En ejecución", description: "6. Alianzas estratégicas", icon: UserCheck, status: "current" },
   { id: 7, year: "En ejecución", description: "7. Partners y Sponsors", icon: Building, status: "current" },
   { id: 8, year: "En ejecución", description: "8. Expansión de la comunidad", icon: Users, status: "current" },

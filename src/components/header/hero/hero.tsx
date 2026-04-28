@@ -108,7 +108,6 @@ export default function Hero() {
                   <MapPin className="w-6 h-6 lg:w-8 lg:h-8 text-[#03f5ff]" />
                 </motion.div>
                 <div className="text-xl text-white md:text-3xl">
-                  <p>Centro de Convenciones GALA</p>
                   <p>Resistencia - Chaco, Argentina</p>
                 </div>
                 
