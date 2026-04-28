@@ -181,7 +181,7 @@ export default function Opportunities() {
                   <p className="text-[#fcfef9]/80">Escribinos a:</p>
                   <div className="flex justify-center items-center gap-2 ">
                     <Mail className="w-5 h-5 text-[#03f5ff]" />
-                    <span className="text-[#03f5ff] text-md lg:text-lg font-semibold">estudiantes@tcsummit.com.ar</span>
+                    <span className="text-[#03f5ff] text-md lg:text-lg font-semibold">estudiantes@tcsummit.net</span>
                   </div>
                 </div>
               </div>
