@@ -88,7 +88,7 @@ export default function Hero() {
 
             
             <div className="space-y-4">
-              <motion.div
+              {/* <motion.div
                 className="flex items-center justify-center space-x-3"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -108,10 +108,10 @@ export default function Hero() {
                   <MapPin className="w-6 h-6 lg:w-8 lg:h-8 text-[#03f5ff]" />
                 </motion.div>
                 <div className="text-xl text-white md:text-3xl">
-                  <p>Resistencia - Chaco, Argentina</p>
+                  <p>Argentina</p>
                 </div>
                 
-              </motion.div>
+              </motion.div> */}
 
               <motion.div
                 className="flex items-center justify-center space-x-3"
@@ -132,7 +132,7 @@ export default function Hero() {
                 >
                   <Calendar className="w-4 h-4 lg:w-8 lg:h-8 text-[#0090ff]" />
                 </motion.div>
-                <span className="text-xl text-white md:text-3xl">01, 02 y 03 de octubre de 2026</span>
+                <span className="text-xl text-white md:text-3xl">Octubre 2026</span>
               </motion.div>
             </div>
 

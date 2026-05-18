@@ -28,16 +28,16 @@ export default function IntroductionLocation(){
         </p>
 
         <div className="space-y-6">
-          <p className="text-white text-lg">Nos emociona presentarles en</p>
+          <p className="text-white text-lg">Nos emociona presentarles el</p>
           <motion.div
-            className="bg-gradient-to-r from-[#03f5ff]/20 to-[#0090ff]/20 backdrop-blur-sm rounded-2xl p-6 border border-[#03f5ff]/30"
+            className="bg-linear-to-r from-[#03f5ff]/20 to-[#0090ff]/20 backdrop-blur-sm rounded-2xl p-6 border border-[#03f5ff]/30"
             animate={{
               borderColor: ["rgba(3, 245, 255, 0.3)", "rgba(0, 144, 255, 0.3)", "rgba(3, 245, 255, 0.3)"],
             }}
             transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             <h4 className="text-2xl lg:text-3xl font-bold text-[#03f5ff] mb-2">
-              CIUDAD DE RESISTENCIA, CHACO - ARGENTINA
+              TCSummit - ARGENTINA
             </h4>
             <p className="text-white text-xl font-semibold">Un MEGA EVENTO sin precedentes.</p>
           </motion.div>
