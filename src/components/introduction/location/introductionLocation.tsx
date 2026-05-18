@@ -53,7 +53,7 @@ export default function IntroductionLocation(){
         className="w-full bg-black/40 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-[#03f5ff]/30 mb-16"
       >
         <p className="text-white text-lg lg:text-xl leading-relaxed text-center mb-8">
-          En el cual en <span className="text-[#03f5ff] font-bold">3 (tres) días</span> se reúne y se sumergen,
+          En el cual en <span className="text-[#03f5ff] font-bold">4 (cuatro) días</span> se reúne y se sumergen,
           con el apoyo gubernamental y privado, a expertos globales, emprendedores innovadores, entusiastas y
           estudiantes del criptoespacio, AI y Tecnología, para explorar las últimas tendencias, discutir avances
           tecnológicos y fomentar la colaboración en estas revolucionarias industrias.
