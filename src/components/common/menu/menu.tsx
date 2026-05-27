@@ -1,89 +1,174 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Menu as MenuIcon } from "lucide-react";
-import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import logo from "@/assets/images/logo.png"
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Menu as MenuIcon, X } from 'lucide-react'
+import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 
-export default function Menu(){
-  const [showMenuMobile, setShowMenuMobile] = useState<boolean>(false)
-  const [isDesktop, setIsDesktop] = useState<boolean>(false)
-  
+import logo from '@/assets/images/logo.png'
+
+export default function Menu() {
+  const [showMenuMobile, setShowMenuMobile] = useState(false)
+
   useEffect(() => {
-    const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= 1024)
+    const handleResize = () => {
+      // cerrar menú mobile automáticamente al pasar a desktop
       if (window.innerWidth >= 1024) {
-        setShowMenuMobile(true)
+        setShowMenuMobile(false)
       }
     }
 
-    checkScreenSize()
-    window.addEventListener('resize', checkScreenSize)
-    return () => window.removeEventListener('resize', checkScreenSize)
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
-  function toggleMenu(){
-    if (!isDesktop){
-      setShowMenuMobile(!showMenuMobile)
+  function toggleMenu() {
+    setShowMenuMobile((prev) => !prev)
+  }
+
+  function handleLinkClick() {
+    if (window.innerWidth < 1024) {
+      setShowMenuMobile(false)
     }
   }
 
-  function getLink(name: string){
+  function getLink(name: string) {
     return (
-      <Link href={`#${name}`} onClick={toggleMenu}
-        className="text-2xl cursor-pointer text-white capitalize lg:text-lg hover:border-b hover:border-white">
-          {name}
+      <Link
+        href={`#${name}`}
+        onClick={handleLinkClick}
+        className={`
+          text-white
+          text-xl
+          lg:text-base
+          capitalize
+          transition-opacity
+          hover:opacity-80
+        `}
+      >
+        {name}
       </Link>
     )
   }
-  
-return (
-    <NavigationMenu.Root>
-      <header className={`w-full flex items-center px-3 fixed top-0 z-1000 border-b-gray-40
-         ${isDesktop ? "bg-blue-950/50 h-16" : "bg-blue-950/90 min-h-16"}
-         ${showMenuMobile && " py-2"}`}>
-        <nav aria-label="Navegación principal" 
-          className={`w-full flex flex-col justify-between items-center lg:flex-row`}>
-          {/* logo */}
-          <div className="w-full flex justify-between items-center">
-            <Link href="/inicio#hero">
-              <div className="w-[50%]">
-                <Image
-                  src={logo}
-                  alt="TCSummit"
-                  layout="responsive"
-                  priority
-                />
-              </div>
+
+  return (
+    <NavigationMenu.Root className={`fixed top-0 left-0 w-full z-1000 `}>
+      <header
+        className={`
+          w-full
+          bg-blue-950/90
+          backdrop-blur-md
+          border-b
+          border-white/10
+        `}
+      >
+        <nav
+          aria-label="Navegación principal"
+          className={`
+            max-w-7xl
+            mx-auto
+            px-4
+          `}
+        >
+          {/* barra superior */}
+          <div
+            className={`
+              h-16
+              flex
+              items-center
+              justify-between
+            `}
+          >
+            {/* logo */}
+            <Link
+              href="/"
+              className={`
+                flex
+                items-center
+                w-40
+                sm:w-48
+                shrink-0
+              `}
+            >
+              <Image
+                src={logo}
+                alt="TCSummit"
+                priority
+                className={`w-full h-auto object-contain`}
+              />
             </Link>
-            <button className="lg:hidden" onClick={toggleMenu}>
-              <MenuIcon className="w-6 h-6 text-white"/>
+
+            {/* botón mobile */}
+            <button
+              onClick={toggleMenu}
+              className={`
+                lg:hidden
+                flex
+                items-center
+                justify-center
+                text-white
+              `}
+              aria-label={
+                showMenuMobile ? 'Cerrar menú' : 'Abrir menú'
+              }
+            >
+              {showMenuMobile ? (
+                <X className={`w-7 h-7`} />
+              ) : (
+                <MenuIcon className={`w-7 h-7`} />
+              )}
             </button>
+
+            {/* navegación desktop */}
+            <div className={`hidden lg:flex`}>
+              <NavigationMenu.List
+                className={`
+                  flex
+                  items-center
+                  gap-8
+                `}
+              >
+                <li>{getLink('inicio')}</li>
+                <li>{getLink('actividades')}</li>
+                <li>{getLink('nosotros')}</li>
+                <li>{getLink('roadmap')}</li>
+                <li>{getLink('contacto')}</li>
+              </NavigationMenu.List>
+            </div>
           </div>
 
-          {/* navegacion */}
-          <div className={`${showMenuMobile ? "w-full my-2 lg:me-2" : "hidden"}`}>
-            <NavigationMenu.List className="w-full flex flex-col items-start ms-3 lg:flex-row lg:justify-between">
-              <li className="my-1">
-                {getLink("inicio")}
-              </li>
-              <li className="my-1">
-                {getLink("actividades")}
-              </li>
-              <li className="my-1">
-                {getLink("nosotros")}
-              </li>
-              <li className="my-1">
-                {getLink("roadmap")}
-              </li>
-              {/* <li className="my-1">
-                {getLink("ubicacion")}
-              </li> */}
-              <li className="my-1">
-                {getLink("contacto")}
-              </li>
+          {/* navegación mobile */}
+          <div
+            className={`
+              lg:hidden
+              overflow-hidden
+              transition-all
+              duration-300
+              ease-in-out
+              ${
+                showMenuMobile
+                  ? 'max-h-96 opacity-100 pb-4'
+                  : 'max-h-0 opacity-0'
+              }
+            `}
+          >
+            <NavigationMenu.List
+              className={`
+                flex
+                flex-col
+                gap-4
+                pt-2
+              `}
+            >
+              <li>{getLink('inicio')}</li>
+              <li>{getLink('actividades')}</li>
+              <li>{getLink('nosotros')}</li>
+              <li>{getLink('roadmap')}</li>
+              <li>{getLink('contacto')}</li>
             </NavigationMenu.List>
           </div>
         </nav>

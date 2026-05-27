@@ -50,7 +50,7 @@ export default function About() {
             className="grid grid-cols-1 lg:grid-cols-2 items-center mb-20"
           >
             <motion.div
-              className="relative w-[20rem] h-80 mx-auto rounded-[50%] overflow-hidden border-2 border-[#03f5ff]/30"
+              className="relative w-full max-w-[20rem] h-80 mx-auto rounded-[50%] overflow-hidden border-2 border-[#03f5ff]/30"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
@@ -140,7 +140,7 @@ export default function About() {
             </div>
 
             <motion.div
-              className="relative w-[20rem] h-80 mx-auto rounded-[50%] overflow-hidden border-2 border-[#0090ff]/30 lg:order-2"
+              className="relative w-full max-w-[20rem] h-80 mx-auto rounded-[50%] overflow-hidden border-2 border-[#0090ff]/30 lg:order-2"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >

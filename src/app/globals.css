@@ -14,7 +14,7 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  max-width: none;
+  height: 100%;
   background-color: #002c6b;
   background-repeat: no-repeat;
   background-size: cover;
