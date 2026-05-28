@@ -17,8 +17,8 @@ export default function Introduction(){
           </p>
           <p className="w-full text-lg lg:text-2xl text-gray-300 text-center 
             leading-relaxed">
-            <strong className="text-[#03f5ff]">NEA - Argentina</strong> se convierte en el epicentro del{" "}
-            <span className="text-[#b5bbef] font-semibold">NEA</span> para una experiencia que te conecta con la{" "}
+            <strong className="text-[#03f5ff]">NEA - Argentina</strong> se convierte en el epicentro de{" "}
+            una experiencia que te conecta con la{" "}
             <span className="text-[#00c6ff] font-semibold">innovación</span>, la{" "}
             <span className="text-[#0090ff] font-semibold">tecnología</span> y los{" "}
             <span className="text-[#03f5ff] font-semibold">empleos del mañana</span>.
