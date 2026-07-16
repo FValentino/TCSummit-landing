@@ -1,6 +1,5 @@
 "use client"
 import {
-  MapPin,
   Calendar,
 } from "lucide-react"
 

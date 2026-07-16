@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { LucideProps } from "lucide-react";
 import { useMemo } from "react";
 import { neonColors } from "../activitiesData";
+import Image from "next/image";
 
 interface ActivityProps{
   id: number,
@@ -75,9 +76,11 @@ export default function ActivityCard({activity, index}: CardProps){
 
         {/* Imagen */}
         <div className="relative h-32 overflow-hidden">
-          <img
+          <Image
             src={activity.img}
             alt={activity.name}
+            width={400}
+            height={128}
             className="w-full h-full object-cover opacity-80"
             loading="lazy"
           />

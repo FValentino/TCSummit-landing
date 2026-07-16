@@ -1,6 +1,7 @@
 import AI from "@/assets/images/introduction/AI.webp"
 import conection from "@/assets/images/introduction/conection.webp"
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 export default function IntroductionDescription(){
   return(
@@ -43,10 +44,12 @@ export default function IntroductionDescription(){
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.3 }}
         >
-          <img
-            src={typeof AI === 'string' ? AI : (AI as any).src}
+          <Image
+            src={AI}
             alt="Innovación Tecnológica"
             loading="lazy"
+            width={600}
+            height={256}
             className="w-full h-64 object-cover"
           />
           <motion.div
@@ -63,10 +66,12 @@ export default function IntroductionDescription(){
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.3 }}
         >
-          <img
-            src={typeof conection === 'string' ? conection : (conection as any).src}
+          <Image
+            src={conection}
             alt="Crypto e IA"
             loading="lazy"
+            width={600}
+            height={256}
             className="w-full h-64 object-cover"
           />
           <motion.div
