@@ -53,7 +53,7 @@ export const teamData = [
   {
     id: 7,
     name: "Valentino Farías",
-    role: "Frontend developer",
+    role: "CTO - Chief Technology Officer",
     img: profileValentino,
     neonColor: "#00c6ff" 
   },
