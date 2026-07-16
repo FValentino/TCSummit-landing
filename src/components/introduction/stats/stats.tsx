@@ -1,6 +1,4 @@
-import { FaCalendarAlt, FaComments, FaCheckCircle, FaUserCheck } from "react-icons/fa"
-import { FaUsers } from "react-icons/fa6"
-import { PiStudentFill } from "react-icons/pi"
+import { Calendar, MessageSquare, CheckCircle, UserCheck, Users, GraduationCap } from "lucide-react"
 import { useEffect} from "react"
 import "./participnatsInfo.css"
 import { motion } from "framer-motion"
@@ -29,12 +27,12 @@ export default function ParticipantInfo() {
   }, [])
 
   const items = [
-    { icon: <FaCalendarAlt className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0" />, label: "Días", value: "4" },
-    { icon: <FaComments className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Charlas", value: "+50" },
-    { icon: <FaUserCheck className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Expertos", value: "+50" },
-    { icon: <PiStudentFill className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Estudiantes", value: "+10.000" },
-    { icon: <FaUsers className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Visitantes", value: "+20.000" },
-    { icon: <FaCheckCircle className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Empresas", value: "+200" },
+    { icon: <Calendar className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0" />, label: "Días", value: "4" },
+    { icon: <MessageSquare className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Charlas", value: "+50" },
+    { icon: <UserCheck className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Expertos", value: "+50" },
+    { icon: <GraduationCap className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Estudiantes", value: "+10.000" },
+    { icon: <Users className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Visitantes", value: "+20.000" },
+    { icon: <CheckCircle className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Empresas", value: "+200" },
   ]
 
   return (
