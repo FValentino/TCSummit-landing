@@ -52,12 +52,8 @@ export default function IntroductionDescription(){
             height={256}
             className="w-full h-64 object-cover"
           />
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-[#03f5ff]/20 to-transparent"
-            animate={{
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-[#03f5ff]/20 to-transparent opacity-65"
           />
         </motion.div>
 
@@ -74,12 +70,8 @@ export default function IntroductionDescription(){
             height={256}
             className="w-full h-64 object-cover"
           />
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-[#0090ff]/20 to-transparent"
-            animate={{
-              opacity: [0.5, 0.8, 0.5],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, delay: 1 }}
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-[#0090ff]/20 to-transparent opacity-65"
           />
         </motion.div>
       </motion.div>

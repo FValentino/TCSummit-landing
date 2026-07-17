@@ -25,19 +25,11 @@ export default function Hero() {
             >
               <span className="block">
                 ¿Sos {" "}
-                <motion.span
+                <span
                   className="text-[#03f5ff]"
-                  animate={{
-                    textShadow: [
-                      "0 0 20px rgba(3, 245, 255, 0.8)",
-                      "0 0 40px rgba(3, 245, 255, 1)",
-                      "0 0 20px rgba(3, 245, 255, 0.8)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                 >
                   estudiante
-                </motion.span>
+                </span>
                 {" "} secundario o universitario?
               </span>
             </motion.h1>
@@ -56,15 +48,11 @@ export default function Hero() {
                   transition={{ duration: 0.8, delay: 0.4 }}
                   className="text-2xl md:text-3xl lg:text-4xl font-semibold text-center lg:text-left"
                 >
-                  <motion.span
+                  <span
                     className="text-[#00c6ff]"
-                    animate={{
-                      opacity: [0.8, 1, 0.8],
-                    }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                   >
                     ¡Viví el futuro en el
-                  </motion.span>{" "}
+                  </span>{" "}
                   <br className="hidden md:block" />
                   <span className="text-[#03f5ff] font-bold">Technocrypto Summit 2026!</span>
                 </motion.h2>
@@ -85,16 +73,6 @@ export default function Hero() {
                   boxShadow: "0 0 30px rgba(3, 245, 255, 0.6)",
                 }}
                 whileTap={{ scale: 0.95 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 20px rgba(3, 245, 255, 0.4)",
-                    "0 0 40px rgba(3, 245, 255, 0.6)",
-                    "0 0 20px rgba(3, 245, 255, 0.4)",
-                  ],
-                }}
-                transition={{
-                  boxShadow: { duration: 2, repeat: Number.POSITIVE_INFINITY },
-                }}
               >
                 Comprar entradas
               </motion.button>
@@ -108,16 +86,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="relative mb-12 lg:mb-0"
           >
-            <motion.div
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 2, -2, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
+            <div
               className="relative"
             >
               {/* En Next.js, si pasas la imagen importada a 'src', no necesitas width/height fijos */}
@@ -127,22 +96,13 @@ export default function Hero() {
                 className="w-full max-w-md mx-auto"
                 priority
               />
-            </motion.div>
+            </div>
 
             {/* Círculos de energía */}
             {[...Array(3)].map((_, i) => (
-              <motion.div
+              <div
                 key={i}
-                className="absolute inset-0 border-2 border-[#03f5ff]/30 rounded-full"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.8,
-                }}
+                className="absolute inset-0 border-2 border-[#03f5ff]/30 rounded-full opacity-45"
               />
             ))}
           </motion.div>

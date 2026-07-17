@@ -8,6 +8,7 @@ export default function SocialNetworks(){
     <motion.div
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.8, delay: 0.2 }}
       className="space-y-8 h-full"
     >
@@ -37,38 +38,23 @@ export default function SocialNetworks(){
                 y: 0,
                 transition: { delay: index * 0.1, duration: 0.5 },
               }}
+              viewport={{ once: true }}
             >
               <a href={social.link} target="_blank">
-                <motion.div
+                <div
                   className="flex flex-col items-center space-y-3"
-                  animate={{
-                    y: [0, -5, 0],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    delay: index * 0.2,
-                  }}
                 >
-                  <motion.div
+                  <div
                     className="p-3 rounded-full"
                     style={{ backgroundColor: `${social.color}20` }}
-                    animate={{
-                      boxShadow: [
-                        `0 0 10px ${social.color}40`,
-                        `0 0 20px ${social.color}60`,
-                        `0 0 10px ${social.color}40`,
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                   >
                     <IconComponent className="w-8 h-8" style={{ color: social.color }} />
-                  </motion.div>
+                  </div>
                   <div className="text-center">
                     <h4 className="text-white font-bold">{social.name}</h4>
                     <p className="text-gray-400 text-sm">{social.handle}</p>
                   </div>
-                </motion.div>
+                </div>
               </a>
             </motion.button>
           )

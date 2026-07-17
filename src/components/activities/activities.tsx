@@ -24,14 +24,6 @@ export default function ActivitiesSection() {
         >
           <motion.h2
             className="text-4xl lg:text-5xl font-bold text-white mb-6"
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 40px rgba(3, 245, 255, 0.8)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             ¿CON QUE TE VAS A ENCONTRAR?
           </motion.h2>
@@ -56,6 +48,7 @@ export default function ActivitiesSection() {
                   rotateY: 0,
                   transition: { delay: index * 0.1, duration: 0.6 },
                 }}
+                viewport={{ once: true }}
                 className="h-96 perspective-[1000px]"
               >
                 <motion.div
@@ -70,23 +63,11 @@ export default function ActivitiesSection() {
                     shadow-lg border-2 boder border-[${activity.neonColor}]`}
                   >
                     
-                    <motion.div
+                    <div
                       className={`p-6 rounded-full mb-6 border-2 border-[${activity.neonColor}]`}
-                      animate={{
-                        boxShadow: [
-                          `0 0 20px ${activity.neonColor}60`,
-                          `0 0 40px ${activity.neonColor}80`,
-                          `0 0 20px ${activity.neonColor}60`,
-                        ],
-                        rotate: [0, 5, -5, 0],
-                      }}
-                      transition={{
-                        boxShadow: { duration: 3, repeat: Number.POSITIVE_INFINITY },
-                        rotate: { duration: 4, repeat: Number.POSITIVE_INFINITY },
-                      }}
                     >
                       <IconComponent className={`w-12 h-12 text-[${activity.neonColor}]`} />
-                    </motion.div>
+                    </div>
 
                     <h3 className="text-white font-bold text-xl text-center mb-6 leading-tight">{activity.title}</h3>
 
@@ -99,14 +80,6 @@ export default function ActivitiesSection() {
                         backgroundColor: `${activity.neonColor}30`,
                       }}
                       whileTap={{ scale: 0.95 }}
-                      animate={{
-                        boxShadow: [
-                          `0 0 10px ${activity.neonColor}40`,
-                          `0 0 20px ${activity.neonColor}60`,
-                          `0 0 10px ${activity.neonColor}40`,
-                        ],
-                      }}
-                      transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
                     >
                       Más información
                     </motion.button>
@@ -130,19 +103,15 @@ export default function ActivitiesSection() {
                     }}
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <motion.div
+                      <div
                         className="p-3 rounded-full border"
                         style={{
                           backgroundColor: `${activity.neonColor}20`,
                           borderColor: activity.neonColor,
                         }}
-                        animate={{
-                          rotate: [0, 360],
-                        }}
-                        transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                       >
                         <IconComponent className="w-6 h-6" style={{ color: activity.neonColor }} />
-                      </motion.div>
+                      </div>
 
                       <motion.button
                         onClick={() => toggleFlip(activity.id)}
@@ -164,18 +133,9 @@ export default function ActivitiesSection() {
                       <p className="text-white text-sm leading-relaxed text-justify">{activity.description}</p>
                     </div>
 
-                    <motion.div
-                      className="mt-4 h-1 rounded-full"
+                    <div
+                      className="mt-4 h-1 rounded-full opacity-75"
                       style={{ backgroundColor: `${activity.neonColor}40` }}
-                      animate={{
-                        scaleX: [0, 1, 0],
-                        opacity: [0.5, 1, 0.5],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                      }}
                     />
                   </div>
                 </motion.div>
@@ -191,15 +151,11 @@ export default function ActivitiesSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="w-full text-center mt-12"
         >
-          <motion.p
+          <p
             className="text-[#03f5ff] text-lg font-medium"
-            animate={{
-              opacity: [0.7, 1, 0.7],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
           >
             💡 Haz clic en &quot;Más información&quot; para conocer los detalles de cada actividad
-          </motion.p>
+          </p>
         </motion.div>
       </div>
     </section>

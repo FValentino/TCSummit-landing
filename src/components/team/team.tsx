@@ -76,14 +76,6 @@ export default function TeamSection() {
         >
           <motion.h2
             className="text-4xl lg:text-5xl font-bold text-white mb-6"
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 40px rgba(3, 245, 255, 0.8)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             Nuestro <span className="text-[#03f5ff]">Equipo</span>
           </motion.h2>
@@ -107,14 +99,6 @@ export default function TeamSection() {
               boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",
             }}
             whileTap={{ scale: 0.95 }}
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
           >
             <ChevronLeft className="w-6 h-6" />
           </motion.button>
@@ -127,14 +111,6 @@ export default function TeamSection() {
               boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",
             }}
             whileTap={{ scale: 0.95 }}
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: 0.5 }}
           >
             <ChevronRight className="w-6 h-6" />
           </motion.button>
@@ -157,40 +133,20 @@ export default function TeamSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                 >
-                  <motion.div
+                  <div
                     className="relative bg-black/40 backdrop-blur-sm rounded-2xl overflow-hidden border-2 p-6 h-full"
                     style={{ borderColor: member.neonColor }}
-                    animate={{
-                      boxShadow: [
-                        `0 0 20px ${member.neonColor}40`,
-                        `0 0 40px ${member.neonColor}60`,
-                        `0 0 20px ${member.neonColor}40`,
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
-                    }}
                   >
                     {/* Imagen del miembro */}
                     <div className="relative mb-6">
-                      <motion.div
+                      <div
                         className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4"
                         style={{ borderColor: member.neonColor }}
-                        animate={{
-                          boxShadow: [
-                            `0 0 20px ${member.neonColor}60`,
-                            `0 0 40px ${member.neonColor}80`,
-                            `0 0 20px ${member.neonColor}60`,
-                          ],
-                        }}
-                        transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                     >
                     <div className="w-full h-32 relative">
                       <Image src={member.img} alt={member.name} fill className="cover" />
                     </div>
-                      </motion.div>
+                      </div>
 
                       {/* Efectos decorativos */}
                       <motion.div
@@ -203,43 +159,27 @@ export default function TeamSection() {
                     {/* Información del miembro */}
                     <div className="text-center">
                       <h3 className="text-white font-bold text-xl mb-2">{member.name}</h3>
-                      <motion.p
+                      <p
                         className="font-semibold mb-4"
                         style={{ color: member.neonColor }}
-                        animate={{
-                          textShadow: [
-                            `0 0 10px ${member.neonColor}60`,
-                            `0 0 20px ${member.neonColor}80`,
-                            `0 0 10px ${member.neonColor}60`,
-                          ],
-                        }}
-                        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                       >
                         {member.role}
-                      </motion.p>
+                      </p>
                     </div>
 
                     {/* Grid de fondo */}
                     <div className="absolute inset-0 opacity-5">
                       <div className="grid grid-cols-6 grid-rows-6 h-full w-full">
                         {[...Array(36)].map((_, i) => (
-                          <motion.div
+                          <div
                             key={i}
                             className="border-r border-b opacity-30"
                             style={{ borderColor: member.neonColor }}
-                            animate={{
-                              opacity: [0.1, 0.3, 0.1],
-                            }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                              delay: i * 0.05,
-                            }}
                           />
                         ))}
                       </div>
                     </div>
-                  </motion.div>
+            </div>
                 </motion.div>
               ))}
             </motion.div>
@@ -258,18 +198,7 @@ export default function TeamSection() {
                 }`}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
-                animate={
-                  currentIndex === index
-                    ? {
-                        boxShadow: [
-                          "0 0 10px rgba(3, 245, 255, 0.5)",
-                          "0 0 20px rgba(3, 245, 255, 0.8)",
-                          "0 0 10px rgba(3, 245, 255, 0.5)",
-                        ],
-                      }
-                    : {}
-                }
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+
               />
             ))}
           </div>
@@ -288,22 +217,14 @@ export default function TeamSection() {
           </div>
 
           {/* Auto-play indicator */}
-          <motion.div
+          <div
             className="absolute top-4 right-4 flex items-center space-x-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1 border border-[#03f5ff]/30"
-            animate={{
-              opacity: [0.7, 1, 0.7],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
           >
-            <motion.div
+            <div
               className={`w-2 h-2 rounded-full ${isAutoPlaying ? "bg-green-400" : "bg-red-400"}`}
-              animate={{
-                scale: [1, 1.2, 1],
-              }}
-              transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
             />
             <span className="text-white text-xs font-mono">{isAutoPlaying ? "AUTO" : "MANUAL"}</span>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

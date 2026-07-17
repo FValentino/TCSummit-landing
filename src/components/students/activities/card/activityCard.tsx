@@ -43,15 +43,7 @@ export default function ActivityCard({activity, index}: CardProps){
           backfaceVisibility: "hidden",
           transform: "translate3d(0, 0, 0)",
         }}
-        whileInView={{
-          boxShadow: [neonStyle.glow, "0 0 10px currentColor", neonStyle.glow],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-        viewport={{ once: false, margin: "-100px" }}
+        viewport={{ once: true, margin: "-100px" }}
       >
         {/* Grid de fondo simplificado */}
         <div className="absolute inset-0 opacity-10">
@@ -60,15 +52,6 @@ export default function ActivityCard({activity, index}: CardProps){
               <motion.div
                 key={i}
                 className={`border-r border-b ${neonStyle.border} opacity-20`}
-                animate={{
-                  opacity: [0.1, 0.3, 0.1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.1,
-                  ease: "easeInOut",
-                }}
               />
             ))}
           </div>
@@ -86,15 +69,8 @@ export default function ActivityCard({activity, index}: CardProps){
           />
 
           {/* Línea de escaneo simplificada */}
-          <motion.div
+          <div
             className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-8"
-            animate={{ y: ["-2rem", "8rem"] }}
-            transition={{
-              duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-              delay: index * 0.5,
-            }}
             style={{
               willChange: "transform",
               transform: "translate3d(0, 0, 0)",
@@ -111,16 +87,7 @@ export default function ActivityCard({activity, index}: CardProps){
         {/* Contenido */}
         <div className="p-4 flex-1 flex flex-col justify-between">
           <div className="flex items-center space-x-3 mb-2">
-            <motion.div
-              whileInView={{
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-              }}
-              viewport={{ once: false }}
+            <div
               className={`${neonStyle.bg} ${neonStyle.border} border p-2 rounded-lg`}
               style={{
                 willChange: "transform",
@@ -138,7 +105,7 @@ export default function ActivityCard({activity, index}: CardProps){
                         : "#99c4e9",
                 }}
               />
-            </motion.div>
+            </div>
             <h3 className="text-white font-bold text-sm">{activity.name}</h3>
           </div>
 
@@ -147,22 +114,13 @@ export default function ActivityCard({activity, index}: CardProps){
           {/* Barra de datos simplificada */}
           <div className="mt-3 flex space-x-1">
             {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                className={`flex-1 h-1 ${neonStyle.bg} rounded-full`}
-                animate={{
-                  opacity: [0.3, 0.8, 0.3],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.1,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  willChange: "opacity",
-                }}
-              />
+                <div
+                  key={i}
+                  className={`flex-1 h-1 ${neonStyle.bg} rounded-full`}
+                  style={{
+                    willChange: "opacity",
+                  }}
+                />
             ))}
           </div>
         </div>

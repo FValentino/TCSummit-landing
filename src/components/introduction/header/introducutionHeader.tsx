@@ -12,14 +12,6 @@ export default function IntroductionHeader(){
       >
         <motion.h2
           className="text-4xl lg:text-5xl font-bold text-white mb-6"
-          animate={{
-            textShadow: [
-              "0 0 20px rgba(3, 245, 255, 0.5)",
-              "0 0 40px rgba(3, 245, 255, 0.8)",
-              "0 0 20px rgba(3, 245, 255, 0.5)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
           Te invitamos y damos la bienvenida
         </motion.h2>
@@ -28,10 +20,6 @@ export default function IntroductionHeader(){
         </p>
         <motion.h3
           className="text-3xl lg:text-4xl font-bold text-white"
-          animate={{
-            scale: [1, 1.02, 1],
-          }}
-          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
           TechnoCrypto Summit 2026: Conectando el Futuro
         </motion.h3>
@@ -45,23 +33,11 @@ export default function IntroductionHeader(){
         transition={{ duration: 0.8 }}
         className="w-full text-center  mb-16 flex items-center justify-center"
       >
-        <motion.div
-          className="w-10 h-10 bg-gradient-to-br from-[#03f5ff] to-[#0090ff] rounded-full flex items-center justify-center"
-          animate={{
-            boxShadow: [
-              "0 0 30px rgba(3, 245, 255, 0.5)",
-              "0 0 60px rgba(3, 245, 255, 0.8)",
-              "0 0 30px rgba(3, 245, 255, 0.5)",
-            ],
-            rotate: [0, 360],
-          }}
-          transition={{
-            boxShadow: { duration: 3, repeat: Number.POSITIVE_INFINITY },
-            rotate: { duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-          }}
-        >
+          <div
+            className="w-10 h-10 bg-gradient-to-br from-[#03f5ff] to-[#0090ff] rounded-full flex items-center justify-center"
+          >
           <span className="text-white font-bold text-4xl">T</span>
-        </motion.div>
+        </div>
         <p className="text-[white] font-bold text-3xl ms-3">TCSUMMIT 2026</p>
       </motion.div>
     </>

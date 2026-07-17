@@ -19,14 +19,6 @@ export default function Roadmap() {
         >
           <motion.h2
             className="text-4xl lg:text-5xl font-bold text-white "
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 40px rgba(3, 245, 255, 0.8)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             Roadmap
           </motion.h2>
@@ -59,6 +51,7 @@ export default function Roadmap() {
                   x: 0,
                   transition: { delay: index * 0.1, duration: 0.6 },
                 }}
+                viewport={{ once: true }}
                 className={`relative w-full flex items-center justify-center ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
               >
                 {/* Content */}
@@ -102,10 +95,6 @@ export default function Roadmap() {
                         backgroundColor: `${statusColor}15`,
                         color: statusColor,
                       }}
-                      animate={{
-                        opacity: [0.8, 1, 0.8],
-                      }}
-                      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                     >
                       <span>
                         {isCompleted ? "✓ Completado" : isCurrent ? "⚡ En curso" : "⏳ Pendiente"}
@@ -120,33 +109,21 @@ export default function Roadmap() {
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <motion.div
+                  <div
                     className="w-12 h-12 rounded-full border-4 border-[#002c6b] flex items-center justify-center"
                     style={{
                       backgroundColor: statusColor,
                     }}
-                    animate={{
-                      boxShadow: [
-                        `0 0 0 0 ${statusColor}40`,
-                        `0 0 0 8px ${statusColor}20`,
-                        `0 0 0 0 ${statusColor}40`,
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                   >
                     <IconComponent className="w-6 h-6 text-white" />
-                  </motion.div>
+                  </div>
 
                   {/* Node Number */}
-                  <motion.div
+                  <div
                     className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#03f5ff] border-2 border-[#002c6b] flex items-center justify-center"
-                    animate={{
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                   >
                     <span className="text-white text-xs font-bold">{node.id}</span>
-                  </motion.div>
+                  </div>
                 </motion.div>
 
                 {/* Empty space for alignment */}
