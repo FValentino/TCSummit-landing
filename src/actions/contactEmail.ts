@@ -1,9 +1,16 @@
 "use server";
 
 import { contactSchema } from "@/schemas/contactSchema";
-import { Resend } from "resend";
+import resend from "@/client/resend";
+import { env } from "@/config/env";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 export async function contactEmail(data: {
   name: string;
@@ -20,15 +27,15 @@ export async function contactEmail(data: {
 
   try {
     await resend.emails.send({
-      from: `I&M <${process.env.FROM_EMAIL}>`,
-      to: [process.env.TO_EMAIL!],
+      from: `I&M <${env.FROM_EMAIL}>`,
+      to: [env.TO_EMAIL],
       replyTo: email,
       subject: "[Web] Nuevo contacto",
       html: `
         <h2>[Web] Nuevo contacto</h2>
-        <p><b>Nombre:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p>${message.replace(/\n/g, "<br/>")}</p>
+        <p><b>Nombre:</b> ${escapeHtml(name)}</p>
+        <p><b>Email:</b> ${escapeHtml(email)}</p>
+        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
       `,
     });
 

@@ -20,14 +20,6 @@ export default function About() {
           >
             <motion.h2
               className="text-4xl lg:text-5xl font-bold text-white mb-6"
-              animate={{
-                textShadow: [
-                  "0 0 20px rgba(3, 245, 255, 0.5)",
-                  "0 0 40px rgba(3, 245, 255, 0.8)",
-                  "0 0 20px rgba(3, 245, 255, 0.5)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
               ¿Quiénes somos?
             </motion.h2>
@@ -55,35 +47,19 @@ export default function About() {
               transition={{ duration: 0.3 }}
             >
               <Image src={rocket} alt="Nuestra Misión" fill style={{ objectFit: 'cover' }} />
-              <motion.div
-                className="absolute inset-0 bg-linear-to-t from-[#03f5ff]/30 to-transparent"
-                animate={{
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+              <div
+                className="absolute inset-0 bg-linear-to-t from-[#03f5ff]/30 to-transparent opacity-65"
               />
             </motion.div>
 
             <div className="space-y-6">
               <motion.h3
                 className="text-3xl w-full text-center lg:text-4xl font-bold text-[#03f5ff]"
-                animate={{
-                  textShadow: [
-                    "0 0 20px rgba(3, 245, 255, 0.8)",
-                    "0 0 40px rgba(3, 245, 255, 1)",
-                    "0 0 20px rgba(3, 245, 255, 0.8)",
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               >
                 Nuestra misión
               </motion.h3>
-              <motion.div
+              <div
                 className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-[#03f5ff]/30"
-                animate={{
-                  borderColor: ["rgba(3, 245, 255, 0.3)", "rgba(3, 245, 255, 0.6)", "rgba(3, 245, 255, 0.3)"],
-                }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
               >
                 <p className="text-white text-lg leading-relaxed">
                   Fomentar el diálogo, la colaboración y el crecimiento en la industria de tecnología, Bitcoin y
@@ -94,7 +70,7 @@ export default function About() {
                   Creemos en el poder de la educación, la conexión y la inspiración para impulsar el cambio y la
                   adopción masiva de estas tecnologías transformadoras.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
 
@@ -109,23 +85,11 @@ export default function About() {
             <div className="space-y-6 lg:order-1">
               <motion.h3
                 className="text-3xl w-full text-center lg:text-4xl font-bold text-[#0090ff]"
-                animate={{
-                  textShadow: [
-                    "0 0 20px rgba(0, 144, 255, 0.8)",
-                    "0 0 40px rgba(0, 144, 255, 1)",
-                    "0 0 20px rgba(0, 144, 255, 0.8)",
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               >
                 Nuestra visión
               </motion.h3>
-              <motion.div
+              <div
                 className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-[#0090ff]/30"
-                animate={{
-                  borderColor: ["rgba(0, 144, 255, 0.3)", "rgba(0, 144, 255, 0.6)", "rgba(0, 144, 255, 0.3)"],
-                }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
               >
                 <p className="text-white text-lg leading-relaxed">
                   Ser reconocidos como el principal punto de encuentro para aquellos interesados en tecnología, Bitcoin,
@@ -136,7 +100,7 @@ export default function About() {
                   Queremos inspirar y empoderar a individuos y organizaciones para que aprovechen todo el potencial de
                   estas tecnologías disruptivas y revolucionen el mundo que nos rodea.
                 </p>
-              </motion.div>
+              </div>
             </div>
 
             <motion.div
@@ -145,12 +109,8 @@ export default function About() {
               transition={{ duration: 0.3 }}
             >
               <Image src={Ai} alt="Nuestra Visión" fill style={{ objectFit: 'cover' }} />
-              <motion.div
-                className="absolute inset-0 bg-linear-to-t from-[#0090ff]/30 to-transparent"
-                animate={{
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, delay: 1 }}
+              <div
+                className="absolute inset-0 bg-linear-to-t from-[#0090ff]/30 to-transparent opacity-65"
               />
             </motion.div>
           </motion.div>

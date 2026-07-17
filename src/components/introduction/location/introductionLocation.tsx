@@ -12,14 +12,6 @@ export default function IntroductionLocation(){
       >
         <motion.h3
           className="text-3xl lg:text-4xl font-bold text-[#03f5ff] mb-8"
-          animate={{
-            textShadow: [
-              "0 0 20px rgba(3, 245, 255, 0.8)",
-              "0 0 40px rgba(3, 245, 255, 1)",
-              "0 0 20px rgba(3, 245, 255, 0.8)",
-            ],
-          }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
         >
           ÚNETE A NOSOTROS
         </motion.h3>
@@ -29,18 +21,14 @@ export default function IntroductionLocation(){
 
         <div className="space-y-6">
           <p className="text-white text-lg">Nos emociona presentarles el</p>
-          <motion.div
+          <div
             className="bg-linear-to-r from-[#03f5ff]/20 to-[#0090ff]/20 backdrop-blur-sm rounded-2xl p-6 border border-[#03f5ff]/30"
-            animate={{
-              borderColor: ["rgba(3, 245, 255, 0.3)", "rgba(0, 144, 255, 0.3)", "rgba(3, 245, 255, 0.3)"],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             <h4 className="text-2xl lg:text-3xl font-bold text-[#03f5ff] mb-2">
               TCSummit - ARGENTINA
             </h4>
             <p className="text-white text-xl font-semibold">Un MEGA EVENTO sin precedentes.</p>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
 
@@ -64,23 +52,20 @@ export default function IntroductionLocation(){
           <span className="text-[#fcfef9] font-bold">EVENTO ÚNICO</span>.
         </p>
 
-        <motion.p
+        <p
           className="text-[#03f5ff] text-xl lg:text-2xl font-bold text-center"
-          animate={{
-            scale: [1, 1.05, 1],
-          }}
-          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
           TECHNOCRYPTO SUMMIT 2026 tiene el objetivo de impulsar y apoyar los distintos proyectos
           <br />
           <span className="text-[#fcfef9]">CRIPTOGRÁFICOS, TECNOLÓGICOS Y DE INTELIGENCIA ARTIFICIAL.</span>
-        </motion.p>
+        </p>
       </motion.div>
 
       {/* Botón de compra y estadísticas */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 1 }}
         className="text-center mb-16"
       >
@@ -91,16 +76,6 @@ export default function IntroductionLocation(){
             boxShadow: "0 0 40px rgba(3, 245, 255, 0.8)",
           }}
           whileTap={{ scale: 0.95 }}
-          animate={{
-            boxShadow: [
-              "0 0 30px rgba(3, 245, 255, 0.4)",
-              "0 0 60px rgba(3, 245, 255, 0.6)",
-              "0 0 30px rgba(3, 245, 255, 0.4)",
-            ],
-          }}
-          transition={{
-            boxShadow: { duration: 2 , repeat: Number.POSITIVE_INFINITY },
-          }}
         >
           Comprar Entrada
         </motion.button>

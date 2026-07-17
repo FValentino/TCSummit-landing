@@ -25,10 +25,3 @@ body {
 button:hover{
   cursor: pointer;
 }
-
-.custom-arrow::before {
-  content: none;
-  display: none;
-  background-color: gray;
-  opacity: 0.5;
-}

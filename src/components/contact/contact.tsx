@@ -17,14 +17,6 @@ export default function Contact() {
         >
           <motion.h2
             className="text-4xl lg:text-5xl font-bold text-white mb-6"
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 40px rgba(3, 245, 255, 0.8)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             Contacto y<span className="text-[#03f5ff] block">Redes Sociales</span>
           </motion.h2>

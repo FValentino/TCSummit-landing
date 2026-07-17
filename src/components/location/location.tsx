@@ -18,14 +18,6 @@ export default function Location(){
       <div className="w-full my-8 relative">
         <motion.h2
             className="text-4xl w-full text-center lg:text-5xl font-bold text-white mb-6 "
-            animate={{
-              textShadow: [
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 40px rgba(3, 245, 255, 0.8)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-              ],
-            }}
-            transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
           >
             Locacion
           </motion.h2>
@@ -38,33 +30,13 @@ export default function Location(){
           className="w-full flex justify-center my-8"
         >
           <div className="w-[60%] lg:w-[25%] max-w-50">
-            <motion.div
-              animate={{
-                rotate: 360,
-                backgroundColor: [
-                  "rgba(0, 68, 255, 0.79)",
-                  "rgba(0, 38, 255, 1)",
-                  "rgba(4, 0, 255, 0.8)",
-                ],
-              }}
-              transition={{
-                rotate: {
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: "linear",
-                },
-                backgroundColor: {
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
+            <div
               className="w-full aspect-square rounded-full overflow-hidden p-4 shadow-lg shadow-[#03f5ff]/20 border border-[#05045ccc]"
             >
               <div className="relative w-full h-full rounded-full overflow-hidden border border-white/10" >
                 <Image src={logo} alt="Gala Hotel & Convenciones Logo" fill />
               </div>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
 

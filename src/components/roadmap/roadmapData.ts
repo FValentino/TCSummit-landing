@@ -1,12 +1,10 @@
-import { MapPin, Users, Globe, UserCheck, Lightbulb, Palette, Building, Mic, Store, Tv, Coins } from 'lucide-react'
-
-import { IconType } from "react-icons"; 
+import { MapPin, Users, Globe, UserCheck, Lightbulb, Palette, Building, Mic, Store, Tv, Coins, type LucideIcon } from 'lucide-react'
 
 type Node = {
   id: number;
   year: string;
   description: string;
-  icon: IconType; 
+  icon: LucideIcon;
   status: string;
 };
 

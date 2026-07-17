@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/config/env"; // Fail-fast: valida env vars al inicio
 import Menu from "@/components/common/menu/menu";
 import Footer from "@/components/common/footer/footer";
 

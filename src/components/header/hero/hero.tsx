@@ -1,6 +1,5 @@
 "use client"
 import {
-  MapPin,
   Calendar,
 } from "lucide-react"
 
@@ -35,14 +34,6 @@ export default function Hero() {
           >
             <motion.p
               className="text-[#03f5ff] text-base md:text-2xl font-bold text-center "
-              animate={{
-                textShadow: [
-                  "0 0 10px rgba(3, 245, 255, 0.5)",
-                  "0 0 20px rgba(3, 245, 255, 0.8)",
-                  "0 0 10px rgba(3, 245, 255, 0.5)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
               El evento de Tecnología, Criptomonedas e Inteligencia Artificial
               más grande de Argentina
@@ -56,32 +47,20 @@ export default function Hero() {
             >
               <span className="block">
                 TECHNO {" "}
-                <motion.span
+                <span
                   className="text-[#03f5ff] "
-                  animate={{
-                    textShadow: [
-                      "0 0 20px rgba(3, 245, 255, 0.8)",
-                      "0 0 40px rgba(3, 245, 255, 1)",
-                      "0 0 20px rgba(3, 245, 255, 0.8)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                 >
                   CRYPTO
-                </motion.span>
+                </span>
               </span>
 
               <span className="block">
                 SUMMIT {" "}
-                <motion.span
+                <span
                   className="text-[#0090ff]  "
-                  animate={{
-                    scale: [1, 1.05, 1],
-                  }}
-                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                 >
                   2026
-                </motion.span>
+                </span>
               </span>
               
             </motion.h1>
@@ -119,19 +98,11 @@ export default function Hero() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
               >
-                <motion.div
+                <div
                   className="bg-[#0090ff]/20 p-2 rounded-lg border border-[#0090ff]"
-                  animate={{
-                    boxShadow: [
-                      "0 0 10px rgba(0, 144, 255, 0.3)",
-                      "0 0 20px rgba(0, 144, 255, 0.6)",
-                      "0 0 10px rgba(0, 144, 255, 0.3)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: 0.5 }}
                 >
                   <Calendar className="w-4 h-4 lg:w-8 lg:h-8 text-[#0090ff]" />
-                </motion.div>
+                </div>
                 <span className="text-xl text-white md:text-3xl">Octubre 2026</span>
               </motion.div>
             </div>
@@ -150,16 +121,6 @@ export default function Hero() {
                   boxShadow: "0 0 30px rgba(3, 245, 255, 0.6)",
                 }}
                 whileTap={{ scale: 0.95 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 20px rgba(3, 245, 255, 0.4)",
-                    "0 0 40px rgba(3, 245, 255, 0.6)",
-                    "0 0 20px rgba(3, 245, 255, 0.4)",
-                  ],
-                }}
-                transition={{
-                  boxShadow: { duration: 2, repeat: Number.POSITIVE_INFINITY },
-                }}
               onClick={()=>{router.push("/new-feature")}}
               >
                 Comprar entradas
@@ -188,16 +149,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="relative mb-12 lg:mb-0"
           >
-            <motion.div
-              animate={{
-                y: [0, -20, 0],
-                rotate: [0, 2, -2, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-              }}
+            <div
               className="relative"
             >
               {/* En Next.js, si pasas la imagen importada a 'src', no necesitas width/height fijos */}
@@ -207,22 +159,13 @@ export default function Hero() {
                 className="w-full max-w-md mx-auto"
                 priority
               />
-            </motion.div>
+            </div>
 
             {/* Círculos de energía */}
             {[...Array(3)].map((_, i) => (
-              <motion.div
+              <div
                 key={i}
-                className="absolute inset-0 border-2 border-[#03f5ff]/30 rounded-full"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.8,
-                }}
+                className="absolute inset-0 border-2 border-[#03f5ff]/30 rounded-full opacity-45"
               />
             ))}
           </motion.div>
