@@ -11,6 +11,7 @@ import logo from '@/assets/images/logo.png'
 export default function Menu() {
   const [showMenuMobile, setShowMenuMobile] = useState(false)
 
+  // Efecto para cerrar el menú mobile automáticamente al pasar a desktop
   useEffect(() => {
     const handleResize = () => {
       // cerrar menú mobile automáticamente al pasar a desktop
@@ -26,21 +27,32 @@ export default function Menu() {
     }
   }, [])
 
+  // Función para toggle del menú mobile
   function toggleMenu() {
     setShowMenuMobile((prev) => !prev)
   }
 
+  // Función para cerrar el menú mobile al hacer clic en un enlace
   function handleLinkClick() {
     if (window.innerWidth < 1024) {
       setShowMenuMobile(false)
     }
   }
 
-  function getLink(name: string) {
+  // Función que genera los enlaces de navegación
+  // Se usa href completo y scroll={true} para asegurar 
+  // que navegue a la raíz con el hash correspondiente
+  function getLink(name: string, customHref?: string) {
+    // Si es "inicio", va a la raíz, si no, va a la raíz con el hash
+    // Esto asegura que desde cualquier ruta (ej: /post-compra) 
+    // siempre navegue a la raíz y luego al hash correspondiente
+    const href = customHref || (name === 'inicio' ? '/' : `/#${name}`);
+    
     return (
       <Link
-        href={`#${name}`}
+        href={href}
         onClick={handleLinkClick}
+        scroll={true} // Asegura que haga scroll al elemento con el hash
         className={`
           text-white
           text-xl
@@ -137,6 +149,7 @@ export default function Menu() {
                 <li>{getLink('nosotros')}</li>
                 <li>{getLink('roadmap')}</li>
                 <li>{getLink('contacto')}</li>
+                {/* <li>{getLink('Mis Entradas', '/tickets/mis-entradas')}</li> */}
               </NavigationMenu.List>
             </div>
           </div>
@@ -169,6 +182,7 @@ export default function Menu() {
               <li>{getLink('nosotros')}</li>
               <li>{getLink('roadmap')}</li>
               <li>{getLink('contacto')}</li>
+              {/* <li>{getLink('Mis Entradas', '/tickets/mis-entradas')}</li> */}
             </NavigationMenu.List>
           </div>
         </nav>
