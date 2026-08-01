@@ -80,7 +80,7 @@ export default function Hero() {
                   }}
                   transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                 >
-                  2026
+                  2027
                 </motion.span>
               </span>
               
@@ -132,7 +132,7 @@ export default function Hero() {
                 >
                   <Calendar className="w-4 h-4 lg:w-8 lg:h-8 text-[#0090ff]" />
                 </motion.div>
-                <span className="text-xl text-white md:text-3xl">Octubre 2026</span>
+                <span className="text-xl text-white md:text-3xl">Mayo 2027</span>
               </motion.div>
             </div>
 
