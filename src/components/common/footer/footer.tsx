@@ -41,7 +41,7 @@ export default function Footer(){
               <span className="text-white font-bold text-xl">T</span>
             </motion.div>
             <div>
-              <h2 className="text-2xl font-bold text-[#03f5ff]">TCSummit 2026</h2>
+              <h2 className="text-2xl font-bold text-[#03f5ff]">TCSummit 2027</h2>
               <p className="text-gray-300">Conectando el Futuro</p>
             </div>
           </motion.div>
@@ -58,7 +58,7 @@ export default function Footer(){
                 animate={{ opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
               >
-                © 2026 TechnoCrypto Summit. Todos los derechos reservados.
+                © 2027 TechnoCrypto Summit. Todos los derechos reservados.
               </motion.p>
               <motion.p
                 className="text-[#03f5ff] text-sm font-semibold"
