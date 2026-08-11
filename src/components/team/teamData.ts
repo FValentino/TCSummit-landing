@@ -1,6 +1,5 @@
 import profileDardo from "@/assets/images/team/Dardo.webp"
 import profileLuis from "@/assets/images/team/Luis.webp"
-import profileJoy from "@/assets/images/team/Joy.webp"
 import profileNoelia from "@/assets/images/team/Noelia.webp"
 import profileRuben from "@/assets/images/team/Ruben.webp"
 import profileValentino from "@/assets/images/team/Valentino.webp"
@@ -56,12 +55,5 @@ export const teamData = [
     role: "CTO - Chief Technology Officer",
     img: profileValentino,
     neonColor: "#00c6ff" 
-  },
-  {
-    id: 8,
-    name: "Joel Fernandez Koloff",
-    role: "Advisor",
-    img: profileJoy,
-    neonColor: "#556298" 
   }
 ]
