@@ -3,13 +3,14 @@
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { teamData } from "./teamData"
+import { useCarousel } from "@/components/common/carousel/useCarousel"
+import CarouselArrow from "@/components/common/carousel/carouselArrow"
+import CarouselDots from "@/components/common/carousel/carouselDots"
 
 
 export default function TeamSection() {
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
   // Configuración responsive del carousel
@@ -34,35 +35,16 @@ export default function TeamSection() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  // Auto-play functionality
-  useEffect(() => {
-    if (!isAutoPlaying) return
+  const slideCount = Math.max(1, teamData.length - itemsPerView + 1)
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => {
-        const maxIndex = Math.max(0, teamData.length - itemsPerView)
-        return prev >= maxIndex ? 0 : prev + 1
-      })
-    }, 4000)
+  const { index: currentIndex, next: nextSlide, prev: prevSlide, goTo: goToSlide } = useCarousel({
+    total: slideCount,
+    wrap: true,
+    autoPlay: isAutoPlaying,
+    autoPlayInterval: 4000,
+  })
 
-    return () => clearInterval(interval)
-  }, [isAutoPlaying, itemsPerView])
-
-  const nextSlide = () => {
-    const maxIndex = Math.max(0, teamData.length - itemsPerView)
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
-  }
-
-  const prevSlide = () => {
-    const maxIndex = Math.max(0, teamData.length - itemsPerView)
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1))
-  }
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index)
-  }
-
-  const maxIndex = Math.max(0, teamData.length - itemsPerView)
+  const maxIndex = slideCount - 1
 
   return (
     <section id="equipo" className="w-full relative z-30 py-20 bg-black/20">
@@ -99,45 +81,21 @@ export default function TeamSection() {
           onMouseLeave={() => setIsAutoPlaying(true)}
         >
           {/* Navigation Buttons */}
-          <motion.button
+          <CarouselArrow
+            direction="prev"
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300 hover:cursor-pointer"
-            whileHover={{
-              scale: 1.1,
-              boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",
-            }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </motion.button>
+            accentColor="#03f5ff"
+            variant="glow"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10"
+          />
 
-          <motion.button
+          <CarouselArrow
+            direction="next"
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/60 backdrop-blur-sm border-2 border-[#03f5ff]/50 rounded-full p-3 text-[#03f5ff] hover:bg-[#03f5ff]/20 transition-all duration-300 hover:cursor-pointer"
-            whileHover={{
-              scale: 1.1,
-              boxShadow: "0 0 20px rgba(3, 245, 255, 0.6)",
-            }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-                "0 0 20px rgba(3, 245, 255, 0.5)",
-                "0 0 10px rgba(3, 245, 255, 0.3)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, delay: 0.5 }}
-          >
-            <ChevronRight className="w-6 h-6" />
-          </motion.button>
+            accentColor="#03f5ff"
+            variant="glow"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10"
+          />
 
           {/* Carousel Content */}
           <div className="overflow-hidden mx-12">
@@ -246,33 +204,14 @@ export default function TeamSection() {
           </div>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center space-x-3 mt-8">
-            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-              <motion.button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-                  currentIndex === index
-                    ? "bg-[#03f5ff] border-[#03f5ff]"
-                    : "bg-transparent border-[#03f5ff]/50 hover:border-[#03f5ff]"
-                }`}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                animate={
-                  currentIndex === index
-                    ? {
-                        boxShadow: [
-                          "0 0 10px rgba(3, 245, 255, 0.5)",
-                          "0 0 20px rgba(3, 245, 255, 0.8)",
-                          "0 0 10px rgba(3, 245, 255, 0.5)",
-                        ],
-                      }
-                    : {}
-                }
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-              />
-            ))}
-          </div>
+          <CarouselDots
+            count={slideCount}
+            activeIndex={currentIndex}
+            onSelect={goToSlide}
+            accentColor="#03f5ff"
+            variant="circle"
+            className="mt-8 space-x-3"
+          />
 
           {/* Progress Bar */}
           <div className="mt-6 mx-auto max-w-md">
