@@ -1,7 +1,6 @@
 import profileDardo from "@/assets/images/team/Dardo.webp"
 import profileLuis from "@/assets/images/team/Luis.webp"
 import profileNoelia from "@/assets/images/team/Noelia.webp"
-import profileRuben from "@/assets/images/team/Ruben.webp"
 import profileValentino from "@/assets/images/team/Valentino.webp"
 import profileDamian from "@/assets/images/team/Damian.webp"
 import profileNadia from "@/assets/images/team/Nadia.webp"
@@ -23,10 +22,10 @@ export const teamData = [
   },
   {
     id: 3,
-    name: "Rubén Maurenzi",
-    role: "CCO - Chief Crypto Officer",
-    img: profileRuben,
-    neonColor: "#99c4e9"
+    name: "Valentino Farías",
+    role: "CTO - Chief Technology Officer",
+    img: profileValentino,
+    neonColor: "#00c6ff" 
   },
   {
     id: 4,
@@ -49,11 +48,4 @@ export const teamData = [
     img: profileNadia,
     neonColor: "#b5bbef" 
   },
-  {
-    id: 7,
-    name: "Valentino Farías",
-    role: "CTO - Chief Technology Officer",
-    img: profileValentino,
-    neonColor: "#00c6ff" 
-  }
 ]
