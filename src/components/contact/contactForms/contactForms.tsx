@@ -33,7 +33,6 @@ export default function ContactForms(){
           {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
           <input type="email" {...register('email')} placeholder="tu@email.com" className="flex-1 bg-black/40 border border-[#03f5ff]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#03f5ff]" />
           {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
-          { /* phone field removed to align with defined schema */ }
           <textarea {...register('message')} placeholder="tu mensaje" className="flex-1 bg-black/40 border border-[#03f5ff]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#03f5ff]" rows={4} />
           {errors.message && <span className="text-red-500 text-sm">{errors.message.message}</span>}
         </div>

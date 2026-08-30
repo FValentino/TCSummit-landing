@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Menu from "@/components/common/menu/menu";
-import Footer from "@/components/common/footer/footer";
 
 import { Saira, Orbitron, Inter } from "next/font/google";
 
@@ -42,11 +40,7 @@ export default function RootLayout({
         className={`${saira.variable} ${orbitron.variable} ${inter.variable} antialiased 
         w-full max-w-screen bg-[#002c6b] text-white overflow-x-hidden relative`}
       >
-        <Menu/>
-
         {children}
-        
-        <Footer/>
       </body>
     </html>
   );

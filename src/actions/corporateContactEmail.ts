@@ -1,6 +1,6 @@
 "use server";
 
-import { contactSchema } from "@/schemas/contactSchema";
+import { corporateContactSchema } from "@/schemas/corporateContactSchema";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -16,28 +16,30 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export async function contactEmail(data: {
+export async function corporateContactEmail(data: {
   name: string;
+  company: string;
   email: string;
   message: string;
 }) {
-  const parsed = contactSchema.safeParse(data);
+  const parsed = corporateContactSchema.safeParse(data);
 
   if (!parsed.success) {
     return { success: false };
   }
 
-  const { name, email, message } = parsed.data;
+  const { name, company, email, message } = parsed.data;
 
   try {
     await resend.emails.send({
       from: `I&M <${process.env.FROM_EMAIL}>`,
       to: [process.env.TO_EMAIL!],
       replyTo: email,
-      subject: "[Web] Nuevo contacto",
+      subject: "[Corporate] Nuevo contacto de patrocinio",
       html: `
-        <h2>[Web] Nuevo contacto</h2>
+        <h2>[Corporate] Nuevo contacto de patrocinio</h2>
         <p><b>Nombre:</b> ${escapeHtml(name)}</p>
+        <p><b>Empresa:</b> ${escapeHtml(company)}</p>
         <p><b>Email:</b> ${escapeHtml(email)}</p>
         <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
       `,
