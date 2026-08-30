@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Check, ArrowRight } from "lucide-react"
 import { TIERS } from "./benefitsData"
 
-export default function CorporateBenefits() {
+export default function PartnersBenefits() {
   return (
     <section id="beneficios" className="w-full relative z-30 py-24">
       <div className="w-[90%] max-w-7xl mx-auto">

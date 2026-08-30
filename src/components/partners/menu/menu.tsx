@@ -15,7 +15,7 @@ const NAV_LINKS = [
   { label: 'Contacto', href: '#contacto' },
 ]
 
-export default function CorporateMenu() {
+export default function PartnersMenu() {
   const [showMenuMobile, setShowMenuMobile] = useState(false)
 
   useEffect(() => {

@@ -24,10 +24,10 @@ const HERO_STATS = [
   { icon: Calendar, value: "4", label: "Días de evento" },
 ]
 
-export default function CorporateHero() {
+export default function PartnersHero() {
   return (
     <section
-      id="hero-corporate"
+      id="hero-partners"
       className="relative w-full min-h-screen flex items-center overflow-hidden pt-28 pb-16"
     >
       {/* Orbes decorativos */}

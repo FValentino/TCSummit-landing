@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { PROCESS_STEPS } from "./processData"
 
-export default function CorporateProcess() {
+export default function PartnersProcess() {
   return (
     <section id="proceso" className="w-full relative z-30 py-24 bg-black/20 overflow-hidden">
       <div className="w-[90%] max-w-7xl mx-auto">

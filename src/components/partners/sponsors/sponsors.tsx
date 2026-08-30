@@ -42,7 +42,7 @@ const SPONSOR_VALUES: SponsorValue[] = [
   },
 ]
 
-export default function CorporateSponsors() {
+export default function PartnersSponsors() {
   return (
     <section id="sponsors" className="w-full relative z-30 py-24 bg-black/20">
       <div className="w-[90%] max-w-7xl mx-auto">

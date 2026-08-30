@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
-import CorporateHero from "@/components/corporate/hero/hero";
-import CorporateSponsors from "@/components/corporate/sponsors/sponsors";
-import CorporateBenefits from "@/components/corporate/benefits/benefits";
-import CorporateProcess from "@/components/corporate/process/process";
-import CorporateContact from "@/components/corporate/contact/contact";
+import PartnersHero from "@/components/partners/hero/hero";
+import PartnersSponsors from "@/components/partners/sponsors/sponsors";
+import PartnersBenefits from "@/components/partners/benefits/benefits";
+import PartnersProcess from "@/components/partners/process/process";
+import PartnersContact from "@/components/partners/contact/contact";
 import ParticlesBackground from "@/components/utils/ParticlesBackground";
 
 export const metadata: Metadata = {
@@ -13,26 +13,26 @@ export const metadata: Metadata = {
     "Convierta su marca en protagonista del TechnoCrypto Summit 2027: alcance masivo, talento tech y más de 300 stands disponibles para empresas y sponsors.",
 };
 
-export default function CorporatePage() {
+export default function PartnersPage() {
   return (
     <main className="w-full">
       <ParticlesBackground dots={100} lines={120}>
-        <CorporateHero />
+        <PartnersHero />
       </ParticlesBackground>
 
       <ParticlesBackground dots={100} lines={120} particleColor="#00c6ff" lineColor="rgba(0, 198, 255, 0.4)">
-        <CorporateSponsors />
+        <PartnersSponsors />
       </ParticlesBackground>
 
       <ParticlesBackground dots={100} lines={120}>
-        <CorporateBenefits />
+        <PartnersBenefits />
       </ParticlesBackground>
 
-      <CorporateProcess />
+      <PartnersProcess />
 
       <div className="w-full mx-auto text-white relative min-h-screen mb-16 mt-32">
         <ParticlesBackground dots={100} lines={120}>
-          <CorporateContact />
+          <PartnersContact />
         </ParticlesBackground>
       </div>
     </main>

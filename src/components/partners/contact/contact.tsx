@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { motion } from "framer-motion"
 import { Mail, Clock, Handshake } from "lucide-react"
 
-import { corporateContactSchema, type CorporateContactFormInputs } from "@/schemas/corporateContactSchema"
-import { corporateContactEmail } from "@/actions/corporateContactEmail"
+import { partnersContactSchema, type PartnersContactFormInputs } from "@/schemas/partnersContactSchema"
+import { partnersContactEmail } from "@/actions/partnersContactEmail"
 
 const inputClasses = `
   w-full
@@ -24,13 +24,13 @@ const inputClasses = `
   duration-200
 `
 
-export default function CorporateContact() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CorporateContactFormInputs>({
-    resolver: zodResolver(corporateContactSchema),
+export default function PartnersContact() {
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<PartnersContactFormInputs>({
+    resolver: zodResolver(partnersContactSchema),
   })
 
-  const onSubmit = async (data: CorporateContactFormInputs) => {
-    const res = await corporateContactEmail(data)
+  const onSubmit = async (data: PartnersContactFormInputs) => {
+    const res = await partnersContactEmail(data)
     if (res.success) {
       alert('Email enviado correctamente')
     } else {
@@ -151,9 +151,9 @@ export default function CorporateContact() {
 
             <div className="flex flex-col space-y-4">
               <div className="flex flex-col space-y-2">
-                <label htmlFor="corporate-name" className="font-bold text-white">Nombre:</label>
+                <label htmlFor="partners-name" className="font-bold text-white">Nombre:</label>
                 <input
-                  id="corporate-name"
+                  id="partners-name"
                   {...register("name")}
                   placeholder="Nombre y apellido"
                   className={inputClasses}
@@ -162,9 +162,9 @@ export default function CorporateContact() {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label htmlFor="corporate-company" className="font-bold text-white">Empresa:</label>
+                <label htmlFor="partners-company" className="font-bold text-white">Empresa:</label>
                 <input
-                  id="corporate-company"
+                  id="partners-company"
                   {...register("company")}
                   placeholder="Nombre de su empresa"
                   className={inputClasses}
@@ -173,9 +173,9 @@ export default function CorporateContact() {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label htmlFor="corporate-email" className="font-bold text-white">Email corporativo:</label>
+                <label htmlFor="partners-email" className="font-bold text-white">Email corporativo:</label>
                 <input
-                  id="corporate-email"
+                  id="partners-email"
                   type="email"
                   {...register("email")}
                   placeholder="nombre@empresa.com"
@@ -185,9 +185,9 @@ export default function CorporateContact() {
               </div>
 
               <div className="flex flex-col space-y-2">
-                <label htmlFor="corporate-message" className="font-bold text-white">Mensaje:</label>
+                <label htmlFor="partners-message" className="font-bold text-white">Mensaje:</label>
                 <textarea
-                  id="corporate-message"
+                  id="partners-message"
                   {...register("message")}
                   placeholder="Cuéntenos sobre su empresa y sus objetivos de patrocinio"
                   rows={4}

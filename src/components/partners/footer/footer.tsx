@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const CORPORATE_LINKS = [
+const PARTNERS_LINKS = [
   { label: 'Sponsors', href: '#sponsors' },
   { label: 'Beneficios', href: '#beneficios' },
   { label: 'Cómo funciona', href: '#proceso' },
   { label: 'Contacto', href: '#contacto' },
 ];
 
-export default function CorporateFooter() {
+export default function PartnersFooter() {
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -58,7 +58,7 @@ export default function CorporateFooter() {
           {/* Navegación corporativa */}
           <nav aria-label="Navegación corporativa" className="mb-6">
             <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-              {CORPORATE_LINKS.map((link) => (
+              {PARTNERS_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -83,7 +83,7 @@ export default function CorporateFooter() {
                 animate={{ opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
               >
-                © 2027 TechnoCrypto Summit · Corporate &amp; Sponsors
+                © 2027 TechnoCrypto Summit · Partners &amp; Sponsors
               </motion.p>
               <motion.p
                 className="text-[#03f5ff] text-sm font-semibold"
