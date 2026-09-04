@@ -44,7 +44,7 @@ export default function Hero() {
               }}
               transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
-              TECNOLOGIA - INTELIGENCIA ARTIFICIAL Y BLOCKCHAINE EN UN MEGA EVENTO SIN PRESEDENTE EN EARGENTINA
+              TECNOLOGIA - INTELIGENCIA ARTIFICIAL Y BLOCKCHAINE EN UN MEGA EVENTO SIN PRESEDENTE EN ARGENTINA 
             </motion.p>
 
             <motion.h1
@@ -107,7 +107,7 @@ export default function Hero() {
                   <MapPin className="w-6 h-6 lg:w-8 lg:h-8 text-[#03f5ff]" />
                 </motion.div>
                 <div className="text-md md:text-xl text-white">
-                  <p>Centro de convenciones gala - Resistencia, Chaco</p>
+                  <p>CENTRO DE CONVENCIONES GALA - Resistencia, Chaco</p>
                 </div>
               </motion.div>
 
@@ -130,7 +130,7 @@ export default function Hero() {
                 >
                   <Calendar className="w-4 h-4 lg:w-8 lg:h-8 text-[#0090ff]" />
                 </motion.div>
-                <span className="text-md md:text-xl text-white">13, 14 y 15 de mayo 2027</span>
+                <span className="text-md md:text-xl text-white">13, 14 y 15 de agosto 2027</span>
               </motion.div>
             </div>
 
