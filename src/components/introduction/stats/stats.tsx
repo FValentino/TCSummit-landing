@@ -29,10 +29,10 @@ export default function ParticipantInfo() {
   }, [])
 
   const items = [
-    { icon: <FaCalendarAlt className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0" />, label: "Días", value: "4" },
+    { icon: <FaCalendarAlt className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0" />, label: "Días", value: "3" },
     { icon: <FaComments className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Charlas", value: "+50" },
     { icon: <FaUserCheck className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Expertos", value: "+50" },
-    { icon: <PiStudentFill className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Estudiantes", value: "+10.000" },
+    { icon: <PiStudentFill className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Estudiantes", value: "+5.000" },
     { icon: <FaUsers className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Visitantes", value: "+20.000" },
     { icon: <FaCheckCircle className="text-4xl me-4 lg:me-0 w-8 h-8 text-[#03f5ff] mx-auto md:mx-0"/>, label: "Empresas", value: "+200" },
   ]
