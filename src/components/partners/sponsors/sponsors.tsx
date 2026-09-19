@@ -16,7 +16,7 @@ const SPONSOR_VALUES: SponsorValue[] = [
     icon: Users,
     title: "Alcance masivo",
     description:
-      "Más de 20.000 visitantes, 10.000 estudiantes y 50 expertos se reúnen durante 4 días en un mismo lugar: tu marca frente a una audiencia que no podés ignorar.",
+      "Más de 5.000 asistentes y 50 expertos se reúnen durante 3 jornadas en un mismo lugar: tu marca frente a una audiencia que no podés ignorar.",
     accent: "#03f5ff",
   },
   {
@@ -35,9 +35,9 @@ const SPONSOR_VALUES: SponsorValue[] = [
   },
   {
     icon: LayoutGrid,
-    title: "300+ stands",
+    title: "+130 stands",
     description:
-      "Exhibí tu propuesta en uno de los eventos de tecnología más grandes de Argentina, con más de 300 espacios disponibles para empresas.",
+      "Exhibí tu propuesta en uno de los eventos de tecnología más grandes de Argentina, con más de 130 espacios disponibles para empresas.",
     accent: "#0090ff",
   },
 ]
@@ -127,7 +127,7 @@ export default function PartnersSponsors() {
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
-          Más de 300 stands disponibles para empresas, startups y sponsors.
+          Más de 130 stands disponibles para empresas, startups y sponsors.
         </motion.p>
       </div>
     </section>

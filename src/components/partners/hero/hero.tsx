@@ -20,10 +20,10 @@ const orbitron = Orbitron({
 })
 
 const HERO_STATS = [
-  { icon: Users, value: "+20.000", label: "Visitantes" },
-  { icon: Building2, value: "+200", label: "Empresas" },
-  { icon: Presentation, value: "+50", label: "Charlas" },
-  { icon: Calendar, value: "4", label: "Días de evento" },
+  { icon: Users, value: "+5.000", label: "Asistentes" },
+  { icon: Building2, value: "+130", label: "Stands" },
+  { icon: Presentation, value: "+50", label: "Expertos" },
+  { icon: Calendar, value: "3", label: "Jornadas" },
 ]
 
 export default function PartnersHero() {

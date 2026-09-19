@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion } from "framer-motion"
@@ -25,9 +26,20 @@ const inputClasses = `
 `
 
 export default function PartnersContact() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<PartnersContactFormInputs>({
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<PartnersContactFormInputs>({
     resolver: zodResolver(partnersContactSchema),
   })
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const message = (event as CustomEvent<string>).detail
+      if (message) {
+        setValue("message", message)
+      }
+    }
+    window.addEventListener("partners:prefill-contact", handler)
+    return () => window.removeEventListener("partners:prefill-contact", handler)
+  }, [setValue])
 
   const onSubmit = async (data: PartnersContactFormInputs) => {
     const res = await partnersContactEmail(data)

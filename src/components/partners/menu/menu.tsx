@@ -10,8 +10,10 @@ import logo from '@/assets/images/logo.png'
 
 const NAV_LINKS = [
   { label: 'Sponsors', href: '#sponsors' },
-  { label: 'Beneficios', href: '#beneficios' },
-  { label: 'Cómo funciona', href: '#proceso' },
+  { label: 'Formas de participar', href: '#participar' },
+  { label: 'Activos', href: '#activos' },
+  { label: 'Proceso', href: '#proceso' },
+  { label: 'Política', href: '#politica' },
   { label: 'Contacto', href: '#contacto' },
 ]
 
