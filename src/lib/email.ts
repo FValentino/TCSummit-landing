@@ -2,7 +2,7 @@ import "server-only";
 
 import { Client, LibraryResponse, SendEmailV3_1 } from "node-mailjet";
 
-const FROM_EMAIL = process.env.MAILJET_FROM_EMAIL ?? "contacto@tcsummit.net";
+const FROM_EMAIL = process.env.CONTACT_FROM_EMAIL ?? "contacto@tcsummit.net";
 
 let mailjetClient: Client | null = null;
 

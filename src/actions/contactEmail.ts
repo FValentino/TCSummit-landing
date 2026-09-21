@@ -26,9 +26,10 @@ export async function contactEmail(data: {
   }
 
   const { name, email, message } = parsed.data;
+  const toEmail = process.env.CONTACT_TO_EMAIL ?? "contacto@tcsummit.net";
 
   return sendEmail({
-    to: "contacto@tcsummit.net",
+    to: toEmail,
     subject: "[Web] Nuevo contacto",
     html: `
       <h2>[Web] Nuevo contacto</h2>
