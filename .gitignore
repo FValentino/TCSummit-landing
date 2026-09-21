@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local working files
+partners.txt
+TechnoCrypto Summit 2027-Sponsor Deck.pdf
