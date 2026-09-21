@@ -135,6 +135,7 @@ export default function Menu() {
                 <li>{getLink('inicio')}</li>
                 <li>{getLink('actividades')}</li>
                 <li>{getLink('nosotros')}</li>
+                <li>{getLink('ubicacion')}</li>
                 <li>{getLink('roadmap')}</li>
                 <li>{getLink('contacto')}</li>
               </NavigationMenu.List>
@@ -167,6 +168,7 @@ export default function Menu() {
               <li>{getLink('inicio')}</li>
               <li>{getLink('actividades')}</li>
               <li>{getLink('nosotros')}</li>
+              <li>{getLink('ubicacion')}</li>
               <li>{getLink('roadmap')}</li>
               <li>{getLink('contacto')}</li>
             </NavigationMenu.List>

@@ -1,13 +1,7 @@
 "use server";
 
 import { partnersContactSchema } from "@/schemas/partnersContactSchema";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-// From/to default to the verified sponsors address. Override via env when needed.
-const FROM_EMAIL = process.env.PARTNERS_FROM_EMAIL ?? "sponsors@tcsummit.net";
-const TO_EMAIL = process.env.PARTNERS_TO_EMAIL ?? "sponsors@tcsummit.net";
+import { sendEmail } from "@/lib/email";
 
 // Escape user-provided values before embedding them in the email HTML to
 // prevent HTML/script injection (the form endpoint is publicly accessible).
@@ -33,25 +27,18 @@ export async function partnersContactEmail(data: {
   }
 
   const { name, company, email, message } = parsed.data;
+  const toEmail = process.env.PARTNERS_TO_EMAIL ?? "sponsors@tcsummit.net";
 
-  try {
-    await resend.emails.send({
-      from: `TCSummit <${FROM_EMAIL}>`,
-      to: [TO_EMAIL],
-      replyTo: email,
-      subject: "[Partners] Nuevo contacto de patrocinio",
-      html: `
-        <h2>[Partners] Nuevo contacto de patrocinio</h2>
-        <p><b>Nombre:</b> ${escapeHtml(name)}</p>
-        <p><b>Empresa:</b> ${escapeHtml(company)}</p>
-        <p><b>Email:</b> ${escapeHtml(email)}</p>
-        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
-      `,
-    });
-
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false };
-  }
+  return sendEmail({
+    to: toEmail,
+    subject: "[Partners] Nuevo contacto de patrocinio",
+    html: `
+      <h2>[Partners] Nuevo contacto de patrocinio</h2>
+      <p><b>Nombre:</b> ${escapeHtml(name)}</p>
+      <p><b>Empresa:</b> ${escapeHtml(company)}</p>
+      <p><b>Email:</b> ${escapeHtml(email)}</p>
+      <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
+    `,
+    replyTo: email,
+  });
 }
