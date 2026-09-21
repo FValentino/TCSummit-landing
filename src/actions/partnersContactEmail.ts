@@ -5,6 +5,10 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// From/to default to the verified sponsors address. Override via env when needed.
+const FROM_EMAIL = process.env.PARTNERS_FROM_EMAIL ?? "sponsors@tcsummit.net";
+const TO_EMAIL = process.env.PARTNERS_TO_EMAIL ?? "sponsors@tcsummit.net";
+
 // Escape user-provided values before embedding them in the email HTML to
 // prevent HTML/script injection (the form endpoint is publicly accessible).
 function escapeHtml(value: string): string {
@@ -32,8 +36,8 @@ export async function partnersContactEmail(data: {
 
   try {
     await resend.emails.send({
-      from: `I&M <${process.env.FROM_EMAIL}>`,
-      to: [process.env.TO_EMAIL!],
+      from: `TCSummit <${FROM_EMAIL}>`,
+      to: [TO_EMAIL],
       replyTo: email,
       subject: "[Partners] Nuevo contacto de patrocinio",
       html: `
