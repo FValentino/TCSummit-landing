@@ -13,8 +13,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# next.js — unanchored, not `/.next/`: a build run from a subdirectory drops its
+# traces there, and the root-anchored pattern left them untracked-but-not-ignored.
+.next/
 /out/
 
 # production
@@ -43,3 +44,7 @@ next-env.d.ts
 # local working files
 partners.txt
 TechnoCrypto Summit 2027-Sponsor Deck.pdf
+
+# local planning artifacts (SDD trail + build handoff specs)
+openspec/
+PARTNERS-FLOOR-PLAN-SPEC.md
