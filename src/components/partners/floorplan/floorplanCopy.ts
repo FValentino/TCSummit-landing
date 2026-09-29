@@ -3,8 +3,14 @@ import type { PriceStage, Stand, StandCategory, StandStatus, ZoneId } from "./fl
 export const SECTION_COPY = {
   eyebrow: "Mapa de stands",
   title: "Explorá el plano del recinto",
-  subtitle:
-    "130 espacios de exhibición listos para tu marca. Seleccioná cualquier stand para ver su ubicación, superficie y disponibilidad.",
+  /** Takes the total as an argument, for the same reason `resultCount` does. It used to be
+   *  the literal `130`, sitting in the same static HTML as a panel that reads the same
+   *  number from the tariff: a figure that cannot drift printed beside one that can, and a
+   *  section able to state two different availability counts in one viewport. The argument
+   *  is also what keeps the import one-way — reading `TOTAL_STANDS` here would form a TDZ
+   *  cycle with the data module, which is the constraint `resultCount` already obeys. */
+  subtitle: (total: number): string =>
+    `${total} espacios de exhibición listos para tu marca. Seleccioná cualquier stand para ver su ubicación, superficie y disponibilidad.`,
 }
 
 export const PANEL_INITIAL_COPY = {
@@ -37,6 +43,13 @@ export const PANEL_COPY = {
   benefits: "Qué incluye",
   areaUnit: "m²",
 }
+
+/** The one word that marks a figure the commercial team has not confirmed. Three surfaces
+ *  publish an area — the panel, the tooltip and the accessible name — and `DRAFT_NOTICE`
+ *  only reaches one of them, so the qualifier is what carries the caveat to the other two.
+ *  It qualifies the *number*, not the stand: the stand is real, its dimensions are the part
+ *  still under review. */
+export const AREA_QUALIFIER = "aprox."
 
 export const STAND_BENEFITS: readonly string[] = [
   "Inclusión en el sitio oficial del evento",
@@ -155,8 +168,17 @@ const shortLabel = (label: string) => label.replace("Stand ", "")
 export const resultCount = (shown: number, total: number): string =>
   `${shown} de ${total} stands`
 
+/** The single formatter for a published area, so a surface that renders its own `${areaM2}
+ *  m²` is a surface that can print a provisional number with nothing to say so. The flag is
+ *  read off the stand rather than passed in: it is derived from `PROVISIONAL_AREA_M2` in the
+ *  data module at the point the stand is built, and travelling on the stand is what stops
+ *  the two halves from being derived by two different routes — the mistake this module's
+ *  area arithmetic was already wrong about once. */
+export const areaText = (stand: Stand): string =>
+  `${stand.areaM2} ${PANEL_COPY.areaUnit}${stand.areaProvisional ? ` ${AREA_QUALIFIER}` : ""}`
+
 export const hotspotLabel = (stand: Stand): string =>
-  `Stand ${shortLabel(stand.label)}, categoría ${CATEGORY_LABEL[stand.category]}, ${stand.areaM2} m², ${STATUS_COPY[stand.status].label}`
+  `Stand ${shortLabel(stand.label)}, categoría ${CATEGORY_LABEL[stand.category]}, ${areaText(stand)}, ${STATUS_COPY[stand.status].label}`
 
 export const ctaLabel = (stand: Stand): string =>
   `Solicitar información sobre el stand ${shortLabel(stand.label)}`

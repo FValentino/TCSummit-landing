@@ -8,7 +8,7 @@ import PlanFilters from "./planFilters"
 import InfoPanel from "./infoPanel"
 import { useFloorplan } from "./useFloorplan"
 import { SECTION_COPY } from "./floorplanCopy"
-import { getStandById } from "./floorplanData"
+import { getStandById, TOTAL_STANDS } from "./floorplanData"
 
 const STAND_PARAM = "stand"
 const PANEL_ANCHOR_ID = "plano-panel"
@@ -96,7 +96,9 @@ export default function PartnersFloorplan() {
           <h2 className="mb-6 text-4xl font-bold text-white lg:text-5xl [text-shadow:0_0_20px_rgba(3,245,255,0.5)]">
             {SECTION_COPY.title}
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-300">{SECTION_COPY.subtitle}</p>
+          <p className="mx-auto max-w-3xl text-xl text-gray-300">
+            {SECTION_COPY.subtitle(TOTAL_STANDS)}
+          </p>
         </motion.div>
 
         <PlanFilters

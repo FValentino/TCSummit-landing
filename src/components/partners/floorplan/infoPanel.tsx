@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import type { Stand } from "./floorplanData"
 import {
   ACTIVE_STAGE,
+  PLACEHOLDER_MODE,
   PRICE_STAGES,
   STAND_STATUSES,
   STATUS_COUNTS,
@@ -17,6 +18,7 @@ import {
   CATEGORY_COLOR,
   CATEGORY_LABEL,
   CTA_COPY,
+  DRAFT_NOTICE,
   PANEL_COPY,
   PANEL_INITIAL_COPY,
   PRICE_COPY,
@@ -26,6 +28,7 @@ import {
   STATS_COPY,
   STATUS_COLOR,
   STATUS_COPY,
+  areaText,
   ctaLabel,
 } from "./floorplanCopy"
 
@@ -125,9 +128,7 @@ export default function InfoPanel({ selectedStand: stand }: InfoPanelProps) {
 
                 <div>
                   <dt className={LABEL_CLASS}>{PANEL_COPY.area}</dt>
-                  <dd className="mt-1 text-base text-gray-200">
-                    {stand.areaM2} {PANEL_COPY.areaUnit}
-                  </dd>
+                  <dd className="mt-1 text-base text-gray-200">{areaText(stand)}</dd>
                 </div>
 
                 <div>
@@ -218,6 +219,16 @@ export default function InfoPanel({ selectedStand: stand }: InfoPanelProps) {
           )}
         </motion.div>
       </AnimatePresence>
+
+      {/* The standing disclosure, and the reason it lives outside `AnimatePresence`: the
+          `aside` is an `aria-live="polite"` region, so a notice inside the swap would be
+          re-announced in full on every stand the user selects. Here it mounts once and
+          stays. Gated on `PLACEHOLDER_MODE` rather than on a second flag — the same switch
+          that arms the per-area qualifier, so the caveat and the disclosure cannot be
+          withdrawn one without the other. */}
+      {PLACEHOLDER_MODE && (
+        <p className="mt-5 border-t border-white/10 pt-4 text-xs text-gray-400">{DRAFT_NOTICE}</p>
+      )}
     </aside>
   )
 }

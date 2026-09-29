@@ -12,8 +12,10 @@ today — eight region columns, two bronze strips, one front-row stand and two P
 the franja — so `STANDS` holds 115 entries: 64 plata, 20 oro, 10 platino, 21 bronce. The
 franja also carries two **totems**, which are floor furniture and not stands at all: they are
 a separate `TOTEMS` collection, so they are in none of those numbers — see
-[Totems](#totems-are-furniture-not-inventory). The published copy still says 130 — see
-[the count drift](#the-count-drift-is-deliberate) below.
+[Totems](#totems-are-furniture-not-inventory). The published copy quotes 130 and now
+**derives it** from `TOTAL_STANDS` instead of carrying a literal — see
+[Published copy is derived](#published-copy-is-derived-not-retyped) and
+[the count drift](#the-count-drift-is-deliberate).
 
 Spec: `PARTNERS-FLOOR-PLAN-SPEC.md` (repo root, gitignored). §4 of it describes the
 superseded percent band generator; the grid model in this file is the current contract.
@@ -26,14 +28,14 @@ superseded percent band generator; the grid model in this file is the current co
 | `floorplanStands.ts` | What is on the floor: the tier-column helpers, the table-frame block helpers, `BLOCKS` and the `expected` stand count every block declares, and `TOTEMS` — the advertising totems, which are floor furniture and deliberately not stands. Imports the geometry, so the two modules point one way and only the contents change when a stand moves |
 | `floorplanData.ts` | The catalogue: what a stand is, what it costs, whether it is taken. Types, the swappable state enums, tariff derivation, the cell tiler, lookups, aggregations; calls the drift guards on every import. Re-exports the layout and `TOTEMS` so consumers keep one import site |
 | `floorplanGuards.ts` | The drift guards: category-name drift, tariff count ceiling, cell size, bounds, overlap — stand×stand, stand×zone, totem×stand, totem×zone, totem×totem — and declared block emission |
-| `floorplanCopy.ts` | Every Spanish string, color maps, status copy, location strings, zone and totem labels, the `aria-label` builder |
-| `planHotspot.tsx` | One stand, a toggle `<button>`, positioned by percent, rest/hover/focus/selected/dimmed treatment, expanded touch area |
+| `floorplanCopy.ts` | Every Spanish string, color maps, status copy, location strings, zone and totem labels, the `aria-label` builder, and `areaText` — the single place an area is rendered. **Value-imports nothing**: the only import is `import type` |
+| `planHotspot.tsx` | One stand, a toggle `<button>`, positioned by percent, rest/hover/focus/selected/dimmed treatment, expanded touch area. A filtered-out stand is `disabled`, not hidden |
 | `planCanvas.tsx` | Plan surface: grid aspect, zone and totem layer, hotspot layer, zoom/pan transform, zoom controls |
 | `planFilters.tsx` | Category and availability chip groups, reset, live result count, zero-result state |
-| `planTooltip.tsx` | Desktop-only hover label for the hovered stand, counter-scaled against the zoom |
-| `infoPanel.tsx` | `role="region"` + `aria-live="polite"`; initial state, stand detail, price strip, CTA |
-| `useFloorplan.ts` | `useReducer` owning selection, hover and both filters; derives the matching set |
-| `floorplan.tsx` | Section root, `relative z-30`, heading block, 70/30 grid, `PlanFilters` + `PlanCanvas` + `InfoPanel`, `?stand=` sync |
+| `planTooltip.tsx` | Desktop-only hover label for the hovered stand, counter-scaled against the zoom. Its area line comes from `areaText` |
+| `infoPanel.tsx` | `role="region"` + `aria-live="polite"`; initial state, stand detail, price strip, CTA, and the `PLACEHOLDER_MODE` draft disclosure |
+| `useFloorplan.ts` | `useReducer` owning selection, hover and both filters; derives the matching set. Also owns the scoped `Esc` listener |
+| `floorplan.tsx` | Section root, `relative z-30`, heading block, 70/30 grid, `PlanFilters` + `PlanCanvas` + `InfoPanel`, `?stand=` sync, and the one call that hands `TOTAL_STANDS` to the subtitle copy |
 
 ## State shape
 
@@ -147,6 +149,32 @@ never moves when a filter is applied.
   sentence, so a screen reader hears the outcome of a filter without a second live region.
 - **`Limpiar filtros` renders only when a filter is active.** A reset button that is always
   there is a control that is usually wrong.
+- **A filtered-out stand is `disabled`, and the hotspot carries no `tabindex` in either state.**
+  The filter used to change only the visuals, so a stand the user could not see still took focus
+  and still fired `onSelect` — a keyboard user tabbed into an invisible control and the panel
+  filled with a stand that was not on screen. `disabled` is the one attribute that removes an
+  element from sequential focus navigation and blocks activation *without* needing a second
+  attribute to stay in sync.
+  - **`aria-hidden` was the obvious alternative and is the wrong one here.** `aria-hidden` does
+    not remove an element from the tab order; the element stays focusable and now advertises
+    itself as hidden, which is a contradiction a screen reader has to resolve. The usual
+    companion `tabIndex={-1}` then has to be kept in sync with the visual filter, and any future
+    path that sets one without the other produces a control that is either reachable-but-hidden
+    or hidden-but-reachable.
+  - **A `disabled` button is still in the accessibility tree, announced as unavailable.** That
+    is a deliberate trade: "95 stands are not available under this filter" is more truthful than
+    "those 95 stands do not exist", and the chip row already says which filter is on. Hiding them
+    from the tree entirely would be the stronger claim and would also be a lie during a partial
+    build.
+  - **`pointer-events-none` is kept on top of `disabled`.** A disabled button still receives hit
+    tests, and the hotspot's touch target is a `::after` pseudo-element expanded by 6–8 px. With
+    95 filtered-out stands on a dense grid, the neighbouring visible stand's clicks land on a
+    disabled element's inflated box and nothing happens — an inert control that eats a live
+    one's taps. The `::after` is not a hit-testable part of the button for this purpose in all
+    engines, so the visual treatment stays and the pointer treatment is not left to chance.
+  - **The filter is not allowed to change the hotspot's own contract.** Both states are a
+    `type="button"` with a `position` that still reflects the same cell, so focus, click target
+    and geometry stay identical whether or not a filter is on.
 
 ## Tooltip
 
@@ -164,10 +192,74 @@ The wrapper stays mounted when nothing is hovered, so hiding it costs no re-rend
 - **`aria-hidden`.** The label repeats what the hotspot's own `aria-label` and the panel
   already announce, so it is decoration for sighted mouse users.
 
+## Published copy is derived, not retyped
+
+Every number and every area the user can read passes through `floorplanCopy.ts`, and the copy
+layer **value-imports nothing**. The rule is structural, not stylistic: `floorplanData.ts`
+already imports `floorplanCopy` at runtime, so a value import in the other direction closes a
+cycle and the failing half is a TDZ `ReferenceError` at module evaluation, not a type error. The
+only import in the file is `import type { Stand }`, which is erased. See
+[Dependency direction](#other-limits).
+
+The consequence is that **the copy cannot read the data**, so the derived value is passed in:
+
+- **`SECTION_COPY.subtitle` is `(total: number) => string`.** It used to be a plain string with
+  `130` typed into it, which is the one number on the page nobody could change safely — edit
+  `STAND_PRICING` and three surfaces would move while the subtitle stayed behind.
+  `floorplan.tsx` is the composition root, so that is where the value is read and handed over:
+
+  ```ts
+  <p>{SECTION_COPY.subtitle(TOTAL_STANDS)}</p>
+  ```
+
+  A function rather than a template literal with an argument baked in, because a template would
+  have to be built at module scope of a file that cannot see the data — which is the same
+  problem in a different costume.
+- **`areaText(stand)` is the only renderer of an area.** `AREA_QUALIFIER` is `"aprox."` and the
+  qualifier is appended when `stand.areaProvisional` is set, so the `m²` string itself lives in
+  exactly one place. The hotspot's accessible name, the info panel and the tooltip all call it —
+  a surface that formats its own area is a surface that can ship the unqualified one.
+- **`Stand.areaProvisional` is a per-stand flag, not a global.** A qualifier has to attach to the
+  figure it qualifies: bronze's `4 m²` is a placeholder read from `PROVISIONAL_AREA_M2` while
+  plata, oro and platino carry confirmed figures. Deciding it in each surface would be three
+  copies of the same category list, and the next tier would be added to one of them.
+
+**Why a qualifier instead of correcting or hiding the number.** Correcting is not available —
+`4` is the measured value of the cells the bronze strips actually occupy, so any other number
+would be a different floor plan. Hiding it loses the fact that bronze is smaller, which is the
+one thing a sponsor comparing tiers needs. Marking it provisional keeps both the number and the
+uncertainty, and the uncertainty is stated once per figure instead of once per page.
+
+**The area qualifier is visible, but the layout is not fully confirmed, so the panel also
+carries `DRAFT_NOTICE` under `PLACEHOLDER_MODE`.** An area qualifier says "this figure is
+provisional"; it does not say "this whole distribution is provisional". Those are different
+claims about different things, and the stronger one belongs to the one that is actually true.
+
+`DRAFT_NOTICE` renders **outside `AnimatePresence`**. The panel swaps its body on selection
+change, and a live-region string that re-mounts on every swap re-announces itself; kept stable,
+it is read once when the region mounts and then behaves like ordinary body text. It is gated on
+`PLACEHOLDER_MODE`, the single switch that turns the disclosure on, so confirming the
+distribution is one flag flip and no string is rewritten.
+
 ## Focus and keyboard
 
 - `Esc` is a `useEffect` `keydown` listener on `window` with a matching
   `removeEventListener` cleanup, registered once with `[]`.
+- **The listener is scoped: `Esc` only clears the selection when the user is not editing text
+  somewhere else on the page.** `/partners` puts the contact form in the same route as the plan,
+  and a `window` listener sees every key event on it — so typing "Tres Patitos" into the
+  company field and pressing `Esc` (a natural thing to do mid-thought, and what a browser or an
+  IME does on its own) wiped the selected stand and the `?stand=` param out from under the user.
+  `isEditingContext(target)` returns true for `input`, `textarea`, `select` and `option`, for
+  anything `HTMLElement.isContentEditable`, for any `contenteditable` attribute that is not
+  literally `"false"`, and for anything inside `[role="dialog"]`. Both `event.target` **and**
+  `document.activeElement` are checked, because the two disagree when focus moved inside a
+  composition or a portal, and the failure mode of checking only one is a listener that fires for
+  a field it cannot see.
+- **The check runs against the editing target, not against the plan's own DOM.** Scoping by
+  "is the event inside `#plano`" would have been simpler and wrong: a stand can be selected, the
+  user can then tab to the contact form, and `Esc` is expected to keep working. The rule is about
+  what the user is *doing*, not about which subtree the key landed in.
 - On selection, focus moves to the panel `<h3>` (`tabIndex={-1}` + ref). The heading lives
   **outside** `AnimatePresence`: under `mode="wait"` the outgoing panel is still mounted
   while it fades, so a heading inside the swap would take focus and then be unmounted
@@ -813,6 +905,32 @@ guards were written to catch. The rule that replaces transcription:
 - **Module line counts** are the weakest number here and are labelled with the file they belong
   to (`floorplanStands.ts:279`), because the point is not the figure but the headroom against
   the 300-line cap.
+- **User-visible copy is derived at the composition root.** A number the user can read is passed
+  into `floorplanCopy` from `floorplan.tsx` as a function argument, never imported by the copy
+  and never typed into a string. `SECTION_COPY.subtitle(TOTAL_STANDS)` and `areaText(stand)` are
+  the two shapes, and both exist because the copy module is not allowed to read the data. See
+  [Published copy is derived](#published-copy-is-derived-not-retyped).
+
+**The procedure, so a re-derivation is a command and not an opinion.** Every figure in this
+section is reachable from a throwaway harness that transpiles the real modules — no fixture, no
+copy of the data — and prints the numbers this file quotes. It is not committed, on the grounds
+that a test which reimplements the derivation proves nothing about the derivation:
+
+1. Register a `require` hook that runs TypeScript through `transpileModule` and resolves the
+   `@/` alias, then `require` `floorplanData` — the guards run on import, so a broken layout
+   throws before any number is printed.
+2. Print the aggregates this file claims: `STANDS.length`, `CATEGORY_TOTALS`, `TOTAL_STANDS`,
+   the unplaced remainder, the used / free / need / margin slots, the stand-floor dimensions, and
+   the totem cell rects with their table columns.
+3. Re-derive the pairwise overlap count from `STANDS`, `ZONES` and `TOTEMS` and compare it to
+   **7,137** — the number in the bounds bullet above. A changed count means a region was added,
+   and the sentence that quotes it has to change with it.
+4. For the import graph, build the value-import graph (type-only imports excluded, since `import
+   type` is erased and cannot form a cycle) and assert zero cycles plus the absence of
+   `floorplanCopy -> floorplanData`. Print the graph, so a new edge is visible in the diff.
+5. Diff the result against the tables in this section. If a figure moved, the change is a data
+   change and belongs in this file; if the harness and this file disagree, **the harness is
+   right**, because it reads the code and this file is a transcription of it.
 
 If a figure in this file cannot be re-derived from one of those sources on demand, it should be
 deleted rather than kept, on the grounds that an unre-derivable number in a design document is
@@ -942,19 +1060,34 @@ for a tier colour or for a zone's near-invisible field.
 ### The count drift is deliberate
 
 `STANDS.length` is **115**, not 130, and that is correct for the regions specified so far. The
-copy was deliberately **not** made to follow:
+drift is deliberate; the **transcription of 130 into a string is not**, and has been removed:
 
 | Surface | Reads | Source |
 |---------|-------|--------|
 | Panel stats, total row | `130` | `TOTAL_STANDS`, tariff-derived |
 | Panel stats, `Disponibles` | `115` | `STATUS_COUNTS`, data-derived |
 | Filter count line | `115 de 130 stands` | `visibleCount` / `TOTAL_STANDS` |
-| Section subtitle | `130 espacios` | a literal |
+| Section subtitle | `130 espacios` | `TOTAL_STANDS`, **passed in** — no longer a literal |
 
-The panel therefore shows `Disponibles 115` right above `Total de stands 130`. **Leave it.**
+The panel therefore shows `Disponibles 115` right above `Total de stands 130`. **Leave that.**
 The hall is being specified region by region; showing a visitor "115 stands" mid-build is
 worse than a known drift, and the two numbers reconcile when the remaining regions land.
-Both literals stay literals — nothing here should start deriving the metric from the data.
+
+**Every one of those four surfaces now reads the same derived value, and none of them retypes
+it.** The subtitle used to be the exception — a literal `130` inside a Spanish string in
+`floorplanCopy.ts`, which is the one surface that could not be corrected by editing the data and
+would have been the first thing to go stale when the tariff moved. The fix is not "make the copy
+read the data": `floorplanData` imports `floorplanCopy` at runtime, so that is a cycle, and the
+copy has to keep importing the data type-only. The fix is that the subtitle became a function
+and `floorplan.tsx` — the composition root, which already imports both modules — hands
+`TOTAL_STANDS` to it. See
+[Published copy is derived](#published-copy-is-derived-not-retyped).
+
+**The drift itself is a separate question from the transcription, and only the transcription was
+a defect.** A derived number cannot lie about what the data says, so the two numbers reconciling
+is now a property of the code rather than a thing a human has to remember. That is the whole
+reason the substring was worth changing before the regions land: it is the one number that would
+have survived all of them.
 
 The running total across the regions specified so far:
 
@@ -1111,17 +1244,24 @@ twenty lines of headroom left, so the next region is the one that will force a s
   not a recovery path, which is why both exist. The boundary's copy is inline, not in
   `floorplanCopy.ts`, because the fallback must not import from the module graph that may have
   thrown.
-- **`PLACEHOLDER_MODE` is `true` and the draft notice has been removed from the map.** It
-  used to also arm a `throw` in production, because shipping the mismatched PNG would have
+- **`PLACEHOLDER_MODE` is `true`, and the draft notice is back — in the panel, not on the map.**
+  It used to also arm a `throw` in production, because shipping the mismatched PNG would have
   drawn a floor plan that did not exist. With the image gone there was nothing to
-  misrepresent, so the guard was removed. The notice then went the other way: the user asked
-  for a clean map surface, and it was the last disclosure saying the distribution was
-  provisional. **`PLACEHOLDER_MODE` and `DRAFT_NOTICE` are still exported but no longer
-  imported by anything** — the string is kept so the disclosure comes back in one edit
-  rather than being rewritten, and the flag is kept so restoring it is a single flip. Delete
-  both once the distribution is real. **The consequence, stated plainly: nothing in the app
-  now marks the layout as provisional, while 15 tariffed stands are still unplaced.** That
-  is a commercial decision, not an engineering one, and it reverses with one flag.
+  misrepresent, so the guard was removed. The notice then went the other way and came off the
+  map entirely: the user asked for a clean map surface, and it was the last disclosure saying
+  the distribution was provisional. **Leaving it off was a trade that stopped being worth
+  making once the area figures started publishing their own uncertainty.** `areaText` now
+  qualifies `4 m²` wherever it is printed, but an area qualifier is a per-figure claim, and the
+  distribution is a whole-plan claim that the qualifier does not cover. So the notice is
+  rendered again, gated on the same `PLACEHOLDER_MODE`, and placed in `infoPanel.tsx` where it
+  does not collide with the stand rows or the zoom cluster — the exact collision that
+  [A 5:3 canvas still scrolls on a phone](#other-limits) documents as the reason it left the
+  map is a layout constraint, not a reason to publish nothing.
+  - It is a sibling of the `AnimatePresence` swap, not a child of it, so it stays mounted across
+    a stand change and does not re-announce itself through the panel's `aria-live="polite"`.
+  - `PLACEHOLDER_MODE` and `DRAFT_NOTICE` are still exported and `DRAFT_NOTICE` is now imported
+    again, so confirming the distribution is one flag flip and no string is rewritten. Delete
+    both once the distribution is real.
 - **The plan is an abstraction, not a venue map.** With no image, a sponsor cannot match a
   square to a physical position in the hall. If the venue ships a real map, re-adding an
   image layer means the grid must be calibrated against it — see the grid section above.
@@ -1130,10 +1270,14 @@ twenty lines of headroom left, so the next region is the one that will force a s
   which would also make `Exact<>` evaluate to `never`. `TariffTierName` mirrors the tariff
   for the compile-time `Exact<>` check, and the guard at the bottom of
   `floorplanData.ts` checks that mirror against the real `STAND_PRICING` on every import.
-- **The metrics box that carried a literal `"130"` is gone from the map.** Spec §9.10 asked
-  for exact value/label pairs, and `floorplanCopy.ts` must not import from `floorplanData.ts`
-  at runtime or the two modules form a TDZ cycle. The tariff-derived `TOTAL_STANDS` is the
-  numeric invariant.
+- **The metrics box that carried a literal `"130"` is gone from the map, and the one literal
+  that outlived it on the subtitle is gone too.** Spec §9.10 asked for exact value/label pairs,
+  and `floorplanCopy.ts` must not import from `floorplanData.ts` at runtime or the two modules
+  form a TDZ cycle. The tariff-derived `TOTAL_STANDS` is the numeric invariant. Note the shape
+  of the rule: the constraint is on the *module*, not on the number. Removing the box was the
+  easy half; the honest half is that a number no module is allowed to read is a number that
+  cannot be kept correct, so the subtitle was made a function of `TOTAL_STANDS` rather than left
+  as the last unverified literal in the section.
 - **No idle pulse in the heading.** The other sections animate `text-shadow` forever;
   §7.4 requires any loop to be gated on reduced motion, and a loop per hotspot on a phone is
   the wrong trade for a decorative glow, so the glow here is a static text shadow.
@@ -1195,6 +1339,30 @@ twenty lines of headroom left, so the next region is the one that will force a s
   data, and **`floorplanStands` must stay ignorant of both** — that is the constraint the
   totem collection exists to satisfy, and the first thing to break if someone imports a tier
   or a status into that module is the sponsor counts.
+- **The runtime import graph, and the one edge that must never appear.** Verified as a graph,
+  not as a reading of the imports, because the failure this prevents is invisible to `tsc` and
+  to `next build` alike — a cycle is valid TypeScript and only explodes at module evaluation:
+
+  ```text
+  floorplan     -> planCanvas, planFilters, infoPanel, useFloorplan, floorplanCopy, floorplanData
+  floorplanData -> floorplanCopy, floorplanGuards, floorplanStands, floorplanLayout
+  planCanvas    -> planHotspot, planTooltip, floorplanCopy, floorplanData
+  planFilters   -> floorplanData, floorplanCopy
+  infoPanel     -> floorplanData, floorplanCopy
+  planHotspot   -> floorplanCopy
+  planTooltip   -> floorplanCopy
+  useFloorplan  -> floorplanData
+  floorplanStands -> floorplanLayout
+  floorplanCopy -> (nothing)          floorplanGuards -> (nothing)    floorplanLayout -> (nothing)
+  ```
+
+  **`floorplanCopy -> floorplanData` is the forbidden edge, and the graph is acyclic today.** It
+  is the tempting one to add: every other module that needs a value imports the data freely, so
+  the copy looks like the only place being left out, and it now genuinely needs a number
+  (`TOTAL_STANDS`) and a flag (`areaProvisional`). The way to give it one is a function argument
+  from the composition root, not an import. If that edge is ever added, the failure is a
+  `ReferenceError: Cannot access 'X' before initialization` at module evaluation — which, in a
+  route that is prerendered at build time, takes the build down rather than a user's browser.
 
 ### Verified, not assumed
 
@@ -1212,7 +1380,16 @@ fail on purpose, not by reading the source and agreeing with it.
 | The area figures were not | The same printout reported the bottom band as 5.25 used slots while the stand-floor formula excluded it, which is what caught the 405 / 255.75 / 243 error above. The numbers in this file are the corrected ones. |
 | Lint baseline unchanged | `npm run lint` reports the same 6 pre-existing problems (2 errors, 4 warnings), none in this module. |
 | Types | `npx tsc --noEmit` passes. |
+| The scoped `Esc` guard is load-bearing | `isEditingContext` was temporarily removed from `useFloorplan.ts` and the same 16 harness cases were re-run: all 8 editing-context cases failed, including the `document.activeElement` case, while the plan cases still passed. The guard, not the harness, is what makes them pass. |
+| `disabled` on a filtered-out stand is load-bearing | `disabled={filteredOut}` was temporarily changed to `disabled={false}` and the plan's tab order was walked again in the browser: **115 hotspot stops instead of 20** — the 95 filtered-out stands re-entered sequential focus, which is the reported defect. Reverted. |
+| The copy module cannot import the data | A value `import { TOTAL_STANDS } from "./floorplanData"` was temporarily added to `floorplanCopy.ts` and the import graph re-built: it reports the cycle `floorplanCopy -> floorplanData -> floorplanCopy` and flips the result to FAIL. The real graph is acyclic. Reverted. |
+| The published copy, in a real browser | Firefox over WebDriver BiDi against the running `/partners`: the rendered subtitle begins `130`, matching the panel's `dd` of `130` and the filter line's `115 de 130 stands`. |
+| The area qualifier, in a real browser | The bronze hotspot's accessible name reads `Stand Bronce 01, categoría Bronce, 4 m² aprox., Disponible`; the panel reads `4 m² aprox.`; the hover tooltip reads `Bronce·4 m² aprox.`; and platino's three surfaces all read a bare `36 m²`. `DRAFT_NOTICE` is present in the panel. |
+| The filter, in a real browser | With no filter: 115 hotspots, 115 enabled, 0 disabled, 0 with `tabindex`, 0 with `aria-hidden`. With `Oro` on: 20 enabled, 95 disabled; a programmatic `focus()` fails on a filtered-out stand and succeeds on a visible one; walking the plan's tab order end to end in 31 real `Tab` presses lands on all 20 visible stands and none of the other 95; a filtered-out stand's `click` fires nothing and adds no `?stand=`. |
+| The scoped `Esc`, in a real browser | On the running page: selecting a stand, moving focus to `#partners-company` and pressing a real `Esc` leaves both the selection and `?stand=` untouched; blurring and pressing `Esc` from the page clears both. |
+| Every figure above still holds | The same harness printed 115 stands, 64/20/10/21, 130 tariff, 15 unplaced, 149.25 used, 432 stand floor, 282.75 free, 270 margin, 7,137 pairwise comparisons with no overlap, and `bronce` as the only provisional area. |
 
-Every one of those temporary edits was reverted, and `git diff` is the record of that: the only
-floorplan code in it is the ungating, guard 6, the `expected` declarations and the new error
-boundary. A proof that leaves its evidence in the diff is not a proof.
+Every one of those temporary edits was reverted, and `git diff` is the record of that. The only
+floorplan code in it is the ungating, guard 6, the `expected` declarations, the error boundary,
+and the four defects this pass fixed. A proof that leaves its evidence in the diff is not a
+proof.

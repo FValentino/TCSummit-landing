@@ -44,6 +44,17 @@ export default function PlanHotspot({
   // physically unreachable there without swallowing the neighbour, and wrong stands beat
   // small ones. See the tradeoffs section of floorplan.md.
 
+  // `disabled` is the whole of the keyboard/a11y answer, and `pointer-events-none` alone was
+  // not one: it removes the stand from hit-testing and from nothing else. A dimmed stand
+  // stayed in the tab order and stayed activatable, so a keyboard user could select a stand
+  // the pointer can no longer reach — the panel would then hold a stand that cannot be
+  // re-selected, and pointer and keyboard disagree about what is available. `disabled`
+  // rather than `tabIndex={-1}` + `aria-hidden` because those are two attributes that have
+  // to move together forever: drop one and `aria-hidden` is left on a still-focusable
+  // element, which is a worse state than either half. One attribute here cannot desync.
+  // `pointer-events-none` stays regardless, and is now load-bearing rather than cosmetic —
+  // a disabled button is still hit-tested, and this one's `::after` reaches 6 px past its
+  // cell, so without it a dimmed stand would swallow its neighbour's click.
   const state = filteredOut
     ? "opacity-20 pointer-events-none"
     : selected
@@ -55,6 +66,7 @@ export default function PlanHotspot({
       type="button"
       aria-label={hotspotLabel(stand)}
       aria-pressed={selected}
+      disabled={filteredOut}
       style={style}
       onClick={() => onSelect(stand.id)}
       onPointerEnter={(event) => trackHover(event, true)}

@@ -59,12 +59,37 @@ const floorplanReducer = (state: FloorplanState, action: FloorplanAction): Floor
  *  panel. Filters are `null` rather than an "all" sentinel so the enums stay the only
  *  vocabulary: the label for the null case is a copy key, the value never appears in a
  *  comparison (C12). */
+/** Whether the keystroke belongs to something the user is typing into or dismissing, rather
+ *  than to the plan. `isContentEditable` is the live check and covers a descendant of an
+ *  editable host and the bare `contenteditable` / `contenteditable=""` forms, which an
+ *  attribute test cannot; the attribute is read as well because `isContentEditable` is an
+ *  `HTMLElement` property and the target is only known to be an `Element`. */
+const isEditingContext = (target: EventTarget | null): boolean => {
+  if (!(target instanceof Element)) return false
+  if (target instanceof HTMLElement && target.isContentEditable) return true
+  const editable = target.getAttribute("contenteditable")
+  if (editable !== null && editable !== "false") return true
+  if (target.closest("[role=dialog]") !== null) return true
+  const tag = target.tagName.toLowerCase()
+  return tag === "input" || tag === "textarea" || tag === "select" || tag === "option"
+}
+
 export function useFloorplan() {
   const [state, dispatch] = useReducer(floorplanReducer, EMPTY_STATE)
 
   useEffect(() => {
+    // The listener stays on `window` on purpose: scoping it to the section would also kill
+    // the documented "Esc clears the selection when nothing in the plan is focused", which
+    // the deep-link flow relies on. But this is one section of a page that also hosts the
+    // contact form, and Escape has no native meaning in a text field — the browser does not
+    // consume it, so nothing upstream suppresses it. Unscoped, one habitual dismiss key in
+    // "Empresa" would clear the selection and rewrite `?stand=` six sections away, with no
+    // visual connection between the cause and the effect. The guard is the narrowest fix
+    // that leaves the plan-level behaviour intact.
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") dispatch({ type: "clear" })
+      if (event.key !== "Escape") return
+      if (isEditingContext(event.target) || isEditingContext(document.activeElement)) return
+      dispatch({ type: "clear" })
     }
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)

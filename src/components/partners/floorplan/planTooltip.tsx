@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import type { Stand } from "./floorplanData"
-import { CATEGORY_COLOR, CATEGORY_LABEL, PANEL_COPY, STATUS_COLOR, STATUS_COPY } from "./floorplanCopy"
+import { CATEGORY_COLOR, CATEGORY_LABEL, STATUS_COLOR, STATUS_COPY, areaText } from "./floorplanCopy"
 
 interface PlanTooltipProps {
   stand?: Stand
@@ -74,7 +74,7 @@ export default function PlanTooltip({ stand, zoom }: PlanTooltipProps) {
                 />
                 {CATEGORY_LABEL[stand.category]}
                 <span className="text-gray-500">·</span>
-                {stand.areaM2} {PANEL_COPY.areaUnit}
+                {areaText(stand)}
               </p>
               <p className="mt-1 flex items-center gap-2 text-xs whitespace-nowrap text-gray-300">
                 <span

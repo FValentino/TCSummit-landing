@@ -53,6 +53,10 @@ export interface Stand {
   category: StandCategory
   status: StandStatus
   areaM2: number
+  /** Whether `areaM2` is still the unconfirmed figure. Carried on the stand rather than
+   *  re-derived by each of the three surfaces that print an area, so a surface cannot
+   *  publish a provisional number without also being able to see that it is one. */
+  areaProvisional: boolean
   location: string
   /** The stand's literal cell, in cells. The source of truth for its size. */
   cell: GridRect
@@ -60,6 +64,13 @@ export interface Stand {
   geometry: StandGeometry
 }
 
+/** Areas the commercial team has not confirmed. Partial rather than folded into
+ *  `TIER_AREA_M2` inline so the unconfirmed claim stays greppable and so the number a
+ *  surface publishes and the fact that it is unconfirmed come from the *same* declaration —
+ *  correcting the bronze figure is one edit to one constant, and confirming it is the
+ *  deletion of the key. `bronce` is a quarter-slot stand, so `4` is a value copied from
+ *  plata's cell rather than a genuine measurement, and the real number is the user's to
+ *  give: nothing here may invent it. */
 export const PROVISIONAL_AREA_M2: Partial<Record<StandCategory, number>> = { bronce: 4 }
 
 const TIER_AREA_M2: Record<StandCategory, number> = {
@@ -69,7 +80,12 @@ const TIER_AREA_M2: Record<StandCategory, number> = {
   bronce: PROVISIONAL_AREA_M2.bronce ?? 0,
 }
 
+/** The master disclosure switch, and the only thing that arms a qualifier anywhere in the
+ *  module. `false` withdraws every provisional caveat at once and no other edit. */
 export const PLACEHOLDER_MODE = true
+
+const isProvisionalArea = (category: StandCategory): boolean =>
+  PLACEHOLDER_MODE && PROVISIONAL_AREA_M2[category] !== undefined
 
 export const ACTIVE_STAGE: PriceStage = "earlyBird"
 
@@ -126,6 +142,7 @@ const buildStands = (): { stands: Stand[]; blocks: BlockTally[] } => {
         category: block.category,
         status: DEFAULT_STATUS,
         areaM2: TIER_AREA_M2[block.category],
+        areaProvisional: isProvisionalArea(block.category),
         location: LOCATIONS[block.category],
         cell,
         geometry: gridToPercent(cell),
