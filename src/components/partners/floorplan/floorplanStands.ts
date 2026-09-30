@@ -7,6 +7,7 @@ import {
   type SlotRect,
   type StandCategory,
   PLATA_SLOT,
+  PREDIO_LEFT_SLOTS,
   STAND_COLUMN_ROWS,
   STAND_MAIN_LAST_ROW,
   STAND_MAIN_ROW,
@@ -88,14 +89,17 @@ const narrowColumn = (column: number, tiers: readonly TierSpan[]): BlockSlot[] =
  *  columns and their band lists: adding a region is one line here, and nothing else in the app
  *  knows how the floor is laid out. A position may arrive in the user's frame — counted from
  *  the table, declared at table col 4 row 3 — in which case the hall slot is the table
- *  coordinate + VIP_COLUMNS columns, + STAND_ORIGIN_ROW rows. */
+ *  coordinate + VIP_COLUMNS + PREDIO_LEFT_SLOTS columns, + STAND_ORIGIN_ROW rows. The columns
+ *  below are written in that same table frame, one for one, and `tableToSlot` is what puts the
+ *  fence margin back in. */
 /** Table frame to hall slot. This is the only conversion between the two, so widening the
  *  franja or moving the entrance renumbers the absolute slot rows once, here, instead of
- *  silently shifting positions that were already placed. Every position the user named goes
- *  through it — a stand block, a totem — because a hand-written `column: 6, row: 4` is the
- *  mistake this module exists to prevent. */
+ *  silently shifting positions that were already placed. `PREDIO_LEFT_SLOTS` rides along on the
+ *  column, because the user's frame starts at the west wall of the building and the fence is
+ *  west of that. Every position the user named goes through it — a stand block, a totem —
+ *  because a hand-written `column: 6, row: 4` is the mistake this module exists to prevent. */
 const tableToSlot = (tableColumn: number, tableRow: number) => ({
-  column: tableColumn + VIP_COLUMNS,
+  column: tableColumn + VIP_COLUMNS + PREDIO_LEFT_SLOTS,
   row: tableRow + STAND_ORIGIN_ROW,
 })
 
@@ -135,34 +139,34 @@ const frontPlata = (tableColumn: number, tableRow: number): BlockSlot => ({
 
 const BLOCK_SLOTS: readonly BlockSlot[] = [
   // West end: one all-Plata wall, full column height.
-  ...wideColumn(4, [["plata", 6]]),
+  ...wideColumn(7, [["plata", 6]]),
   // East run: one narrow bay every two slot columns, tiers stacked top to bottom.
-  ...narrowColumn(10, [
+  ...narrowColumn(13, [
     ["oro", 2],
     ["platino", 2],
     ["oro", 2],
   ]),
-  ...narrowColumn(12, [
+  ...narrowColumn(15, [
     ["oro", 2],
     ["platino", 2],
     ["oro", 2],
   ]),
-  ...narrowColumn(14, [
+  ...narrowColumn(17, [
     ["platino", 2],
     ["oro", 4],
   ]),
-  ...narrowColumn(16, [
+  ...narrowColumn(19, [
     ["oro", 2],
     ["platino", 2],
     ["oro", 2],
   ]),
-  ...narrowColumn(18, [
+  ...narrowColumn(21, [
     ["oro", 2],
     ["platino", 2],
     ["oro", 2],
   ]),
   // Middle: one wide column, Plata / Platino / Plata down the bands.
-  ...wideColumn(20, [
+  ...wideColumn(23, [
     ["plata", 2],
     ["platino", 2],
     ["plata", 2],
@@ -190,8 +194,8 @@ const BLOCK_SLOTS: readonly BlockSlot[] = [
   // Second Platino of the franja: the same two rows, 13 columns to the right of the first.
   // Table col 13 is visual col 16, so the two stands are 13 apart on the band the user asked
   // for, with eleven columns between them (visual cols 5–15), one of which carries a totem.
-  // A third Platino does not fit this row: the tarifa has two, and 30 columns hold two with
-  // room to spare, but the band was specified as a pair.
+  // A third Platino does not fit this row: the tarifa has two, and the band is wide enough for
+  // two with room to spare, but it was specified as a pair.
   frontBlock("platino", 13, -6, 2, 2),
 ]
 
@@ -210,15 +214,18 @@ const SLOT_BLOCKS: readonly DeclaredBlock[] = BLOCK_SLOTS.map((block) => ({
  *  while every other block's are slots, and reading one as the other is exactly the mistake
  *  the two shapes invite. The bottom band is part-claimed rather than open: the tier columns
  *  stop at `STAND_MAIN_LAST_ROW` and these strips occupy the open row above the margin, so
- *  the cells they skip stay open floor and the ones they take are sold. Both ends are
- *  derived, so widening the franja at the top carries the bronze down with everything else
- *  instead of stranding it. */
-/** The bottom band, in the two strips the user specified. The gap between them — cells 22 to
- *  27, table cols 9 to 11 — is requested empty, not leftover: the right strip was asked for
+ *  the cells they skip stay open floor and the ones they take are sold. The row is derived
+ *  from the bands, so widening the franja at the top carries the bronze down with everything
+ *  else instead of stranding it; the columns are written out, because the pattern is a list
+ *  of cells and not a rectangle. */
+/** The bottom band, in the two strips the user specified. The gap between them — cells 28 to
+ *  33, table cols 9 to 11 — is requested empty, not leftover: the right strip was asked for
  *  "desde la columna 12". Each strip is a repeated texture rather than a plain stride, so the
- *  adjacency is part of the pattern and not a rounding remainder. */
-const BRONZE_STRIP_LEFT = [6, 8, 10, 11, 13, 15, 17, 19, 21] as const
-const BRONZE_STRIP_RIGHT = [28, 30, 31, 33, 35, 36, 38, 40, 41, 43, 45, 46] as const
+ *  adjacency is part of the pattern and not a rounding remainder. The columns are cells and
+ *  they are written out, so they carry the fence margin themselves: the left strip starts six
+ *  cells further in than it used to, at cell 12, the first cell of the west Plata wall. */
+const BRONZE_STRIP_LEFT = [12, 14, 16, 17, 19, 21, 23, 25, 27] as const
+const BRONZE_STRIP_RIGHT = [34, 36, 37, 39, 41, 42, 44, 46, 47, 49, 51, 52] as const
 
 const BRONZE_ROW_CELLS = [...BRONZE_STRIP_LEFT, ...BRONZE_STRIP_RIGHT]
 

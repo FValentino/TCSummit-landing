@@ -16,7 +16,7 @@ const SPONSOR_VALUES: SponsorValue[] = [
     icon: Users,
     title: "Alcance masivo",
     description:
-      "Más de 5.000 asistentes y 50 expertos se reúnen durante 3 jornadas en un mismo lugar: tu marca frente a una audiencia que no podés ignorar.",
+      "Más de 2.000 asistentes y 50 expertos se reúnen durante 3 jornadas en un mismo lugar: tu marca frente a una audiencia que no podés ignorar.",
     accent: "#03f5ff",
   },
   {

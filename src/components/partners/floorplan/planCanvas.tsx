@@ -4,13 +4,17 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from "re
 import { motion, useMotionValue, useReducedMotion } from "framer-motion"
 import PlanHotspot from "./planHotspot"
 import PlanTooltip from "./planTooltip"
+import PlanWall from "./planWall"
+import PlanEntry from "./planEntry"
 import { A11Y_COPY, TOTEM_LABEL, ZONE_LABEL, ZOOM_GLYPH } from "./floorplanCopy"
 import type { Stand, Totem, Zone, ZoneKind } from "./floorplanData"
 import {
   CELL_FILL_RATIO,
+  ENTRIES,
   GRID_ASPECT_RATIO,
   STANDS,
   TOTEMS,
+  WALLS,
   ZONES,
   gridToPercent,
 } from "./floorplanData"
@@ -214,6 +218,24 @@ export default function PlanCanvas({
               onSelect={onSelect}
               onHover={onHover}
             />
+          ))}
+        </div>
+
+        {/* Above the hotspots, not beside them: a wall is structure and a stand is
+            inventory, so a stand's hover scale must not be able to paint over the line that
+            bounds it. `aria-hidden` because a wall carries no label, no state and no
+            behaviour — a screen reader gets three anonymous regions it can do nothing
+            with, and a region to be read is what `PlanZone` already announces.
+            `pointer-events-none` on the wrapper, not only on each wall: an absolutely
+            positioned `inset-0` div is hit-testable whether or not it paints, and this one
+            sits above the hotspot layer, so leaving it `auto` swallows all 115 stand clicks
+            while every child already sets `pointer-events-none` and the intent looks served. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          {WALLS.map((wall) => (
+            <PlanWall key={wall.id} wall={wall} />
+          ))}
+          {ENTRIES.map((entry) => (
+            <PlanEntry key={`${entry.column}:${entry.row}`} entry={entry} />
           ))}
         </div>
 

@@ -117,8 +117,6 @@ export const CATEGORY_LABEL: Record<StandCategory, string> = {
  *  the accessible name of the same region come from here, so they cannot disagree. */
 export const ZONE_LABEL: Record<ZoneId, string> = {
   vip: "Zona VIP",
-  entrance: "Entrada",
-  margin: "Margen inferior",
 }
 
 /** One string for every totem, and it is the accessible name only. They are identical

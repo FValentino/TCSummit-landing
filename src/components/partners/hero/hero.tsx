@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from "framer-motion"
-import { Users, Building2, Presentation, Calendar } from "lucide-react"
 import Image from "next/image"
 import robot from "@/assets/images/hero/robot.webp"
 
@@ -18,13 +17,6 @@ const orbitron = Orbitron({
   weight: ["400", "700"],
   display: "swap",
 })
-
-const HERO_STATS = [
-  { icon: Users, value: "+5.000", label: "Asistentes" },
-  { icon: Building2, value: "+130", label: "Stands" },
-  { icon: Presentation, value: "+50", label: "Expertos" },
-  { icon: Calendar, value: "3", label: "Jornadas" },
-]
 
 export default function PartnersHero() {
   return (
@@ -86,10 +78,10 @@ export default function PartnersHero() {
           </motion.div>
         </div>
 
-        {/* Bloque 60/40 — contenido + stats */}
-        <div className="w-full md:flex md:items-center md:justify-between md:gap-12">
+        {/* Contenido */}
+        <div className="w-full md:flex md:items-center">
           {/* Columna izquierda — contenido */}
-          <div className="w-full md:w-[60%] space-y-4">
+          <div className="w-full space-y-4">
             {/* Título */}
             <motion.h1
             className={`${saira.className} mb-4 text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight`}
@@ -169,62 +161,7 @@ export default function PartnersHero() {
               Ver beneficios
             </motion.a>
           </motion.div>
-        </div>
-
-        {/* Columna derecha — stats */}
-        <motion.div
-          initial={{ opacity: 0, x: 60, scale: 0.95 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="relative z-20 mt-12 md:mt-0 w-full md:w-[40%] grid grid-cols-2 md:grid-cols-1 gap-4"
-        >
-          {HERO_STATS.map((stat) => {
-            const IconComponent = stat.icon
-            return (
-              <motion.div
-                key={stat.label}
-                className="bg-black/40 backdrop-blur-sm rounded-xl p-5 border border-[#03f5ff]/30 flex items-center gap-4"
-                whileHover={{ scale: 1.05 }}
-                animate={{
-                  borderColor: [
-                    "rgba(3, 245, 255, 0.3)",
-                    "rgba(3, 245, 255, 0.6)",
-                    "rgba(3, 245, 255, 0.3)",
-                  ],
-                }}
-                transition={{
-                  borderColor: {
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                  },
-                }}
-              >
-                <div className="bg-[#03f5ff]/10 rounded-lg p-2.5 shrink-0">
-                  <IconComponent className="w-6 h-6 text-[#03f5ff]" />
-                </div>
-                <div className="flex flex-col">
-                  <motion.span
-                    className="text-2xl font-bold text-white"
-                    animate={{
-                      textShadow: [
-                        "0 0 10px rgba(3, 245, 255, 0.5)",
-                        "0 0 20px rgba(3, 245, 255, 0.8)",
-                        "0 0 10px rgba(3, 245, 255, 0.5)",
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                    }}
-                  >
-                    {stat.value}
-                  </motion.span>
-                  <p className="text-gray-300 text-sm">{stat.label}</p>
-                </div>
-              </motion.div>
-            )
-          })}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

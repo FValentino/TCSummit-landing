@@ -1,14 +1,28 @@
 /** The hall as a set of rectangles. Nothing in this module prices a stand, labels it or
  *  knows what status it has — it declares the floor, and `floorplanData` builds the catalogue
  *  from what is declared here. Import direction is one way: data depends on layout, never the
- *  other way, so the guards can keep reading layout types without a cycle. */
+ *  other way, so the guards can keep reading layout types without a cycle. The walls are
+ *  declared in `floorplanWalls`, which is a one-way edge out of this module for the same
+ *  reason: structure reads the floor, the floor knows nothing about structure. */
 
 /** Two levels, one declaration. The hall is specified in **plata slots** — the user counts
  *  columns and rows in the footprint of one PLATA stand — while every internal coordinate is
  *  an integer **cell**, half a slot per side. Regions are declared in the user's units and
  *  converted once, at the declaration site; nothing downstream carries a fractional unit. */
 export const PLATA_SLOT = 2
-export const SLOT_COLUMNS = 30
+export const SLOT_COLUMNS = 33
+
+/** The building's distance from the west edge of the grid, in slots: the ground the outer
+ *  fence needs around it. Three slots is six cells, the room the user asked for between the
+ *  building's side walls and the fence, and `SLOT_COLUMNS` grew by the same six cells, so the
+ *  east side is given the same room out of the difference and the fence ends up three cells
+ *  inside the grid on the west and on the east alike — the plan centres itself horizontally
+ *  with no view offset, because the margin is in the model rather than in the projection.
+ *
+ *  Every west-anchored region reads it rather than repeating the number: the VIP strip and
+ *  the stand origin below, and the table frame and the bronze strips in `floorplanStands`.
+ *  Enlarging the recinto is one edit here plus the wall coordinates, not a sweep. */
+export const PREDIO_LEFT_SLOTS = 3
 
 export const STAND_CATEGORIES = ["platino", "oro", "plata", "bronce"] as const
 export type StandCategory = (typeof STAND_CATEGORIES)[number]
@@ -64,7 +78,12 @@ export const CELL_FILL_RATIO = 0.85
 const round2 = (value: number) => Math.round(value * 100) / 100
 
 /** The only grid-to-percent conversion in the project, so no rendered rect can disagree
- *  with the data that declared it. */
+ *  with the data that declared it. There is no offset in it: the canvas shows the grid as it
+ *  is, and what centres the drawing is the fence, which is a wall in the model — three cells
+ *  inside the grid on the west and on the east, and on row 1 at the north, with the empty row
+ *  0 above it as an equal margin to the one below the south fence. Translating the projection
+ *  to re-centre what the geometry already centres would only be a second thing to keep in
+ *  step. */
 export const gridToPercent = ({ column, row, columns, rows }: GridRect): StandGeometry => ({
   x: round2((column / CELL_COLUMNS) * 100),
   y: round2((row / CELL_ROWS) * 100),
@@ -72,7 +91,7 @@ export const gridToPercent = ({ column, row, columns, rows }: GridRect): StandGe
   h: round2((rows / CELL_ROWS) * 100),
 })
 
-export type ZoneId = "vip" | "entrance" | "margin"
+export type ZoneId = "vip"
 export type ZoneKind = "vip" | "open"
 
 export interface Zone extends GridRect {
@@ -98,7 +117,7 @@ type ZoneSlot = SlotRect & { id: ZoneId; kind: ZoneKind }
  *  meaning what it meant before — which only holds because the bands are derived, not written.
  *  `OPEN_BOTTOM_ROWS` is the row above the margin. It is unbuilt as columns — no tier column
  *  reaches it, which is what keeps the bottom band free for a later region — but it is not
- *  unclaimed: the 21 bronze cells sit in its cells 30–31. */
+ *  unclaimed: the 21 bronze cells take its first cell row. */
 export const VIP_COLUMNS = 3
 /** The hall is the sum of its bands, in the order the table comment above names them, so
  *  growing the franja is one edit here rather than two literals kept in step by hand. */
@@ -107,7 +126,12 @@ const ENTRANCE_ROWS = 1
 const ENTRY_ROWS = 1
 const MAIN_FLOOR_ROWS = 6
 export const OPEN_BOTTOM_ROWS = 1
-const MARGIN_ROWS = 1
+/** Two, not one: the bottom margin is the strip the building's south wall stands in and the
+ *  outer fence closes at the far side of it, so it has to hold three cells of ground and the
+ *  row the fence line is drawn on. It is the margin and not `OPEN_BOTTOM_ROWS` because the
+ *  bronze strip sits in the open row — growing this leaves `BRONZE_CELL_ROW` and every
+ *  bronze id untouched, and pushes the south wall and the fence down with them. */
+const MARGIN_ROWS = 2
 export const SLOT_ROWS =
   FRANJA_ROWS + ENTRANCE_ROWS + ENTRY_ROWS + MAIN_FLOOR_ROWS + OPEN_BOTTOM_ROWS + MARGIN_ROWS
 export const CELL_COLUMNS = SLOT_COLUMNS * PLATA_SLOT
@@ -117,7 +141,7 @@ export const GRID_ASPECT_RATIO = CELL_COLUMNS / CELL_ROWS
 const FRANJA_FIRST_ROW = 1
 const FRANJA_LAST_ROW = FRANJA_FIRST_ROW + FRANJA_ROWS - 1
 const ENTRANCE_FIRST_ROW = FRANJA_LAST_ROW + 1
-export const STAND_ORIGIN_COLUMN = VIP_COLUMNS + 1
+export const STAND_ORIGIN_COLUMN = VIP_COLUMNS + 1 + PREDIO_LEFT_SLOTS
 export const STAND_ORIGIN_ROW = ENTRANCE_FIRST_ROW + ENTRANCE_ROWS
 export const STAND_MAIN_ROW = STAND_ORIGIN_ROW + ENTRY_ROWS
 export const STAND_MAIN_LAST_ROW = SLOT_ROWS - OPEN_BOTTOM_ROWS - MARGIN_ROWS
@@ -128,26 +152,24 @@ export const STAND_COLUMN_ROWS = STAND_MAIN_LAST_ROW - STAND_MAIN_ROW + 1
  *  selection or the panel. The stand area between them is implicit — it is the floor a
  *  stand column sits on, not a drawn shape. */
 const ZONE_SLOTS: readonly ZoneSlot[] = [
-  // The VIP is interior, not exterior: it starts at the entrance and runs to the bottom of
-  // the hall, and it does not reach up into the franja. That is why the top is
-  // ENTRANCE_FIRST_ROW and not 1, and why the height is derived rather than SLOT_ROWS — the
-  // franja belongs to zone 1, and a VIP painted across it would claim exterior floor.
-  { id: "vip", kind: "vip", column: 1, row: ENTRANCE_FIRST_ROW, columns: VIP_COLUMNS, rows: SLOT_ROWS - ENTRANCE_FIRST_ROW + 1 },
+  // The VIP is interior flooring only: it starts on the first stand row and covers exactly
+  // the stand floor — never the entrance above it, never the bottom band below (the margin
+  // zone is gone; the bottom band is still part of the slot budget, just not painted). The
+  // top is STAND_ORIGIN_ROW and the height is derived from the same bands as the stands, so
+  // growing the franja or adding a tier band moves the VIP with them: it re-derives from the
+  // floor it sits on instead of drifting. A literal height would overflow the grid the moment
+  // the bands above it change — the slot rect is converted to cells and the guard only checks
+  // cells, so a zone that outgrew the floor would run off the end of the grid at build time.
+  // The west edge is the same story: the strip is the first region the fence margin pushes,
+  // so widening the recinto carries it along with the building instead of leaving it standing
+  // in the yard.
   {
-    id: "entrance",
-    kind: "open",
-    column: STAND_ORIGIN_COLUMN,
-    row: ENTRANCE_FIRST_ROW,
-    columns: SLOT_COLUMNS - VIP_COLUMNS,
-    rows: ENTRANCE_ROWS,
-  },
-  {
-    id: "margin",
-    kind: "open",
-    column: STAND_ORIGIN_COLUMN,
-    row: SLOT_ROWS - MARGIN_ROWS + 1,
-    columns: SLOT_COLUMNS - VIP_COLUMNS,
-    rows: MARGIN_ROWS,
+    id: "vip",
+    kind: "vip",
+    column: 1 + PREDIO_LEFT_SLOTS,
+    row: STAND_ORIGIN_ROW,
+    columns: VIP_COLUMNS,
+    rows: SLOT_ROWS - STAND_ORIGIN_ROW - MARGIN_ROWS + 1,
   },
 ]
 

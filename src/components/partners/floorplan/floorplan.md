@@ -1,11 +1,12 @@
 # Partners Floor Plan
 
-Interactive exhibition map for `/partners`. The hall is an explicit **30 × 18 grid of
-plata slots**, which is 60 × 36 **cells** internally; regions are declared in the user's
+Interactive exhibition map for `/partners`. The hall is an explicit **33 × 19 grid of
+plata slots**, which is 66 × 38 **cells** internally; regions are declared in the user's
 table units, converted to cells at the declaration site, projected to percent once, and
-rendered as percent-positioned hotspots. The VIP holds the first 3 columns, so the stand
-area is **27 columns wide** (cols 4–30) — the VIP columns double as the aisles, so
-aisles do not consume the stand budget.
+rendered as percent-positioned hotspots. The westernmost 3 columns are the fence margin
+and the next 3 are the VIP, so the stand area is the full `SLOT_COLUMNS - VIP_COLUMNS -
+PREDIO_LEFT_SLOTS` = **27 columns wide** (slot cols 7–33) — the VIP columns double as the
+aisles and the margin is outside the building, so neither consumes the stand budget.
 
 **Current state: the layout is being specified region by region.** Eight stand regions exist
 today — eight region columns, two bronze strips, one front-row stand and two Platinos of
@@ -24,13 +25,14 @@ superseded percent band generator; the grid model in this file is the current co
 
 | File | Role |
 |------|------|
-| `floorplanLayout.ts` | The floor as geometry: the slot→cell constants, cell sizes, percent projection, the hall frame and the `ZONES`. Knows no price, label, status — or what stands on it |
+| `floorplanLayout.ts` | The floor as geometry: the slot→cell constants, cell sizes, percent projection, the hall frame, the `ZONES` and the `WALLS` with their `wallToPercent` projection. Knows no price, label, status — or what stands on it |
 | `floorplanStands.ts` | What is on the floor: the tier-column helpers, the table-frame block helpers, `BLOCKS` and the `expected` stand count every block declares, and `TOTEMS` — the advertising totems, which are floor furniture and deliberately not stands. Imports the geometry, so the two modules point one way and only the contents change when a stand moves |
 | `floorplanData.ts` | The catalogue: what a stand is, what it costs, whether it is taken. Types, the swappable state enums, tariff derivation, the cell tiler, lookups, aggregations; calls the drift guards on every import. Re-exports the layout and `TOTEMS` so consumers keep one import site |
-| `floorplanGuards.ts` | The drift guards: category-name drift, tariff count ceiling, cell size, bounds, overlap — stand×stand, stand×zone, totem×stand, totem×zone, totem×totem — and declared block emission |
+| `floorplanGuards.ts` | The drift guards: category-name drift, tariff count ceiling, cell size, bounds, overlap — stand×stand, stand×zone, totem×stand, totem×zone, totem×totem — declared block emission, and wall×stand penetration |
 | `floorplanCopy.ts` | Every Spanish string, color maps, status copy, location strings, zone and totem labels, the `aria-label` builder, and `areaText` — the single place an area is rendered. **Value-imports nothing**: the only import is `import type` |
 | `planHotspot.tsx` | One stand, a toggle `<button>`, positioned by percent, rest/hover/focus/selected/dimmed treatment, expanded touch area. A filtered-out stand is `disabled`, not hidden |
-| `planCanvas.tsx` | Plan surface: grid aspect, zone and totem layer, hotspot layer, zoom/pan transform, zoom controls |
+| `planCanvas.tsx` | Plan surface: grid aspect, zone and totem layer, hotspot layer, wall layer, zoom/pan transform, zoom controls |
+| `planWall.tsx` | One declared wall line, painted as a centred stroke. Split out of `planCanvas.tsx` on the same rule as `planHotspot.tsx` and `planTooltip.tsx` — the wall layer pushed the canvas file past the 300-line cap |
 | `planFilters.tsx` | Category and availability chip groups, reset, live result count, zero-result state |
 | `planTooltip.tsx` | Desktop-only hover label for the hovered stand, counter-scaled against the zoom. Its area line comes from `areaText` |
 | `infoPanel.tsx` | `role="region"` + `aria-live="polite"`; initial state, stand detail, price strip, CTA, and the `PLACEHOLDER_MODE` draft disclosure |
@@ -331,14 +333,16 @@ named constant connects them, at the top of `floorplanLayout.ts`:
 | | Declaration | Value |
 |---|-----------|-------|
 | Cells per slot side | `PLATA_SLOT` | 2 |
-| Hall in slots | `SLOT_COLUMNS` × `SLOT_ROWS` | 30 × **18** — derived, see below |
-| Stand columns | `SLOT_COLUMNS - 3` | **27** — cols 4–30, right of the VIP |
-| Hall in cells | `CELL_COLUMNS` × `CELL_ROWS` | `SLOT_COLUMNS * PLATA_SLOT` = **60 × 36** |
-| Canvas shape | `GRID_ASPECT_RATIO` | `CELL_COLUMNS / CELL_ROWS` = **1.67** |
+| Hall in slots | `SLOT_COLUMNS` × `SLOT_ROWS` | 33 × **19** — derived, see below |
+| Fence margin, west | `PREDIO_LEFT_SLOTS` | 3 — slot cols 1–3, outside the building |
+| VIP columns | `VIP_COLUMNS` | 3 — slot cols 4–6, right of the margin |
+| Stand columns | `SLOT_COLUMNS - VIP_COLUMNS - PREDIO_LEFT_SLOTS` | **27** — slot cols 7–33 |
+| Hall in cells | `CELL_COLUMNS` × `CELL_ROWS` | `SLOT_COLUMNS * PLATA_SLOT` = **66 × 38** |
+| Canvas shape | `GRID_ASPECT_RATIO` | `CELL_COLUMNS / CELL_ROWS` = **1.74** |
 
 Slot row N occupies cells `2N-2, 2N-1`, and slot column N the same pair horizontally. The
 canvas is 5:3 (it replaces the old `aspect-square`; it was 3:1 at ten rows and 2:1 at
-fifteen). Nothing downstream hardcodes the aspect, 30 or 60, and the only consumer of the
+fifteen). Nothing downstream hardcodes the aspect, 33 or 66, and the only consumer of the
 shape is `planCanvas.tsx` reading `GRID_ASPECT_RATIO` straight from the data module.
 
 **`SLOT_ROWS` is a sum, not a number.** It used to be the literal `15` sitting next to
@@ -360,14 +364,15 @@ So the user's table frame is the source of truth and absolute slots are derived 
 
 | Table frame | Slot | Cells |
 |-------------|------|-------|
-| col `N` | `N + 3` | `2 * (N + 2)`, `+1` |
+| col `N` | `N + VIP_COLUMNS + PREDIO_LEFT_SLOTS` = `N + 6` | `2 * (N + 5)`, `+1` |
 | fila `N` | `N + STAND_ORIGIN_ROW` (`10`) | `2 * (N + 9)`, `+1` |
 | franja | filas **−9 … −2** → slots 1–8 | 0–15 |
 | entrance | fila −1 → slot 9 | 16–17 |
 | frente | fila 0 → slot 10 | 18–19 |
 | piso principal | filas 1–6 → slots 11–16 | 20–31 |
-| bronce | fila 7 → slot 17 | 32–33 |
-| margen | fila 8 → slot 18 | 34–35 |
+| fondo libre | fila 7 → slot 17 | 32–33 |
+| bronce | fila 7 → slot 17, first cell row | 32 |
+| margen | filas 8–9 → slots 18–19 | 34–37 |
 
 The franja is **negative table rows**. That is the whole trick: it is new space that already
 has coordinates, so adding it moves no coordinate the user has already given, and the
@@ -393,22 +398,20 @@ unit anywhere in the app. `gridToPercent` divides by `CELL_COLUMNS` / `CELL_ROWS
 
 | Region | Table frame (as the user reads them) | Cells (0-indexed) | Model |
 |--------|------------------|------------------|-------|
-| Zona VIP | cols 1–3, filas −1…8 — **desde la entrada hacia abajo** | `0, 16, 6, 20` | `ZONES` entry, kind `vip` |
-| Franja | filas −9…−2, cols 4–30 | `6, 0, 54, 16` | **eight reserved rows, two stands and two totems in them** |
-| Entrance | fila −1, cols 4–30 | `6, 16, 54, 2` | `ZONES` entry, kind `open` |
-| Stand area | filas −9…6, cols 4–30 | cells cols 6–59, rows 0–31 | **implicit** — the floor a block sits on, not a drawn shape |
-| Bottom band | fila 7, cols 4–30 | `6, 32, 54, 2` | the two bronze strips, part-claimed |
-| Bottom margin | fila 8, cols 4–30 | `6, 34, 54, 2` | `ZONES` entry, kind `open` |
-| Front row | col 22, fila 0 | `48, 18, 2, 2` | `frontPlata(22, 0)` → `plata-c25r10` |
-| Franja's Platinos | **table cols 0–1** and **13–14**, filas −6…−5 | `4, 6, 4, 4` and `30, 6, 4, 4` | `frontBlock("platino", 0, -6, 2, 2)` and `frontBlock("platino", 13, -6, 2, 2)` |
-| Publicidad totems | **table cols 5** and **17**, fila −6 | `14, 6, 2, 2` and `38, 6, 2, 2` | `TOTEMS` — `frontTotem(5, -6)` and `frontTotem(17, -6)`, one slot square each — see [Totems](#totems-are-furniture-not-inventory) |
-| Plata wall | cols 4–9, filas 1–6 | `6, 20, 12, 12` | `BLOCKS` entry `plata-c4r11` |
-| Oro east, top | cols 10–11, filas 1–2 | `18, 20, 4, 4` | `BLOCKS` entry `oro-c10r11` |
-| Platino east, middle | cols 10–11, filas 3–4 | `18, 24, 4, 4` | `BLOCKS` entry `platino-c10r13` |
-| Oro east, bottom | cols 10–11, filas 5–6 | `18, 28, 4, 4` | `BLOCKS` entry `oro-c10r15` |
-| Bronze strip A | fila 7, at cells 6/8/10/11/13/15/17/19/21 | `6, 32, 1, 1` each | `bronce-cell6r32` … — see [Cells are 0-based](#cells-are-0-indexed) |
-| Bronze strip B | fila 7, at cells 28/30/31/33/35/36/38/40/41/43/45/46 | `28, 32, 1, 1` each | same, cells 28–46 |
-| East edge, partial | col 23, filas 1/3/4, at cell rows 20/24/26 | `50, 20, 1, 1` each | `frontPlata(23, 1/3/4)` → `plata-c26r11`/`r13`/`r14` — see [Partial columns](#partial-columns-are-declared-as-raw-blocks) |
+| Zona VIP | cols 1–3, filas 0…7 — **solo el piso de stands** | `6, 18, 6, 16` — slot cols 4–6 | `ZONES` entry, kind `vip` |
+| Franja | filas −9…−2, cols 4–30 — slot cols 7–33 | `12, 0, 54, 16` | **eight reserved rows, two stands and two totems in them** |
+| Stand area | filas −9…6, cols 4–30 — slot cols 7–33 | cells cols 12–65, rows 0–31 | **implicit** — the floor a block sits on, not a drawn shape |
+| Bottom band | fila 7, cols 4–30 — slot cols 7–33 | `12, 32, 54, 2` | the two bronze strips, part-claimed |
+| Front row | col 22, fila 0 | `54, 18, 2, 2` | `frontPlata(22, 0)` → `plata-c28r10` |
+| Franja's Platinos | **table cols 0–1** and **13–14**, filas −6…−5 | `10, 6, 4, 4` and `36, 6, 4, 4` | `frontBlock("platino", 0, -6, 2, 2)` and `frontBlock("platino", 13, -6, 2, 2)` |
+| Publicidad totems | **table cols 5** and **17**, fila −6 | `20, 6, 2, 2` and `44, 6, 2, 2` | `TOTEMS` — `frontTotem(5, -6)` and `frontTotem(17, -6)`, one slot square each — see [Totems](#totems-are-furniture-not-inventory) |
+| Plata wall | slot cols 7–12, filas 1–6 | `12, 20, 12, 12` | `BLOCKS` entry `plata-c7r11` |
+| Oro east, top | cols 13–14, filas 1–2 | `24, 20, 4, 4` | `BLOCKS` entry `oro-c13r11` |
+| Platino east, middle | cols 13–14, filas 3–4 | `24, 24, 4, 4` | `BLOCKS` entry `platino-c13r13` |
+| Oro east, bottom | cols 13–14, filas 5–6 | `24, 28, 4, 4` | `BLOCKS` entry `oro-c13r15` |
+| Bronze strip A | fila 7, at cells 12/14/16/17/19/21/23/25/27 | `12, 32, 1, 1` each | `bronce-cell12r32` … — see [Cells are 0-based](#cells-are-0-indexed) |
+| Bronze strip B | fila 7, at cells 34/36/37/39/41/42/44/46/47/49/51/52 | `34, 32, 1, 1` each | same, cells 34–52 |
+| East edge, partial | col 23, filas 1/3/4, at cell rows 20/24/26 | `56, 20, 2, 2` each | `frontPlata(23, 1/3/4)` → `plata-c29r11`/`r13`/`r14` — see [Partial columns](#partial-columns-are-declared-as-raw-blocks) |
 
 Block ids are **derived, not written**: `${category}-c${slotColumn}r${slotRow}`. Moving a
 column renames its blocks instead of stranding a hand-written label, and two blocks of one
@@ -416,11 +419,18 @@ tier cannot collide, because they may not share a start cell. The ids on cell-de
 say `cell` instead, because their coordinates are cells while every other block's are slots —
 see below.
 
-**The VIP is zone 2, and it starts at the entrance — it is the one region whose top is not
-the top of the hall.** It occupies table filas −1…8, slot rows 9–18, cells `0, 16, 6, 20`:
-the entrance row and everything below it, to the bottom margin. It does **not** reach up
-into the franja, because the franja is zone 1 — the exterior — and a VIP painted across
-exterior floor would claim space that is not the VIP's.
+**The VIP is interior flooring only: it starts on the first stand row and covers exactly the
+stand floor.** It occupies slot rows 10–17, cells `6, 18, 6, 16` — the entrance row above it
+and the bottom band below it are not part of the VIP principal. It does **not** reach up into
+the franja, because the franja is the exterior and a VIP painted across exterior floor would
+claim space that is not the VIP's. The height is derived from the same bands as the stands
+(`SLOT_ROWS - STAND_ORIGIN_ROW - MARGIN_ROWS + 1`), so growing the franja or adding a tier
+band moves the VIP with the floor it sits on; a literal height would overflow the grid the
+moment the bands above it change, because slot rects are converted to cells (`×2`) and the
+guard only checks cells — row + rows over 19 explodes at build time. The `margin` zone is
+still absent from `ZONE_SLOTS` on purpose: the bottom band stays in the slot budget but is no
+longer painted, and `MARGIN_ROWS` is now 2 — the strip the building's south wall stands in
+and the outer fence closes at the far side of it.
 
 Both mistakes were mine, in opposite directions, and both looked right in a render. First I
 gave it the full height `SLOT_ROWS`, which claimed a 3 × 9-cell strip below the entrance
@@ -433,27 +443,37 @@ top at `ENTRANCE_FIRST_ROW`, height `SLOT_ROWS - ENTRANCE_FIRST_ROW + 1`.
 in this hall that sits above row 1, and the VIP is the only region that is not in it.
 
 Unchanged by any of that is the reason the first three columns were never subtracted from
-the stand budget: the stands live in cols 4–30. 115 stands, 149.25 used, and the margin is
-a function of the floor, not of the stands — it has moved with the hall every time.
+the stand budget: the stands live in slot cols 7–33. 115 stands, 149.25 used, and the margin
+is a function of the floor, not of the stands — it has moved with the hall every time.
 
 Slot row 17 (cells 32–33) is the bottom band — the two bronze strips claim 21 cells of it, and
-the rest is left as open floor.
+the rest is left as open floor. Slot rows 18–19 (cells 34–37) are the margin, which holds the
+building's south wall and the fence line rather than any stand.
 
-**The 3 VIP columns are the aisles.** Widening the hall from 27 to 30 columns did not take
-three columns out of the stand budget — it added three. The aisles a visitor walks are the
-VIP band itself, so the stand area is the full `SLOT_COLUMNS - 3` = **27 columns**, not
-24. That is why only the right-hand `ZONES` entries widen: they are written
-`SLOT_COLUMNS - 3`, so they track the hall while every `BLOCK_SLOTS` entry stays exactly
-where it is.
+**The 3 VIP columns are the aisles, and the 3 fence columns are outside the building.**
+Widening the hall from 27 to 30 columns did not take three columns out of the stand budget —
+it added three, as aisles. Widening it again, from 30 to 33, did not take three out either:
+those three became `PREDIO_LEFT_SLOTS`, the strip of ground the outer fence needs west of the
+building's side walls. The aisles a visitor walks are the VIP band itself and the fence margin
+is not a room at all, so the stand area is the full
+`SLOT_COLUMNS - VIP_COLUMNS - PREDIO_LEFT_SLOTS` = 33 − 3 − 3 = **27 columns**, not 24 and not
+30. The two subtractions are different in kind and only one of them is a zone: `VIP_COLUMNS`
+is painted flooring, `PREDIO_LEFT_SLOTS` is yard.
+
+`STAND_ORIGIN_COLUMN` is the single expression that carries the margin —
+`VIP_COLUMNS + 1 + PREDIO_LEFT_SLOTS` = 7 — and every west-anchored region reads it rather than
+repeating the number. That is why the one `ZONE_SLOTS` entry, the VIP, widens with the fence
+margin (`column: 1 + PREDIO_LEFT_SLOTS`) instead of with `SLOT_COLUMNS`: it is anchored to the
+west wall of the building, not to the west edge of the grid.
 
 **Adding a region is one array entry, in the unit it occupies.** A non-stand region is a
 `ZONE_SLOTS` entry; a stand region is a `BLOCK_SLOTS` entry in slots, or a `CELL_BLOCKS`
 entry when it is smaller than a slot; all are converted to `ZONES` / `BLOCKS` as they are
-declared. Neither the canvas nor any other file knows the layout. The right
-edge is written `SLOT_COLUMNS - 3` rather than the literal 27, so "columns 4 to the end of
-the hall" cannot drift when the hall grows. This is what made the 27 → 30 widening a
-one-constant change: the two right-hand zones widened, the four blocks did not move, and
-`STANDS` came out identical.
+declared. Neither the canvas nor any other file knows the layout. A position the user named
+goes through `tableToSlot` rather than a literal, so "table col 23" cannot drift when the
+fence moves. This is what made the 30 → 33 widening a one-constant change: `PREDIO_LEFT_SLOTS`
+carried the VIP zone and the table frame with it, the tier columns are written in slots and
+moved with the same edit, and `STANDS` came out with the same 115 entries.
 
 ### Cells are 0-indexed
 
@@ -470,12 +490,12 @@ the front row:
 |-----------|------|-------|-------------|
 | 1–6 | 11–16 | 20–31 | the seven tier columns |
 | **7** | **17** | **32–33** | **the two bronze strips; the un-claimed cells stay open floor** |
-| 8 | 18 | 34–35 | the `margin` zone |
+| 8–9 | 18–19 | 34–37 | the margin — the building's south wall stands in it and the outer fence closes at its far side |
 
 The bottom band is part-claimed, not open: 21 bronce stands occupy cell row 32 inside it, and only
 the cells they skip are open floor. A block declared against the wrong *band* is invisible to
 every geometric check — a bronce at cell row 18 would be in bounds, in no zone and clear of
-every stand, because the front row holds one stand and it sits at cells 48–49. The declared
+every stand, because the front row holds one stand and it sits at cells 54–55. The declared
 `expected` count is what sees a mistake of that shape, and it is the only guard here that reads
 the declaration rather than the tiler's output.
 
@@ -591,7 +611,7 @@ yourself, never by accident.
 
 **Block ids do not reach the visitor.** `STANDS` is generated by expanding blocks, and a
 stand's id is `{category}-{nn}` by position within its tier — `plata-61`, not
-`plata-c26r11`. Every assertion about a region has to be made against cell geometry, not
+`plata-c29r11`. Every assertion about a region has to be made against cell geometry, not
 against block ids. This has now broken a harness twice.
 
 ### The margin is an invariant, and asserting it against a stale number invents a change
@@ -734,8 +754,8 @@ A cell is emitted only where its whole size fits the block, so a span that is no
 multiple of the cell leaves the remainder as open floor rather than squeezing a smaller
 stand into it. That rule is the reason a block needs a declared `expected` count: the
 remainder it drops is not an error, so nothing upstream of the tiler notices that it dropped
-one. The plata block is 6 × 6 **slots** — `6, 20, 12, 12` cells — against a
-2 × 2 cell, so it tiles exactly: **36 stands** over cells cols 6–17 × rows 20–31, six rows
+one. The plata block is 6 × 6 **slots** — `12, 20, 12, 12` cells — against a
+2 × 2 cell, so it tiles exactly: **36 stands** over cells cols 12–23 × rows 20–31, six rows
 of six. There is no remainder and therefore no gap to justify.
 
 The three east blocks tile the same way, and each one lands on its own cell because each is
@@ -743,13 +763,13 @@ declared as a 2 × 2 **slot** span:
 
 | Block | Cells | Own cell | Tiled | Stands | Stand cells |
 |-------|-------|----------|-------|--------|-------------|
-| `oro-c10r11` | `18, 20, 4, 4` | 4 × 2 | 2 wide × 2 deep | **2** | `18,20` and `18,22` |
-| `platino-c10r13` | `18, 24, 4, 4` | 4 × 4 | 1 × 1 | **1** | `18,24` |
-| `oro-c10r15` | `18, 28, 4, 4` | 4 × 2 | 2 wide × 2 deep | **2** | `18,28` and `18,30` |
+| `oro-c13r11` | `24, 20, 4, 4` | 4 × 2 | 2 wide × 2 deep | **2** | `24,20` and `24,22` |
+| `platino-c13r13` | `24, 24, 4, 4` | 4 × 4 | 1 × 1 | **1** | `24,24` |
+| `oro-c13r15` | `24, 28, 4, 4` | 4 × 2 | 2 wide × 2 deep | **2** | `24,28` and `24,30` |
 
 A 4 × 4 **cell** block is where the tiers earn their keep: it is two 4 × 2 cells deep, so
 `oro` yields 2 stands and `platino` yields 1 from the identical rectangle. The two oro blocks
-are not adjacent — `platino-c10r13` sits between them, at cells rows 24–27, so the east
+are not adjacent — `platino-c13r13` sits between them, at cells rows 24–27, so the east
 region reads as five stacked tiers with no shared edge.
 
 An earlier reading of the hall ("columna 4 hasta la columna 6", three columns wide) was
@@ -777,7 +797,7 @@ module's own import of the guard. Passing the data
 in rather than importing it also means a caller cannot forget an argument and silently skip
 a guard.
 
-Six guards, in this order:
+Seven guards, in this order:
 
 | # | Invariant | Failure it catches |
 |---|-----------|--------------------|
@@ -787,16 +807,17 @@ Six guards, in this order:
 | 4 | Every stand, zone and totem fits `CELL_COLUMNS` × `CELL_ROWS` | A block declared against a stale hall width, or a coordinate typo |
 | 5 | No overlap between any two regions: stand×stand, stand×zone, totem×stand, totem×zone, totem×totem | Two `BLOCK_SLOTS` entries covering the same cells, or a totem painted over something |
 | 6 | Every block emits exactly the `expected` stands it declares | A span that tiles to fewer cells than the rectangle claims, or a block that tiles to nothing |
+| 7 | No wall crosses the interior of a stand | A wall authored on a grid line that a multi-cell stand spans — see [Walls](#walls) |
 
 Overlap is **half-open**: blocks that merely share a boundary cell line are legal, only a
-genuinely double-covered cell throws. Both overlap guards were proved to fire by constructing an
-out-of-bounds stand and an overlapping pair and checking the thrown message, and every guard is
-verified on the real data once per build and once per page load — 6,555 stand pairs, 345
-stand × zone pairs, and for the two totems 230 totem × stand, 6 totem × zone and 1
-totem × totem, zero collisions in every one. (The two figures this paragraph used to quote,
-820 and 6,368, were both stale — they were written when the hall held far fewer stands and
-neither was ever re-derived. The counts above come from `C(115, 2)` and `115 × 3` on the
-current `STANDS`. The 7,137 is their sum.)
+genuinely double-covered cell throws. Guard 7 is half-open for the same reason, on both of its
+comparisons, and a wall sitting exactly on a stand's outer edge is legal by contract. Every
+guard is verified on the real data once per build and once per page load — 6,555 stand pairs,
+345 stand × zone pairs, 345 wall × stand pairs, and for the two totems 230 totem × stand,
+6 totem × zone and 1 totem × totem, zero collisions in every one. (The two figures this
+paragraph used to quote, 820 and 6,368, were both stale — they were written when the hall held
+far fewer stands and neither was ever re-derived. The counts above come from `C(115, 2)` and
+`115 × 3` on the current `STANDS`. The 7,482 is their sum plus guard 7's `3 × 115`.)
 
 ### Guard 6 reads the declaration, because the other five cannot
 
@@ -828,7 +849,7 @@ declared 3, an emitted 2 — and fails. The `platino` band in the same column fa
 `declares 1.5 stands, emitted 1`. A fraction is not a rounding problem to be tolerated, it is
 a rectangle that does not divide into its own tile, and the derived formula is what makes it
 visible instead of silently flooring. The build stops on the first block it reaches —
-`oro-c10r11` — and never gets to the Platino one behind it.
+`oro-c13r11` — and never gets to the Platino one behind it.
 
 `expected` is set two ways, and which one is used is the design decision:
 
@@ -1011,14 +1032,14 @@ the same thing.
 
 **Placement, in both frames.** Offsets are counted from a Platino's **left** column — one base
 for both totems, which is the whole point of stating it. The same convention put the second
-Platino 13 columns after the first (`3 + 13 = 16`):
+Platino 13 columns after the first (`6 + 13 = 19`):
 
-| | Table frame | Visual column | Slot | Cells |
+| | Table frame | Slot column | Slot | Cells |
 |---|---|---|---|---|
-| First Platino | cols 0–1, filas −6…−5 | 3–4 | `c3r4` | `4, 6, 4, 4` |
-| **First totem** | **col 5, fila −6** — 5 to the right | **8** | `c8r4` | `14, 6, 2, 2` |
-| Second Platino | cols 13–14, filas −6…−5 | 16–17 | `c16r4` | `30, 6, 4, 4` |
-| **Second totem** | **col 17, fila −6** — 4 to the right | **20** | `c20r4` | `38, 6, 2, 2` |
+| First Platino | cols 0–1, filas −6…−5 | 6–7 | `c6r4` | `10, 6, 4, 4` |
+| **First totem** | **col 5, fila −6** — 5 to the right | **11** | `c11r4` | `20, 6, 2, 2` |
+| Second Platino | cols 13–14, filas −6…−5 | 19–20 | `c19r4` | `36, 6, 4, 4` |
+| **Second totem** | **col 17, fila −6** — 4 to the right | **23** | `c23r4` | `44, 6, 2, 2` |
 
 The second totem is a human placement, not a computed one: it was moved from table col 16 to 17
 after this table was first written, and the doc was the thing that failed to follow. `TOTEM_SLOTS`
@@ -1054,6 +1075,189 @@ swallowed a stand's hit area would take that stand's click with it. The `pointer
 is the rendering-level half of a check that has no rendering-level half in code. Its colour is
 the only violet on the plan, so it cannot be mistaken
 for a tier colour or for a zone's near-invisible field.
+
+### Walls
+
+The floor is two nested outlines — the fence around the predio and the walls of the hall inside
+it — and they are **declarations, not drawing instructions**. That is the entire design
+decision, and everything else follows from it.
+
+**A wall is authored on a grid line, not on a cell.** A line is a boundary *between* cells, so
+`at` is the left edge of column `at` for a `"v"` wall and the top edge of row `at` for an
+`"h"` one, and `from`/`to` are a half-open span along the other axis. The reason is the same
+one the hall has gaps between its stands: a wall runs along a boundary, and a cell has no
+such thing as a side.
+
+| Id | Orientation | `at` | `from` → `to` | What it is |
+|---|---|---|---|---|
+| `wall-13` | `"h"` | row 1 | col 3 → 9 | Fence, north side, west of the first entrance |
+| `wall-13b` | `"h"` | row 1 | col 15 → 35 | Fence, north side, between the entrances |
+| `wall-13c` | `"h"` | row 1 | col 41 → 63 | Fence, north side, east of the second entrance |
+| `wall-14` | `"v"` | col 3 | row 1 → 37 | Fence, west side |
+| `wall-15` | `"v"` | col 63 | row 1 → 37 | Fence, east side |
+| `wall-16` | `"h"` | row 37 | col 3 → 63 | Fence, south side |
+| `wall-1` | `"v"` | col 52 | row 17 → 18 | Niche west side, 1 row, level with `plata-64`'s top edge |
+| `wall-2` | `"h"` | row 17 | col 52 → 60 | Niche top, running east to the east wall |
+| `wall-3` | `"h"` | row 18 | col 44 → 52 | Body top band, east run, ending at `wall-1`'s column |
+| `wall-4` | `"h"` | row 18 | col 36 → 40 | Body top band, 4 columns |
+| `wall-5` | `"h"` | row 18 | col 22 → 32 | Body top band, 10 columns |
+| `wall-6` | `"h"` | row 18 | col 16 → 20 | Body top band, 4 columns |
+| `wall-7` | `"h"` | row 18 | col 11 → 14 | Body top band, 3 columns |
+| `wall-8` | `"h"` | row 18 | col 6 → 8 | Body top band, 2 columns, from the west wall |
+| `wall-9` | `"v"` | col 6 | row 18 → 34 | Building west side |
+| `wall-10` | `"h"` | row 34 | col 6 → 29 | Building south side, west half |
+| `wall-11` | `"h"` | row 34 | col 29 → 60 | Building south side, east half |
+| `wall-12` | `"v"` | col 60 | row 17 → 34 | Building east side, carrying the niche's east edge |
+
+**The fence is what centres the plan, in the model rather than in the projection.** The grid is
+66 × 38; the fence sits three cells inside it on the west and the east and one on the north and
+the south, so the drawing is symmetric in the canvas with **no view offset** — and because the
+centring is geometry, `gridToPercent` stays a pure projection. The margin is real ground, not a
+half row of stroke, which is also what keeps the fence's own line fully drawn: a wall centred
+on row 0 would have had its top half clipped by the canvas. The rectangle closes on lines 3 →
+63 horizontally and 1 → 37 vertically, around cell rows 1–36, and cell rows 0 and 37 are the
+symmetric margin bands outside it.
+
+**The north side is the one fence line that is not whole, and its two openings are the
+property's entrances.** `wall-13`, `wall-13b` and `wall-13c` are that side split in three,
+leaving columns 9–14 and 35–40 open — **six cells each**, the sixth and seventh badges, derived
+from the gaps by the same rule that derives the hall's five. Each width is *derived from a
+stand rather than chosen*: `platino-09` occupies cells cols 10–13 and `platino-10` occupies
+cols 36–39, and each gate is that span plus one cell of air at each side, on the stand's own
+column. The user asked for exactly that alignment — an entrance on the same column as each
+Platino but one cell longer on each side — so each gate and its stand read as one gesture in
+plan, with the entrances landing on the yard directly north of the fringe's two Platinos. The
+other three fence lines are still unbroken: one segment per row each, so none of them has a
+neighbour to leave a gap against.
+
+**The property's entrances read A, not E.** The hall's five openings mark the way into the hall,
+so they carry E; the north gates are the way into the *predio*, a different kind of pass-through,
+so they carry A. The label is derived with the opening — `ENTRIES` stamps the letter from the
+line the gap sits on, and both north gates share the single fence row, so the rule marks each A
+without needing to know how many exist — a future fence opening cannot silently inherit the
+hall's letter.
+
+The badge row needs one rule the hall's five do not. `ENTRIES` puts a mark in the two rows of
+ground its line encloses, which for the row-18 band is rows 16–17, north of the wall and outside
+the stand floor. For the north fence on row 1 that arithmetic runs off the grid, since
+`at - 2` = −1 and **row 0 is canvas margin**, not ground: the enclosed rows there are 1–2,
+*below* the line and inside the property. The rule is `at - 2 < 1 ? at : at - 2`, so a badge can
+never land outside the grid, and the north gates resolve to `{ column: 9, row: 1, columns: 6,
+rows: 2 }` and `{ column: 35, row: 1, columns: 6, rows: 2 }`.
+
+**The building is that perimeter, inset.** Three cells of ground on the west (`wall-9` at
+column 6 against fence `wall-14` at 3), three on the east (`wall-12` at column 60 against fence
+`wall-15` at 63) and three rows on the south (`wall-10`/`wall-11` on row 34 against fence
+`wall-16` on 37). The south gap is what `MARGIN_ROWS` = 2 is for, and it is why the bronze strip
+stayed on row 32 when the building moved down. These gaps are a consequence of four numbers and
+not a rule anything checks: guard 8 holds walls off the *stands* and no guard measures the
+fence.
+
+**The top is stepped — a niche at the east end, then a row of openings.** `wall-1` and
+`wall-2` are the niche: the vertical at column 52 with one row of air against `plata-64`, whose
+top edge is row 18, and the horizontal on row 17 running east to the building wall. The niche's
+bottom is **open on purpose**: the user specified a niche, not an enclosure, so the fourth side
+along row 18 across columns 52–60 is deliberately absent, and adding it is not completing a
+shape, it is declaring a different one — a recess a sponsor stands at the mouth of would become
+a box. The body's top is the row-18 band, one row below the niche's top: `wall-8` through
+`wall-3` run from the west wall east as six segments that **deliberately do not touch**. The
+openings between them are the way from the yard above into the stand floor, and `ENTRIES` is
+*derived* from them, so the marks cannot drift from the walls the way a hand-written list can.
+Six marks come out of that rule: the band's five, plus the north fence's two — the other
+three fence lines still produce nothing, being one segment per row.
+
+**The east wall is at column 60, not 58, because of guard 8.** Its span crosses
+`plata-61`, `plata-62` and `plata-63`, whose east edge is column 58, so a wall there would run
+flush along three stands — legal to guard 7, which only forbids crossing a stand, and still
+wrong, because flush is indistinguishable from a stand border at a glance. Clearance is a
+separate rule from penetration, and it is the stricter of the two. (`plata-64`, the front-row
+stand at the mouth of the niche, is four cells further in at column 56, so the niche's own
+clearance is not what fixes the wall.)
+
+**Why they are data: guards 7 and 8.** A wall sits on a grid line, and a grid line can pass
+through the **interior** of a stand that spans several rows or columns. A line at row 21 crosses
+the stands beneath the row-18 band straight through their middle. Every other guard passes in
+that situation and *has* to: guards 3, 4 and 5 all read `stand.cell`, which is correct,
+correctly sized and correctly placed, and says nothing at all about what gets drawn over the top
+of it. Only a declared line compared against a declared cell can see it, and an inline SVG wall
+is invisible to every guard in the module by construction.
+
+The comparison is strict on both ends, and that is the whole contract of authoring on a grid
+line:
+
+| Wall | Stand | Predicate | Result |
+|---|---|---|---|
+| `"h"` at row `at` over columns `[from, to)` | any stand | `cell.row < at < cell.row + cell.rows` **and** the column span overlaps | cuts |
+| `"v"` at column `at` over rows `[from, to)` | any stand | `cell.column < at < cell.column + cell.columns` **and** the row span overlaps | cuts |
+
+A **non-strict** comparison would be unusable rather than merely wrong: every building wall
+that runs beside a stand sits within a cell of it — `wall-2` a row above `plata-64`, `wall-1`
+a column west of it, `wall-12` two columns east of `plata-61`/`62`/`63`. `<=` would report
+them all as cutting and the model would be unable to express a wall at all. The span comparison
+is half-open for the same reason `overlaps` is: a wall that stops *on* a stand's edge touches
+it, it does not slice it.
+
+**Guard 8 exists because guard 7 cannot catch the mistake the user actually made.** The
+penetration predicate is blind to distance: a wall flush against a stand's outer edge cuts
+nothing, passes every other guard, and still reads on screen as that stand's own border. That
+is not hypothetical — the east wall was authored at column 58, directly on the edge of
+`plata-61`/`62`/`63`, and it passed the entire guard suite.
+
+It is a separate guard and not a tighter `cuts` because the two rules have different owners.
+Penetration is a layout error meaning a stand is unusable; clearance is a drawing decision about
+how the hall should look. Merged, the wall's appearance would become a function of which stands
+happen to exist, and a stand added next to the wall later would fail a rule that was written
+about drawing. The predicate measures the same `min(|at - start|, |at - (start + size)|)` that
+`cuts` refuses to look at, and `WALL_CLEARANCE_CELLS` is **1**, not 2 — two is what the
+*distance* is on the east side, but the north wall has one row of air over `plata-64` because
+the user chose one over two, and a threshold of 2 would silently overrule that choice the next
+time the wall moves.
+
+Both were proved against the real input, not by reading the source: `at: 58` throws
+`Wall clearance`, `at: 57` crossing `plata-61`/`62`/`63` still throws `Wall penetration`, and
+the shipped walls pass with the minimum clearance on the plan being 1 cell between `wall-2` and
+`plata-64`.
+
+It was proved both ways rather than by reading the source and agreeing with it — `wall-5`
+moved from row 18 to row 21 throws `Wall penetration` (a line through the interior of the
+two-row stands below), while the same wall at row 20, the stands' own top edge, is **not** a
+penetration — it is flush, which is what guard 8 rejects: `Wall clearance` at a 0-cell gap.
+The east wall proves the same contract from its side: at column 57, through `plata-61`'s
+interior, it throws `Wall penetration`, while at column 58, the stands' outer edge, it does
+not — and guard 8 is what stops it there. See
+[Verified, not assumed](#verified-not-assumed).
+
+**No expected/emitted pair, unlike guard 6.** There is no tiler on the other side of a wall:
+the declaration *is* the output, and a wall that projects to a degenerate rect is the only
+thing `wallToPercent` can produce. The analogous failure here is a wall that projects off the
+grid, and that is not currently guarded — a line at `at: 99` renders outside the plan and
+throws nothing.
+
+**Projection.** `wallToPercent` returns a `StandGeometry` from `gridToPercent` with a
+**degenerate axis** — zero width for `"v"`, zero height for `"h"`. The zero is the drawing
+instruction rather than an accident, and it is what keeps the guard's model and the canvas's
+model the same object: a wall that grew a thickness in grid space would straddle the very
+outer edge it is legal on, and the two would then disagree about where the wall is.
+
+**Rendering.** `PlanWall` lives in its own file, on the same rule as `planHotspot.tsx` and
+`planTooltip.tsx`: the wall layer is what pushed `planCanvas.tsx` past the 300-line cap, and
+the folder's convention is one component per file for the plan surface. It takes the zero axis
+from `WALL_STROKE` and centres the stroke on the line with a half-stroke translate, so the
+stroke lives in the paint layer and the geometry stays a line. `WALL_STROKE_CELLS` is expressed
+in cells and projected through `gridToPercent` like everything else, so the wall scales with
+the drawing rather than with the viewport, and one number covers both axes because the aspect
+ratio is fixed.
+
+The layer sits **above** the hotspots, not beside them: a wall is structure and a stand is
+inventory, and a stand's hover `scale-105` must not be able to paint over the line that bounds
+it. The treatment is `bg-white/55` with square ends, where every stand is a rounded
+`rounded-[3px]` block in one of four saturated tier colours. Three things keep a wall from
+reading as a fifth category: it is the only **neutral** mark on the plan, it is a **line** and
+not a field, and the brand cyan is already spoken for by the VIP zone, the focus rings and the
+section heading — reusing it here would make structure look like a region. It carries
+`pointer-events-none` for the same structural reason `TOTEM_CLASS` does, and the layer is
+`aria-hidden`: a wall has no label, no state and no behaviour, so announcing three anonymous
+regions is strictly worse than not rendering them to the accessibility tree at all.
 
 ## Tradeoffs and known limits
 
@@ -1100,12 +1304,13 @@ The running total across the regions specified so far:
 | **Total** | **115** | **130** | **15** |
 
 **Oro and Platino are both finished.** The rest of the tarifa is 15 stands, 12.75 slots. The stand area is
-cells cols 6–59 × rows 0–31 with the entrance row at 16–17 left out — so the regions that follow
+cells cols 12–65 × rows 0–31 with the entrance row at 16–17 left out — so the regions that follow
 are bounded by the tariff and by the shape asked for, not by the floor.
 
 **Free stand area: 282.75 slots.** The stand floor is 27 columns × 16 rows = **432 slots** —
 8 of franja, 1 of front row, 6 of main floor and 1 of bottom band. It excludes the entrance row
-and the margin row, which are circulation, and the 3 VIP columns, which are a zone. The seven
+and the two margin rows, which are circulation, and the 3 VIP columns and the 3 fence columns,
+which are a zone and a yard respectively. The seven
 tier columns use 132
 (60 plata + 20 oro × 2 + 8 platino × 4), the east-edge partial column adds 3, the front row
 adds 1, the two bronze strips add 5.25 (twenty-one cells) and the franja's two Platinos add
@@ -1222,7 +1427,7 @@ twenty lines of headroom left, so the next region is the one that will force a s
 - **Bounds and overlap are now guarded, after being script-only.** Both were real gaps: with
   more than a handful of `BLOCK_SLOTS` rectangles — the layout is well past that — two entries
   sharing cells compile, tile and render as two layers of hotspots stacked on one spot, and
-  the 15% `CELL_FILL_RATIO` gap is a paint-time transform that cannot see it. The 27 → 30
+  the 15% `CELL_FILL_RATIO` gap is a paint-time transform that cannot see it. The 30 → 33
   widening made bounds a live risk too — a block declared against the old width is now out of
   bounds, and it would have rendered as a hotspot positioned off the plan where nothing could
   see or click it. Two guards close
@@ -1287,9 +1492,9 @@ twenty lines of headroom left, so the next region is the one that will force a s
   `after:absolute after:-inset-1.5 pointer-coarse:after:-inset-2`, which adds 6 px on
   desktop and 8 px on touch. A plata cell at a 360 px viewport is ~12 px wide, and `bronce`
   is ~6 px, so the pseudo-element is the only thing keeping those tappable at all. The slot
-  correction halved both, and the 27 → 30 widening halved them again: the hall is now 60
-  cells wide, so every cell is a sixtieth of the container width — a sixtieth horizontally and
-  a thirty-sixth vertically, which is what the 5:3 aspect means. Reaching 44 px there needs a
+  correction halved both, and the 30 → 33 widening halved them again: the hall is now 66
+  cells wide, so every cell is a sixty-sixth of the container width — a sixty-sixth horizontally
+  and a thirty-eighth vertically, which is what the 1.74 aspect means. Reaching 44 px there needs a
   ±16 px inset, which would overlap
   neighbouring stands and steal their taps. Left as a documented exception, and it worsens
   as the grid gets denser: raising it needs either a coarser grid or a smaller cell.
@@ -1371,12 +1576,17 @@ fail on purpose, not by reading the source and agreeing with it.
 
 | Check | How it was proved |
 |---|---|
-| Guards survive bundling | Each of the seven distinct thrown messages was grepped in the production build output. Baseline was zero JS hits; after the change each is present, which is what "ungated" has to mean in practice. Exclude `.next/dev` — those are stale dev-server artefacts, not the bundle. |
-| Guard 6 catches a narrow band | `narrowColumn(10, …)`'s `2` temporarily changed to `1`. The build fails with `Block emission drift: narrow-b10 declares 1, emitted 0`, which also proves guards 1–5 passed first — they run earlier in the same call. |
-| Guard 6 catches a wide band | The same constant changed to `3`: `oro-c10r11 declares 3 stands, emitted 2`. The Platino band behind it drifts to a fractional `1.5`. |
+| Guards survive bundling | Each of the eight distinct thrown messages was grepped in the production build output. Baseline was zero JS hits; after the change each is present, which is what "ungated" has to mean in practice. Exclude `.next/dev` — those are stale dev-server artefacts, not the bundle. |
+| Guard 7 catches a wall that cuts a stand | `wall-5` temporarily moved one row down, to `at: 21`: the build fails with `Wall penetration: wall-5 at h at 21 from 22 to 32 cuts stand plata-06 at 22,20 2x2`. A two-row stand is cut in half by the line between its two rows. Reverted. |
+| Guard 7 is about the **interior**, not proximity | With `WALL_CLEARANCE_CELLS` muted to 0 (guard 8 off, so only the strict interior test remains): the same wall at `at: 20` — the stands' own top edge — builds, and at `at: 21` throws `Wall penetration`, once more on `plata-06` at `22,20`. The throw is attributable to the strict inequality on `at`, not to the wall merely being near a stand. Reverted. |
+| Guard 8 is needed, not redundant with guard 7 | With the east wall authored at `at: 58` — flush on the east edge of `plata-61`/`62`/`63` — guards 1–7 all pass and the build fails on guard 8: `Wall clearance: wall-12 at v at 58 from 17 to 34 is 0 cells from stand plata-61 at 56,20 2x2, needs 1`. That is the exact wall the user rejected as "stuck to the stands", so a passing suite was not evidence of a correct plan. Moving it to `at: 60` is what makes the rule checkable rather than assumed. |
+| The clearance threshold of 1 is the user's choice, not a minimum I picked | With `WALL_CLEARANCE_CELLS = 2` the suite failed on the shipped walls: `Wall clearance: wall-2 at h at 17 from 52 to 60 is 1 cells from stand plata-64 at 54,18 2x2, needs 2`. The user chose one row of air over `plata-64` over two, so 2 was quietly overruling a decision they had made. Lowered to 1. |
+| `WALL_CLEARANCE_CELLS` is read from the walls module, not from the data barrel | `floorplanData` imports `floorplanGuards` at runtime, so importing the constant back from `./floorplanData` builds the cycle `floorplanGuards -> floorplanData -> floorplanGuards`. It is imported from `./floorplanWalls`, which imports only `./floorplanLayout` — a leaf — and is already your upstream of the guard, so the edge stays acyclic. |
+| Guard 6 catches a narrow band | `narrowColumn(13, …)`'s `2` temporarily changed to `1`. The build fails with `Block emission drift: oro-c13r11 declares 1, emitted 0`, which also proves guards 1–5 passed first — they run earlier in the same call. |
+| Guard 6 catches a wide band | The same constant changed to `3`: `oro-c13r11 declares 3 stands, emitted 2`. The Platino band behind it drifts to a fractional `1.5`. |
 | Guard 6 alone is what fails | With the corruption still in place, guard 6's throw replaced by a log, the build succeeds and prints 15 drifting blocks — so nothing else in the module is coincidentally sensitive to that width, and the failure is attributable to guard 6 and not to a side effect of the edit. |
 | Bounds guard runs in production | A narrow block's column temporarily moved out of `CELL_COLUMNS`. `next build` fails, rather than shipping a hotspot nobody can see or click. |
-| Counts are unchanged | The aggregates were printed from a temporary `console.log` at module scope and removed: 115 stands, 64 Plata / 20 Oro / 10 Platino / 21 Bronce, 115 against 130 tariff, 15 unplaced, 12.75 slots, 149.25 used, 27 × 16 = 432 stand floor, 282.75 free, 270 margin, totems at cells `14, 6` and `38, 6`, both 2 × 2. |
+| Counts are unchanged | The aggregates were printed from a temporary `console.log` at module scope and removed: 115 stands, 64 Plata / 20 Oro / 10 Platino / 21 Bronce, 115 against 130 tariff, 15 unplaced, 12.75 slots, 149.25 used, 27 × 16 = 432 stand floor, 282.75 free, 270 margin, totems at cells `20, 6` and `44, 6`, both 2 × 2. |
 | The area figures were not | The same printout reported the bottom band as 5.25 used slots while the stand-floor formula excluded it, which is what caught the 405 / 255.75 / 243 error above. The numbers in this file are the corrected ones. |
 | Lint baseline unchanged | `npm run lint` reports the same 6 pre-existing problems (2 errors, 4 warnings), none in this module. |
 | Types | `npx tsc --noEmit` passes. |

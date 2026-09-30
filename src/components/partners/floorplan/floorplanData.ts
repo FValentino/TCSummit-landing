@@ -2,6 +2,7 @@ import { STAND_PRICING } from "@/components/partners/participate/participateData
 import { CATEGORY_LABEL, LOCATIONS } from "./floorplanCopy"
 import { assertFloorplanInvariants, type BlockTally } from "./floorplanGuards"
 import { BLOCKS, TOTEMS } from "./floorplanStands"
+import { WALLS } from "./floorplanWalls"
 import {
   CELL_COLUMNS,
   CELL_ROWS,
@@ -17,9 +18,12 @@ import {
 } from "./floorplanLayout"
 
 /** The catalogue: what a stand is, what it costs, whether it is taken. The floor itself lives
- *  in `floorplanLayout` — this module only turns rectangles into priced, labelled, filterable
- *  stands. Layout types are re-exported below so consumers keep one import site. */
+ *  in `floorplanLayout` and its structure in `floorplanWalls` — this module only turns
+ *  rectangles into priced, labelled, filterable stands. Both are re-exported below so
+ *  consumers keep one import site; the two export disjoint names, so the barrel has no
+ *  collision to resolve and nothing to shadow. */
 export * from "./floorplanLayout"
+export * from "./floorplanWalls"
 export { BLOCKS, TOTEMS, type Totem } from "./floorplanStands"
 
 /** Mirrors the `name` of every `STAND_PRICING` entry. The tariff array is not `as const`,
@@ -186,7 +190,7 @@ export const STATUS_COUNTS = countByStatus()
  *  `DEV = process.env.NODE_ENV === "development"` is inlined to `false` by the bundler in
  *  both graphs — so the call, its import and this whole module were dead-code-eliminated and
  *  `next build`, which runs with `NODE_ENV=production`, validated no geometry at all. The
- *  guards now ship to the browser and run 7,137 comparisons once per page load, in
+ *  guards now ship to the browser and run 7,482 comparisons once per page load, in
  *  microseconds. That is the right trade: a false-positive build failure costs one line of
  *  layout arithmetic, a silent wrong sales page costs a sponsor contract, and a throw here
  *  blocks the deploy instead of shipping it. A `prebuild` script was the alternative and was
@@ -201,4 +205,5 @@ assertFloorplanInvariants({
   zones: ZONES,
   totems: TOTEMS,
   blocks: built.blocks,
+  walls: WALLS,
 })

@@ -1,5 +1,14 @@
 import { STAND_PRICING } from "@/components/partners/participate/participateData"
-import type { GridRect, GridSize, Stand, StandCategory, Totem, Zone } from "./floorplanData"
+import { WALL_CLEARANCE_CELLS } from "./floorplanWalls"
+import type {
+  GridRect,
+  GridSize,
+  Stand,
+  StandCategory,
+  Totem,
+  WallSegment,
+  Zone,
+} from "./floorplanData"
 
 /** One block's declared output next to the output it actually produced. Passed in rather than
  *  re-tiled here: `tileRect` lives in the data module, and a second copy of it would give this
@@ -21,6 +30,7 @@ export interface FloorplanGuardInput {
   zones: readonly Zone[]
   totems: readonly Totem[]
   blocks: readonly BlockTally[]
+  walls: readonly WallSegment[]
 }
 
 /** Half-open overlap: touching edges do not collide, so two blocks that share a boundary
@@ -33,6 +43,43 @@ const overlaps = (a: GridRect, b: GridRect) =>
 
 const describe = ({ column, row, columns, rows }: GridRect) =>
   `${column},${row} ${columns}x${rows}`
+
+const describeWall = ({ orientation, at, from, to }: WallSegment) =>
+  `${orientation} at ${at} from ${from} to ${to}`
+
+/** Strict on both ends, which is the whole contract of authoring a wall on a grid line: a
+ *  line that lands on a span's first or last index is that span's own edge, and a wall
+ *  flush against a stand is legal. A wall has no thickness in grid space, so a non-strict
+ *  comparison here would report the walls that touch the most stands as the walls that cut
+ *  them. */
+const insideSpan = (at: number, start: number, size: number) => start < at && at < start + size
+
+/** Half-open along the wall, for the same reason `overlaps` is: a wall that stops on a
+ *  stand's edge touches it, it does not slice it. */
+const crossesSpan = (from: number, to: number, start: number, size: number) =>
+  from < start + size && start < to
+
+/** Whether a wall runs through the interior of a cell rectangle. A stand that spans more
+ *  than one row or one column is crossed by every line between its own outer edges, and
+ *  `wall-1`/`wall-2`/`wall-3` are all legal precisely because they sit on outer edges. */
+const cuts = ({ orientation, at, from, to }: WallSegment, cell: GridRect): boolean =>
+  orientation === "h"
+    ? insideSpan(at, cell.row, cell.rows) && crossesSpan(from, to, cell.column, cell.columns)
+    : insideSpan(at, cell.column, cell.columns) && crossesSpan(from, to, cell.row, cell.rows)
+
+/** Empty cells between a wall and the nearest edge of a stand its span crosses, or `null` when
+ *  the span does not cross that stand at all. This is the measurement `cuts` cannot make: a
+ *  wall flush on a stand's outer edge is legal to it and still zero here. */
+const clearance = ({ orientation, at, from, to }: WallSegment, cell: GridRect): number | null => {
+  const crossed =
+    orientation === "h"
+      ? crossesSpan(from, to, cell.column, cell.columns)
+      : crossesSpan(from, to, cell.row, cell.rows)
+  if (!crossed) return null
+  const start = orientation === "h" ? cell.row : cell.column
+  const size = orientation === "h" ? cell.rows : cell.columns
+  return Math.min(Math.abs(at - start), Math.abs(at - (start + size)))
+}
 
 const assertInBounds = (label: string, rect: GridRect, grid: GridSize) => {
   if (rect.column + rect.columns > grid.columns || rect.row + rect.rows > grid.rows) {
@@ -57,6 +104,7 @@ export const assertFloorplanInvariants = ({
   zones,
   totems,
   blocks,
+  walls,
 }: FloorplanGuardInput): void => {
   // Guard 1 — name level. The `Exact<>` check at the top of the data module proves only
   // that two hand-written lists agree; this proves the mirror still matches the tariff.
@@ -176,6 +224,48 @@ export const assertFloorplanInvariants = ({
         `Block emission drift: ${block.id} declares ${block.expected} stands, ` +
           `emitted ${block.emitted}`,
       )
+    }
+  }
+
+  // Guard 7 — wall penetration. The first guard that compares two *declarations* rather than
+  // one declaration and its output, and the reason it cannot live in the tiler: a wall is a
+  // grid line, a stand is a cell rectangle, and a stand that spans several rows or columns
+  // is crossed by every line between its own outer edges. A two-row stand is cut in half by
+  // a wall on the row between its two rows — while guards 3, 4 and 5 all pass, because
+  // `stand.cell` is correct and correctly sized and correctly placed, and says nothing about
+  // what gets drawn over it. Only a declared line against a declared cell can see it, which
+  // is why the walls are data and not inline SVG.
+  for (const wall of walls) {
+    for (const stand of stands) {
+      if (cuts(wall, stand.cell)) {
+        throw new Error(
+          `Wall penetration: ${wall.id} at ${describeWall(wall)} cuts stand ` +
+            `${stand.id} at ${describe(stand.cell)}`,
+        )
+      }
+    }
+  }
+
+  // Guard 8 — wall clearance. Guard 7 answers "does this wall cut a stand", which is not the
+  // same question as "does this wall look attached to one": a wall on a stand's outer edge cuts
+  // nothing and still reads as that stand's own border, and there is no amount of wall-1 tuning
+  // that makes the two distinguishable to someone looking at the plan. The east wall crosses
+  // three stands whose east edge is column 58, so the distinction is what put it at 60.
+  //
+  // It is a separate guard rather than a tighter `cuts` because the two rules answer different
+  // questions and have different owners: penetration is a layout error that means a stand is
+  // unusable, while clearance is a drawing decision about how the hall should look. Folding
+  // them together would make the wall's appearance a function of a stand's existence, and a
+  // stand added next to the wall later would fail a rule that was written about drawing.
+  for (const wall of walls) {
+    for (const stand of stands) {
+      const gap = clearance(wall, stand.cell)
+      if (gap !== null && gap < WALL_CLEARANCE_CELLS) {
+        throw new Error(
+          `Wall clearance: ${wall.id} at ${describeWall(wall)} is ${gap} cells from stand ` +
+            `${stand.id} at ${describe(stand.cell)}, needs ${WALL_CLEARANCE_CELLS}`,
+        )
+      }
     }
   }
 }
