@@ -97,8 +97,8 @@ export const NIVELES: ParticipateCard[] = [
 /* ── Group 2 — Sponsorship (marca + contenidos) ──────────────────── */
 
 export const SPONSORSHIP_PRICING = [
-  { name: "Presenting Partner", price: 30000, slots: "1 empresa" },
-  { name: "Main Partner", price: 17500, slots: "2 partners" },
+  { name: "Presenting Partner", price: 20000, slots: "1 empresa" },
+  { name: "Main Partner", price: 15000, slots: "2 partners" },
   { name: "Platino Sponsor", price: 8500, slots: "10" },
   { name: "Oro Sponsor", price: 5000, slots: "20" },
   { name: "Plata Sponsor", price: 2900, slots: "Disponible" },
