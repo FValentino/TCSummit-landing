@@ -2,7 +2,7 @@
 
 import type { CSSProperties, PointerEvent } from "react"
 import type { Stand } from "./floorplanData"
-import { CATEGORY_COLOR, hotspotLabel } from "./floorplanCopy"
+import { CATEGORY_COLOR, hotspotLabel, STATUS_COLOR } from "./floorplanCopy"
 
 interface PlanHotspotProps {
   stand: Stand
@@ -24,13 +24,15 @@ export default function PlanHotspot({
   const { x, y, w, h } = stand.geometry
   const tierColor = CATEGORY_COLOR[stand.category]
 
+  const standColor = stand.status === "disponible" ? tierColor : STATUS_COLOR[stand.status]
+
   const style = {
-    "--tier": tierColor,
+    "--tier": standColor,
     left: `${x}%`,
     top: `${y}%`,
     width: `${w}%`,
     height: `${h}%`,
-    backgroundColor: `${tierColor}${FILL_ALPHA}`,
+    backgroundColor: `${standColor}${FILL_ALPHA}`,
   } as CSSProperties
 
   // `pointerType` is the only reliable way to keep the tooltip off touch: a tap fires

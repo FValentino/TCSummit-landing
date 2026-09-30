@@ -35,11 +35,16 @@ type TariffTierName = "Platino" | "Oro" | "Plata" | "Bronce"
 
 export type StandCategoryName = StandCategory
 
+
 export const STAND_STATUSES = ["disponible", "reservado", "vendido"] as const
 export type StandStatus = (typeof STAND_STATUSES)[number]
 
 export const DEFAULT_STATUS: StandStatus = "disponible"
 
+const STAND_STATUS_OVERRIDES: Partial<Record<string, StandStatus>> = {
+  "platino-03": "reservado",
+  "plata-64": "vendido",
+}
 
 export type PriceStage = "earlyBird" | "presale" | "normal"
 
@@ -144,13 +149,14 @@ const buildStands = (): { stands: Stand[]; blocks: BlockTally[] } => {
         id: `${block.category}-${number}`,
         label: `Stand ${CATEGORY_LABEL[block.category]} ${number}`,
         category: block.category,
-        status: DEFAULT_STATUS,
+        status: STAND_STATUS_OVERRIDES[`${block.category}-${number}`] ?? DEFAULT_STATUS,
         areaM2: TIER_AREA_M2[block.category],
         areaProvisional: isProvisionalArea(block.category),
         location: LOCATIONS[block.category],
         cell,
         geometry: gridToPercent(cell),
       })
+
     }
   }
   return { stands, blocks }
