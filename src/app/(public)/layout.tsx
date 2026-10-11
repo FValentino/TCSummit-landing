@@ -8,8 +8,14 @@ export default function PublicLayout({
 }>) {
   return (
     <>
+      {/* First tab stop: jumps past the fixed chrome straight to the page content. */}
+      <a href="#contenido" className="skip-link">
+        Saltar al contenido
+      </a>
       <Menu />
-      {children}
+      <div id="contenido" tabIndex={-1}>
+        {children}
+      </div>
       <Footer />
     </>
   );
