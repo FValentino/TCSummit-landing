@@ -1,57 +1,36 @@
 "use client"
 
 /**
- * Universe detail modal (M1, spec publics-depth). Renders the selected universe over the shared
- * `Modal` primitive, which owns focus trap, Escape, focus restore and scroll-lock. Entry point
- * for the six universe cards; the trigger never navigates.
+ * Universe detail modal (M1, spec publics-depth). Now a thin consumer of the shared `DetailModal`
+ * (design §Modal Primitive) instead of its own dialog body: the scaffold, focus trap and
+ * scroll-lock live there, M1 only maps a `Universe` to content. The public API is unchanged, so
+ * `UniversesGrid` needs no edits. The CTA satisfies the spec scenario "M1 opens … and a CTA" and
+ * resolves to `#participar` until S7 wires the lead modals.
  */
 
-import { useRef } from "react"
-
-import Modal from "@/components/common/modals/Modal"
+import DetailModal, { type DetailContent } from "@/components/common/modals/detailModal"
 
 import type { Universe } from "./summitData"
-
-const TITLE_ID = "universe-modal-title"
 
 interface UniverseModalProps {
   universe: Universe | null
   onClose: () => void
 }
 
+/** Rendered while closed (the scrim is inert and transparent); only `title` is required. */
+const CLOSED: DetailContent = { title: "" }
+
 export default function UniverseModal({ universe, onClose }: UniverseModalProps) {
-  const titleRef = useRef<HTMLHeadingElement>(null)
-  const open = universe !== null
+  const content: DetailContent =
+    universe === null
+      ? CLOSED
+      : {
+          eyebrow: universe.number,
+          title: universe.title,
+          subtitle: universe.tagline,
+          body: universe.detail,
+          cta: { label: "Quiero ser parte", href: "#participar" },
+        }
 
-  return (
-    <Modal
-      open={open}
-      onRequestClose={onClose}
-      labelledBy={TITLE_ID}
-      initialFocusRef={titleRef}
-      panelClassName="relative my-8 w-full max-w-lg rounded-2xl border border-[#03f5ff]/30 bg-[#001b3d] p-6 text-white shadow-2xl sm:p-8"
-    >
-      <p className="text-sm font-semibold tracking-[0.2em] text-[#03f5ff]">
-        {universe?.number ?? ""}
-      </p>
-      <h2
-        id={TITLE_ID}
-        ref={titleRef}
-        tabIndex={-1}
-        className="mt-1 text-3xl font-bold text-white focus:outline-none"
-      >
-        {universe?.title ?? ""}
-      </h2>
-      <p className="mt-2 text-sm font-medium text-[#9fd8ff]">{universe?.tagline ?? ""}</p>
-      <p className="mt-4 text-base leading-relaxed text-gray-300">{universe?.detail ?? ""}</p>
-
-      <button
-        type="button"
-        onClick={onClose}
-        className="mt-6 inline-flex items-center justify-center rounded-xl border-2 border-[#03f5ff] px-6 py-3 font-bold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
-      >
-        Cerrar
-      </button>
-    </Modal>
-  )
+  return <DetailModal open={universe !== null} onClose={onClose} content={content} />
 }
