@@ -6,7 +6,6 @@ import { STANDS, getStandById } from "./floorplanData"
 
 export interface FloorplanState {
   selectedId: string | null
-  hoveredId: string | null
   categoryFilter: StandCategory | null
   availabilityFilter: StandStatus | null
 }
@@ -14,14 +13,12 @@ export interface FloorplanState {
 export type FloorplanAction =
   | { type: "select"; id: string }
   | { type: "clear" }
-  | { type: "hover"; id: string | null }
   | { type: "setCategoryFilter"; value: StandCategory | null }
   | { type: "setAvailabilityFilter"; value: StandStatus | null }
   | { type: "resetFilters" }
 
 const EMPTY_STATE: FloorplanState = {
   selectedId: null,
-  hoveredId: null,
   categoryFilter: null,
   availabilityFilter: null,
 }
@@ -42,8 +39,6 @@ const floorplanReducer = (state: FloorplanState, action: FloorplanAction): Floor
     }
     case "clear":
       return assign(state, "selectedId", null)
-    case "hover":
-      return assign(state, "hoveredId", action.id)
     case "setCategoryFilter":
       return assign(state, "categoryFilter", action.value)
     case "setAvailabilityFilter":
@@ -108,14 +103,9 @@ export function useFloorplan() {
     return matched
   }, [categoryFilter, availabilityFilter])
 
-  const hoveredStand: Stand | undefined =
-    state.hoveredId === null ? undefined : getStandById(state.hoveredId)
-
   return {
     selectedId: state.selectedId,
     selectedStand: state.selectedId === null ? undefined : getStandById(state.selectedId),
-    hoveredId: state.hoveredId,
-    hoveredStand,
     categoryFilter,
     availabilityFilter,
     visibleIds,
@@ -124,7 +114,6 @@ export function useFloorplan() {
     hasActiveFilters: categoryFilter !== null || availabilityFilter !== null,
     select: (id: string) => dispatch({ type: "select", id }),
     clear: () => dispatch({ type: "clear" }),
-    hover: (id: string | null) => dispatch({ type: "hover", id }),
     setCategoryFilter: (value: StandCategory | null) =>
       dispatch({ type: "setCategoryFilter", value }),
     setAvailabilityFilter: (value: StandStatus | null) =>

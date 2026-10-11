@@ -3,36 +3,34 @@ import type { PriceStage, Stand, StandCategory, StandStatus, ZoneId } from "./fl
 export const SECTION_COPY = {
   eyebrow: "Mapa de stands",
   title: "Explorá el plano del recinto",
-  /** Takes the total as an argument, for the same reason `resultCount` does. It used to be
-   *  the literal `130`, sitting in the same static HTML as a panel that reads the same
-   *  number from the tariff: a figure that cannot drift printed beside one that can, and a
-   *  section able to state two different availability counts in one viewport. The argument
-   *  is also what keeps the import one-way — reading `TOTAL_STANDS` here would form a TDZ
-   *  cycle with the data module, which is the constraint `resultCount` already obeys. */
+  /** Takes the count as an argument, for the same reason `resultCount` does, and the caller
+   *  now passes `STANDS.length` rather than `TOTAL_STANDS`. The two are 115 and 130: the
+   *  tariff declares 130 slots and the layout tiles 115 of them, so a section that quoted
+   *  the tariff claimed 15 places on this floor that are not drawn — beside a legend whose
+   *  four category rows sum to the drawn 115. Two figures, one viewport, and the larger one
+   *  is the one that is not on screen. The argument keeps the import one-way; reading either
+   *  constant here would form a TDZ cycle with the data module, which is the constraint
+   *  `resultCount` already obeys. */
   subtitle: (total: number): string =>
     `${total} espacios de exhibición listos para tu marca. Seleccioná cualquier stand para ver su ubicación, superficie y disponibilidad.`,
 }
 
+/** The heading and the line under it for the right-hand column, which is where a sponsor
+ *  arrives when nothing is selected. Kept under its old name after the panel it belonged to
+ *  became the stand dialog: the string never changed, only the surface that shows it. */
 export const PANEL_INITIAL_COPY = {
   title: "Seleccioná un stand",
   body: "Explorá el mapa interactivo para conocer la ubicación, características y disponibilidad de cada espacio.",
 }
 
-/** Plural labels, keyed by the stand states. One map because the stats block and the
- *  availability filter both need the plural form, and two maps would let the page
- *  disagree with itself the way §9.13 had to fix in the hero (C12). */
+/** Plural labels, keyed by the stand states. The availability filter is the only consumer
+ *  left — the legend's rows are the states the plan actually paints, so the default one
+ *  never reaches a count here — and one map means the filter and any future surface cannot
+ *  disagree over the same word (C12). */
 export const STATUS_PLURAL: Record<StandStatus, string> = {
   disponible: "Disponibles",
   reservado: "Reservados",
   vendido: "Vendidos",
-}
-
-/** Keyed by the stand states so the stats block can be built by iterating the enum
- *  instead of listing labels next to their values (C12). */
-export const STATS_COPY = {
-  label: "Resumen del recinto",
-  total: "Total de stands",
-  ...STATUS_PLURAL,
 }
 
 export const PANEL_COPY = {
@@ -44,9 +42,9 @@ export const PANEL_COPY = {
   areaUnit: "m²",
 }
 
-/** The one word that marks a figure the commercial team has not confirmed. Three surfaces
- *  publish an area — the panel, the tooltip and the accessible name — and `DRAFT_NOTICE`
- *  only reaches one of them, so the qualifier is what carries the caveat to the other two.
+/** The one word that marks a figure the commercial team has not confirmed. Two surfaces
+ *  publish an area — the detail dialog and the accessible name — and `DRAFT_NOTICE`
+ *  only reaches one of them, so the qualifier is what carries the caveat to the other.
  *  It qualifies the *number*, not the stand: the stand is real, its dimensions are the part
  *  still under review. */
 export const AREA_QUALIFIER = "aprox."
@@ -94,12 +92,14 @@ export const FILTER_COPY = {
  *  marks only, kept here so the component carries no user-facing string. */
 export const ZOOM_GLYPH = { in: "+", out: "−", reset: "1:1" }
 
+/** Same rule for the dialog's dismiss control. */
+export const CLOSE_GLYPH = { close: "×" }
+
 export const DRAFT_NOTICE =
   "Datos de referencia en revisión. La asignación y la disponibilidad de cada stand se confirman con el equipo comercial."
 
 export const A11Y_COPY = {
   planGroup: "Mapa de stands",
-  panelRegion: "Detalle del stand",
   zoomIn: "Acercar el mapa",
   zoomOut: "Alejar el mapa",
   zoomReset: "Restablecer la vista del mapa",
@@ -134,9 +134,27 @@ export const CATEGORY_COLOR: Record<StandCategory, string> = {
   bronce: "#22D3EE",
 }
 
+/** Read by the hotspot: a stand in the default state takes its category colour and every
+ *  other state takes its own, which is what keeps an unreserved stand identifiable as its
+ *  tier instead of as a fifth, unlabelled colour. */
 export const STATUS_COLOR: Record<StandStatus, string> = {
+  // Never painted as a fill — the default state falls back to the category colour, which is
+  // why sharing a hex with `bronce` above is harmless on the plan. It is not harmless in the
+  // legend, which is why the legend's rows come from the non-default states and the data
+  // module throws if one of them ever collides with a category.
   disponible: "#22D3EE",
-  reservado: "#475569",
+  // Muted lilac, chosen by measurement across every colour the plan already paints. Two
+  // constraints drove it. First, the slate it replaces sat at 2.52:1 against the canvas
+  // field — under the 3:1 WCAG needs for a graphic that has to be seen — and at hue 215,
+  // two degrees off `platino`, so a held stand rendered as a dim blue. Second, this state is
+  // exempt from the hotspot's two opacity curtains (see `planHotspot.tsx`), so it is seen at
+  // full strength and the colour has to be quiet on its own account rather than merely
+  // legible: a saturated hue reads as a shout next to 113 tier-coloured stands.
+  // 22% saturation clears `vendido` by 77 degrees of hue and `platino` by 70, at 9.31:1.
+  // Violet is deliberately avoided — hue 283 rather than the 255 that every lavender sits on,
+  // because `planCanvas.tsx` spends violet on the totems and a stand in that band makes a
+  // totem read as a stand. The obvious `#B39DDB` is 6 degrees from the totem fill.
+  reservado: "#CBA9D9",
   vendido: "#EF4444",
 }
 
@@ -144,14 +162,23 @@ export const STATUS_COPY: Record<StandStatus, { label: string; note: string }> =
   disponible: { label: "Disponible", note: "" },
   reservado: {
     label: "Reservado",
-    note: "Este stand está reservado. Contactanos para evaluar espacios disponibles.",
+    note: "",
   },
   vendido: {
     label: "Vendido",
-    note: "Este stand fue vendido. Contactanos para recibir el catálogo de espacios disponibles.",
+    note: "",
   },
 }
 
+export const LEGEND_COPY = {
+  categories: "Categoría",
+  statuses: "Estado",
+}
+
+/** Where each tier sits in the building. Reached by the detail dialog's "Ubicación" row and by
+ *  `floorplanData` when it stamps `Stand.location`; it stopped being legend copy when the
+ *  legend rows went to name-and-count only, and the strings live on because the dialog is
+ *  where a sponsor reads where a specific stand is. */
 export const LOCATIONS: Record<StandCategory, string> = {
   platino: "Sector central frente al Main Stage",
   oro: "Anillo central - pasillos de circulación",
@@ -165,6 +192,11 @@ const shortLabel = (label: string) => label.replace("Stand ", "")
  *  sentence lives in the copy module. */
 export const resultCount = (shown: number, total: number): string =>
   `${shown} de ${total} stands`
+
+/** The legend's per-row count. Singular and plural decided here rather than at the call
+ *  site, because "1 stands" next to "21 stands" is the kind of thing that survives to
+ *  production because nothing about it is wrong at compile time. */
+export const standCount = (count: number): string => `${count} ${count === 1 ? "stand" : "stands"}`
 
 /** The single formatter for a published area, so a surface that renders its own `${areaM2}
  *  m²` is a surface that can print a provisional number with nothing to say so. The flag is
