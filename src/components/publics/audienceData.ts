@@ -23,6 +23,10 @@ export interface AudienceDescriptor {
 /** TODO(launch): confirmed ticket URL. */
 export const TICKET_URL = "#"
 
+/** CTA shown while no public is selected (brief §9: `[QUIERO SER PARTE]`). It targets the
+ *  closing `#participar` segment, the page's own conversion area. */
+export const NEUTRAL_CTA = { label: "Quiero ser parte", target: "#participar" } as const
+
 export const AUDIENCES: AudienceDescriptor[] = [
   {
     id: "asistente",
