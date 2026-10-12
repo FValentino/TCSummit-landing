@@ -16,10 +16,10 @@ import Modal from "@/components/common/modals/Modal"
 export type LeadStatus = "idle" | "success" | "error"
 
 const PANEL_CLASS =
-  "relative my-8 w-full max-w-xl rounded-2xl border border-[#F107CA]/30 bg-[#001b3d] p-6 text-white shadow-2xl sm:p-8"
+  "relative my-8 w-full max-w-xl rounded-2xl border border-[#03f5ff]/30 bg-[#001b3d] p-6 text-white shadow-2xl sm:p-8"
 
 export const LEAD_INPUT_CLASS =
-  "w-full rounded-lg border border-[#F107CA]/30 bg-black/40 px-4 py-2 text-white placeholder-gray-400 transition-colors focus:border-[#F107CA] focus:outline-none"
+  "w-full rounded-lg border border-[#03f5ff]/30 bg-black/40 px-4 py-2 text-white placeholder-gray-400 transition-colors focus:border-[#03f5ff] focus:outline-none"
 
 interface LeadFormModalProps {
   open: boolean
@@ -43,7 +43,7 @@ export function LeadFormModal({ open, onClose, kicker, title, intro, children }:
       initialFocusRef={titleRef}
       panelClassName={PANEL_CLASS}
     >
-      <p className="text-sm font-semibold tracking-[0.2em] text-[#F71ABF]">{kicker}</p>
+      <p className="text-sm font-semibold tracking-[0.2em] text-[#03f5ff]">{kicker}</p>
       <h2
         id={titleId}
         ref={titleRef}
@@ -155,7 +155,7 @@ export function LeadSubmit({ submitting, label }: { submitting: boolean; label: 
     <button
       type="submit"
       disabled={submitting}
-      className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#F107CA] to-[#C5128E] px-8 py-3 text-lg font-bold text-[#2D0448] shadow-lg transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+      className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#03f5ff] to-[#0090ff] px-8 py-3 text-lg font-bold text-[#002c6b] shadow-lg transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {submitting ? "Enviando..." : label}
     </button>
@@ -179,7 +179,7 @@ export function LeadSuccess({ message, onClose }: { message: string; onClose: ()
       <button
         type="button"
         onClick={onClose}
-        className="mt-6 inline-flex items-center justify-center rounded-xl border-2 border-[#F107CA] px-6 py-3 font-bold text-[#F71ABF] transition-colors hover:bg-[#F107CA]/10"
+        className="mt-6 inline-flex items-center justify-center rounded-xl border-2 border-[#03f5ff] px-6 py-3 font-bold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
       >
         Cerrar
       </button>

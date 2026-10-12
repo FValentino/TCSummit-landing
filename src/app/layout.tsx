@@ -38,7 +38,7 @@ export default function RootLayout({
     <html lang="es" className="overflow-x-hidden">
       <body
         className={`${saira.variable} ${orbitron.variable} ${inter.variable} antialiased 
-        w-full max-w-screen bg-gradient-to-b from-[#002c6b] to-[#2D0448] text-white overflow-x-hidden relative`}
+        w-full max-w-screen bg-[#002c6b] text-white overflow-x-hidden relative`}
       >
         {children}
       </body>

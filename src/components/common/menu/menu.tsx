@@ -12,8 +12,8 @@ import { NAV_LINKS, NAV_IDS } from '@/components/common/navLinks'
 import { useScrollSpy } from './useScrollSpy'
 
 const LINK_CLASS =
-  'text-white text-xl lg:text-base capitalize transition-colors hover:text-[#F71ABF]'
-const ACTIVE_CLASS = 'text-[#F71ABF]'
+  'text-white text-xl lg:text-base capitalize transition-colors hover:text-[#03f5ff]'
+const ACTIVE_CLASS = 'text-[#03f5ff]'
 
 export default function Menu() {
   const [showMenuMobile, setShowMenuMobile] = useState(false)
@@ -71,7 +71,7 @@ export default function Menu() {
       <header
         className={`
           w-full
-          bg-[#2D0448]/90
+          bg-blue-950/90
           backdrop-blur-md
           border-b
           border-white/10

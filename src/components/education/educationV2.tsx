@@ -28,7 +28,7 @@ export default function EducationV2() {
       aria-labelledby="educacion-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
         {EDUCACION.kicker}
       </p>
       <h2
@@ -37,7 +37,7 @@ export default function EducationV2() {
       >
         {EDUCACION.headline}
       </h2>
-      <p className="mt-2 text-lg font-medium text-[#F71ABF]">{EDUCACION.subtitle}</p>
+      <p className="mt-2 text-lg font-medium text-[#9fd8ff]">{EDUCACION.subtitle}</p>
       <p className="mt-6 max-w-3xl text-base leading-relaxed text-gray-300 sm:text-lg">
         {EDUCACION.lead}
       </p>
@@ -52,7 +52,7 @@ export default function EducationV2() {
             transition={{ duration: 0.4, delay: reduced ? 0 : index * 0.05 }}
           >
             <article className="flex h-full flex-col rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-8 transition-colors hover:border-[#03f5ff]/60">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
                 {teaser.kicker}
               </p>
               <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{teaser.headline}</h3>
@@ -72,7 +72,7 @@ export default function EducationV2() {
               <button
                 type="button"
                 onClick={() => setActive(teaser.id)}
-                className="mt-6 inline-flex w-fit items-center rounded-lg border border-[#03f5ff]/40 px-4 py-2 text-sm font-semibold text-[#F71ABF] transition-colors hover:bg-[#03f5ff]/10"
+                className="mt-6 inline-flex w-fit items-center rounded-lg border border-[#03f5ff]/40 px-4 py-2 text-sm font-semibold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
               >
                 Conocé más
               </button>

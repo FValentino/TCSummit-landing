@@ -54,7 +54,7 @@ export default function TerritorioV2() {
       aria-labelledby="territorio-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
         {TERRITORIO.kicker}
       </p>
       <h2
@@ -70,7 +70,7 @@ export default function TerritorioV2() {
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         <BlockMotion reduced={reduced} className="h-full">
           <div className={`h-full ${BLOCK_CLASS}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
               {CHACO.title}
             </p>
             <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{CHACO.headline}</h3>
@@ -94,7 +94,7 @@ export default function TerritorioV2() {
         <BlockMotion reduced={reduced} delay={0.05} className="h-full">
           <div className={`h-full ${BLOCK_CLASS}`}>
             <h3 className="text-xl font-bold text-white sm:text-2xl">{ARGENTINA.headline}</h3>
-            <p className="mt-2 text-sm font-medium text-[#F71ABF]">{ARGENTINA.subtitle}</p>
+            <p className="mt-2 text-sm font-medium text-[#9fd8ff]">{ARGENTINA.subtitle}</p>
             <ul className="mt-5 flex flex-wrap gap-2">
               {ARGENTINA.nodes.map((node) => (
                 <li
@@ -115,7 +115,7 @@ export default function TerritorioV2() {
               {LATINOAMERICA.countries.map((country) => (
                 <li
                   key={country}
-                  className="rounded-full border border-[#03f5ff]/20 bg-white/5 px-3 py-1 text-xs font-semibold text-[#F71ABF]"
+                  className="rounded-full border border-[#03f5ff]/20 bg-white/5 px-3 py-1 text-xs font-semibold text-[#03f5ff]"
                 >
                   {country}
                 </li>
@@ -136,7 +136,7 @@ export default function TerritorioV2() {
 
       <BlockMotion reduced={reduced} delay={0.05} className="mt-6">
         <div className={BLOCK_CLASS}>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
             Gobierno · Ciencia · Empresa · Educación
           </p>
           <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{GOBIERNO.headline}</h3>

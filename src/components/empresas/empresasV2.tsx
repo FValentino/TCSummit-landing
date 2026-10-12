@@ -22,7 +22,7 @@ import {
 } from "./empresasData"
 
 const CARD_CLASS =
-  "rounded-3xl border border-[#F107CA]/25 bg-white/5 p-6 transition-colors hover:border-[#F107CA]/60"
+  "rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-6 transition-colors hover:border-[#03f5ff]/60"
 
 export default function EmpresasV2() {
   const reduced = useReducedMotion()
@@ -34,7 +34,7 @@ export default function EmpresasV2() {
       aria-labelledby="empresas-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
         {EMPRESAS.kicker}
       </p>
       <h2
@@ -58,7 +58,7 @@ export default function EmpresasV2() {
             className="h-full"
           >
             <article className={`h-full ${CARD_CLASS}`}>
-              <p className="text-2xl font-bold text-[#F71ABF]">{benefit.verb}</p>
+              <p className="text-2xl font-bold text-[#03f5ff]">{benefit.verb}</p>
               <p className="mt-3 text-sm leading-relaxed text-gray-300">{benefit.body}</p>
             </article>
           </motion.li>
@@ -68,7 +68,7 @@ export default function EmpresasV2() {
       <div className="mt-8">
         <a
           href={EMPRESA_CTA.href}
-          className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#F107CA] to-[#C5128E] px-6 py-3 font-bold text-[#2D0448] transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#03f5ff] to-[#0090ff] px-6 py-3 font-bold text-[#002c6b] transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           {EMPRESA_CTA.label}
         </a>
@@ -79,9 +79,9 @@ export default function EmpresasV2() {
         whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.4 }}
-        className="mt-16 rounded-3xl border border-[#F107CA]/25 bg-white/5 p-8"
+        className="mt-16 rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-8"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
           {SPONSORS.kicker}
         </p>
         <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{SPONSORS.headline}</h3>
@@ -91,7 +91,7 @@ export default function EmpresasV2() {
           {SPONSOR_BENEFITS.map((benefit) => (
             <li
               key={benefit}
-              className="rounded-full border border-[#F107CA]/30 bg-white/5 px-3 py-1 text-xs text-gray-300"
+              className="rounded-full border border-[#03f5ff]/20 bg-white/5 px-3 py-1 text-xs text-gray-300"
             >
               {benefit}
             </li>
@@ -102,13 +102,13 @@ export default function EmpresasV2() {
           <button
             type="button"
             onClick={() => setSponsorsOpen(true)}
-            className="inline-flex items-center rounded-lg border border-[#F107CA]/40 px-4 py-2 text-sm font-semibold text-[#F71ABF] transition-colors hover:bg-[#F107CA]/10"
+            className="inline-flex items-center rounded-lg border border-[#03f5ff]/40 px-4 py-2 text-sm font-semibold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
           >
             Conocé más
           </button>
           <Link
             href={SPONSORS_CTA.href}
-            className="inline-flex items-center rounded-lg border border-[#F107CA]/40 px-4 py-2 text-sm font-semibold text-[#F71ABF] transition-colors hover:bg-[#F107CA]/10"
+            className="inline-flex items-center rounded-lg border border-[#03f5ff]/40 px-4 py-2 text-sm font-semibold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
           >
             {SPONSORS_CTA.label}
           </Link>
