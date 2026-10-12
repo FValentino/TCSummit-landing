@@ -29,7 +29,7 @@ export default function ParticlesLayer() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
       {reduced ? (
-        <div className="h-full w-full bg-gradient-to-b from-[#0091fd]/10 via-transparent to-transparent" />
+        <div className="h-full w-full bg-gradient-to-b from-[#F107CA]/10 via-transparent to-transparent" />
       ) : (
         <ParticlesBackground
           dots={mobile ? MOBILE_COUNTS.dots : DESKTOP_COUNTS.dots}

@@ -28,8 +28,8 @@ const ParticlesBackground = ({
   dots = 50,
   lines = 100,
   particleSize = 4,
-  particleColor = "#0091fd",
-  lineColor = "rgba(0, 145, 255, 0.5)",
+  particleColor = "#F107CA",
+  lineColor = "rgba(241,7,202,0.5)",
   children,
 }: ParticlesBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
