@@ -13,7 +13,7 @@ export default function SummitV2() {
       aria-labelledby="summit-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
         {SUMMIT.kicker}
       </p>
       <h2
@@ -27,7 +27,7 @@ export default function SummitV2() {
       </p>
 
       <div className="mt-12 rounded-3xl border border-[#03f5ff]/20 bg-white/5 p-8">
-        <h3 className="text-xl font-bold text-[#03f5ff] sm:text-2xl">{SUMMIT.objectiveTitle}</h3>
+        <h3 className="text-xl font-bold text-[#F71ABF] sm:text-2xl">{SUMMIT.objectiveTitle}</h3>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {SUMMIT.objectives.map((objective) => (
             <li key={objective} className="flex items-center gap-2 text-gray-200">

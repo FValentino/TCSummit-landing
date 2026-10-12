@@ -13,9 +13,9 @@ import { AUDIENCES, type AudienceDescriptor } from "./audienceData"
 import { useAudience } from "./useAudience"
 
 const CHIP_BASE =
-  "rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#03f5ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001b3d]"
-const CHIP_IDLE = "border-[#03f5ff]/40 text-gray-200 hover:border-[#03f5ff] hover:text-white"
-const CHIP_ACTIVE = "border-transparent bg-gradient-to-r from-[#03f5ff] to-[#0090ff] text-[#002c6b]"
+  "rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F107CA] focus-visible:ring-offset-2 focus-visible:ring-offset-[#001b3d]"
+const CHIP_IDLE = "border-[#F107CA]/40 text-gray-200 hover:border-[#F107CA] hover:text-white"
+const CHIP_ACTIVE = "border-transparent bg-gradient-to-r from-[#F107CA] to-[#C5128E] text-[#2D0448]"
 
 export default function AudienceSelector() {
   const { mode, select } = useAudience()

@@ -14,7 +14,7 @@ export default function ScienceV2() {
       aria-labelledby="ciencia-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
         {CIENCIA.kicker}
       </p>
       <h2

@@ -18,7 +18,7 @@ export default function HeroV2() {
     >
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <div className="space-y-6 text-center lg:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
             {HERO.eyebrow}
           </p>
 
@@ -33,7 +33,7 @@ export default function HeroV2() {
             {HERO.lead}
           </p>
 
-          <p className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-sm font-medium text-[#9fd8ff] lg:justify-start">
+          <p className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-sm font-medium text-[#F71ABF] lg:justify-start">
             <span>{HERO.date}</span>
             <span aria-hidden="true">·</span>
             <span>{HERO.location}</span>
@@ -45,7 +45,7 @@ export default function HeroV2() {
               <AudienceCta />
               <a
                 href="#summit"
-                className="inline-flex items-center justify-center rounded-2xl border-2 border-[#03f5ff] px-8 py-4 text-lg font-bold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
+                className="inline-flex items-center justify-center rounded-2xl border-2 border-[#F107CA] px-8 py-4 text-lg font-bold text-[#F71ABF] transition-colors hover:bg-[#F107CA]/10"
               >
                 {HERO.secondaryCta}
               </a>

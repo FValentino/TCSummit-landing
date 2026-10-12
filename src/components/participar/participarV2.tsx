@@ -32,7 +32,7 @@ export default function ParticiparV2() {
         transition={{ duration: 0.4 }}
         className="text-center"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
           {PARTICIPAR.kicker}
         </p>
         <h2
@@ -45,12 +45,12 @@ export default function ParticiparV2() {
           {PARTICIPAR.lead}
         </p>
 
-        <div className="mt-12 rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
+        <div className="mt-12 rounded-3xl border border-[#F107CA]/25 bg-white/5 p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
             {GALA.kicker}
           </p>
           <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{GALA.title}</h3>
-          <p className="mt-2 text-lg font-medium text-[#9fd8ff]">{GALA.headline}</p>
+          <p className="mt-2 text-lg font-medium text-[#F71ABF]">{GALA.headline}</p>
           <p className="mt-3 mx-auto max-w-2xl text-sm leading-relaxed text-gray-300">
             {GALA.body}
           </p>
@@ -59,21 +59,21 @@ export default function ParticiparV2() {
             {GALA.features.map((feature) => (
               <li
                 key={feature}
-                className="rounded-full border border-[#03f5ff]/20 bg-white/5 px-3 py-1 text-xs text-gray-300"
+                className="rounded-full border border-[#F107CA]/20 bg-white/5 px-3 py-1 text-xs text-gray-300"
               >
                 {feature}
               </li>
             ))}
           </ul>
 
-          <p className="mt-5 border-l-2 border-[#03f5ff]/50 pl-4 text-base italic text-gray-200">
+          <p className="mt-5 border-l-2 border-[#F107CA]/50 pl-4 text-base italic text-gray-200">
             {GALA.closing}
           </p>
 
           <button
             type="button"
             onClick={() => setVenueOpen(true)}
-            className="mt-6 inline-flex items-center rounded-lg border border-[#03f5ff]/40 px-4 py-2 text-sm font-semibold text-[#03f5ff] transition-colors hover:bg-[#03f5ff]/10"
+            className="mt-6 inline-flex items-center rounded-lg border border-[#F107CA]/40 px-4 py-2 text-sm font-semibold text-[#F71ABF] transition-colors hover:bg-[#F107CA]/10"
           >
             Conocé más
           </button>

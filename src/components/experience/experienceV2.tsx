@@ -24,7 +24,7 @@ export default function ExperienceV2() {
       aria-labelledby="experiencia-title"
       className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
         {EXPERIENCIA.kicker}
       </p>
       <h2
@@ -51,11 +51,11 @@ export default function ExperienceV2() {
               onClick={() => setOpenId(element.id)}
               className="flex h-full w-full flex-col items-start rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-6 text-left transition-colors hover:border-[#03f5ff]/60"
             >
-              <span className="text-[#03f5ff]">{element.label}</span>
+              <span className="text-[#F71ABF]">{element.label}</span>
               <span className="mt-3 flex-1 text-sm leading-relaxed text-gray-300">
                 {element.teaser}
               </span>
-              <span className="mt-4 inline-flex items-center rounded-lg border border-[#03f5ff]/40 px-3 py-1 text-xs font-semibold text-[#03f5ff]">
+              <span className="mt-4 inline-flex items-center rounded-lg border border-[#03f5ff]/40 px-3 py-1 text-xs font-semibold text-[#F71ABF]">
                 Conocé más
               </span>
             </button>

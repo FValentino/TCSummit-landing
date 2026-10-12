@@ -28,12 +28,12 @@ export default function DepthPage({
     <main className="mx-auto w-full max-w-4xl px-6 pb-24 pt-28">
       <Link
         href="/"
-        className="inline-flex items-center text-sm font-semibold text-[#03f5ff] hover:underline"
+        className="inline-flex items-center text-sm font-semibold text-[#F71ABF] hover:underline"
       >
         ← Volver al inicio
       </Link>
 
-      <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+      <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF] sm:text-sm">
         {kicker}
       </p>
       <h1 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
@@ -48,7 +48,7 @@ export default function DepthPage({
           {sections.map((section) => (
             <section
               key={section.heading}
-              className="rounded-3xl border border-[#03f5ff]/25 bg-white/5 p-8"
+              className="rounded-3xl border border-[#F107CA]/25 bg-white/5 p-8"
             >
               <h2 className="text-xl font-bold text-white sm:text-2xl">{section.heading}</h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-300 sm:text-base">
@@ -58,7 +58,7 @@ export default function DepthPage({
               {section.items !== undefined && section.items.length > 0 ? (
                 <div className="mt-5">
                   {section.itemsLabel !== undefined ? (
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff]">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F71ABF]">
                       {section.itemsLabel}
                     </p>
                   ) : null}
@@ -66,7 +66,7 @@ export default function DepthPage({
                     {section.items.map((item) => (
                       <li
                         key={item}
-                        className="rounded-full border border-[#03f5ff]/20 bg-white/5 px-3 py-1 text-sm text-gray-200"
+                        className="rounded-full border border-[#F107CA]/30 bg-white/5 px-3 py-1 text-sm text-gray-200"
                       >
                         {item}
                       </li>
@@ -83,7 +83,7 @@ export default function DepthPage({
         <div className="mt-12">
           <Link
             href={cta.href}
-            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#03f5ff] to-[#0090ff] px-6 py-3 font-bold text-[#002c6b]"
+            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#F107CA] to-[#C5128E] px-6 py-3 font-bold text-[#2D0448]"
           >
             {cta.label}
           </Link>

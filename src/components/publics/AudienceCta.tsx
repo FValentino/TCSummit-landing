@@ -17,7 +17,7 @@ import { AUDIENCES, NEUTRAL_CTA, type AudienceMode } from "./audienceData"
 import { useAudience } from "./useAudience"
 
 const CTA_CLASS =
-  "inline-flex cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-r from-[#03f5ff] to-[#0090ff] px-8 py-4 text-lg font-bold text-[#002c6b] shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.97]"
+  "inline-flex cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-r from-[#F107CA] to-[#C5128E] px-8 py-4 text-lg font-bold text-[#2D0448] shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.97]"
 
 const NEUTRAL_LABEL = NEUTRAL_CTA.label
 const NEUTRAL_HREF = NEUTRAL_CTA.target
