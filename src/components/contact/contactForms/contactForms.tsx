@@ -47,14 +47,7 @@ export default function ContactForms() {
             className="flex-1 bg-black/40 border border-[#03f5ff]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#03f5ff] disabled:opacity-50"
           />
           {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
-
-          <textarea
-            {...register("message")}
-            placeholder="tu mensaje"
-            disabled={isSubmitting}
-            rows={4}
-            className="flex-1 bg-black/40 border border-[#03f5ff]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#03f5ff] disabled:opacity-50"
-          />
+          <textarea {...register('message')} placeholder="tu mensaje" className="flex-1 bg-black/40 border border-[#03f5ff]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#03f5ff]" rows={4} />
           {errors.message && <span className="text-red-500 text-sm">{errors.message.message}</span>}
         </div>
 

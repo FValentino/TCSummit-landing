@@ -1,15 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useReducedMotion } from 'framer-motion'
 import { Menu as MenuIcon, X } from 'lucide-react'
 import * as NavigationMenu from '@radix-ui/react-navigation-menu'
 
 import logo from '@/assets/images/logo.png'
+import { NAV_LINKS, NAV_IDS } from '@/components/common/navLinks'
+import { useScrollSpy } from './useScrollSpy'
+
+const LINK_CLASS =
+  'text-white text-xl lg:text-base capitalize transition-colors hover:text-[#03f5ff]'
+const ACTIVE_CLASS = 'text-[#03f5ff]'
 
 export default function Menu() {
   const [showMenuMobile, setShowMenuMobile] = useState(false)
+  const reduced = useReducedMotion()
+  const activeId = useScrollSpy(NAV_IDS)
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,28 +39,30 @@ export default function Menu() {
     setShowMenuMobile((prev) => !prev)
   }
 
-  function handleLinkClick() {
+  function handleLinkClick(event: MouseEvent<HTMLAnchorElement>, id: string) {
     if (window.innerWidth < 1024) {
       setShowMenuMobile(false)
     }
+    // Under reduced motion, leave the native hash jump to the browser — no smooth scroll.
+    if (reduced) return
+    const target = document.getElementById(id)
+    if (target === null) return
+    event.preventDefault()
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    window.history.replaceState(null, '', `#${id}`)
   }
 
-  function getLink(name: string) {
+  function renderLink(id: string, label: string) {
+    const isActive = activeId === id
     return (
-      <Link
-        href={`#${name}`}
-        onClick={handleLinkClick}
-        className={`
-          text-white
-          text-xl
-          lg:text-base
-          capitalize
-          transition-opacity
-          hover:opacity-80
-        `}
+      <a
+        href={`#${id}`}
+        onClick={(event) => handleLinkClick(event, id)}
+        aria-current={isActive ? 'true' : undefined}
+        className={`${LINK_CLASS} ${isActive ? ACTIVE_CLASS : ''}`}
       >
-        {name}
-      </Link>
+        {label}
+      </a>
     )
   }
 
@@ -115,6 +126,7 @@ export default function Menu() {
               aria-label={
                 showMenuMobile ? 'Cerrar menú' : 'Abrir menú'
               }
+              aria-expanded={showMenuMobile}
             >
               {showMenuMobile ? (
                 <X className={`w-7 h-7`} />
@@ -132,11 +144,9 @@ export default function Menu() {
                   gap-8
                 `}
               >
-                <li>{getLink('inicio')}</li>
-                <li>{getLink('actividades')}</li>
-                <li>{getLink('nosotros')}</li>
-                <li>{getLink('roadmap')}</li>
-                <li>{getLink('contacto')}</li>
+                {NAV_LINKS.map((link) => (
+                  <li key={link.id}>{renderLink(link.id, link.label)}</li>
+                ))}
               </NavigationMenu.List>
             </div>
           </div>
@@ -164,11 +174,9 @@ export default function Menu() {
                 pt-2
               `}
             >
-              <li>{getLink('inicio')}</li>
-              <li>{getLink('actividades')}</li>
-              <li>{getLink('nosotros')}</li>
-              <li>{getLink('roadmap')}</li>
-              <li>{getLink('contacto')}</li>
+              {NAV_LINKS.map((link) => (
+                <li key={link.id}>{renderLink(link.id, link.label)}</li>
+              ))}
             </NavigationMenu.List>
           </div>
         </nav>

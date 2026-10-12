@@ -18,12 +18,18 @@ interface Particle {
   vy: number;
 }
 
+// Tope de densidad en pantallas chicas: el cálculo de distancias es O(n²) por frame, así que
+// un canvas con 100 partículas cuesta lo mismo que tres. El caller puede pedir más; acá se
+// recorta. No cambia la API pública.
+const MOBILE_MAX_DOTS = 40;
+const MOBILE_MAX_LINES = 90;
+
 const ParticlesBackground = ({
   dots = 50,
   lines = 100,
   particleSize = 4,
-  particleColor = "#0091fd",
-  lineColor = "rgba(0, 145, 255, 0.5)",
+  particleColor = "#F107CA",
+  lineColor = "rgba(241,7,202,0.5)",
   children,
 }: ParticlesBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -37,6 +43,14 @@ const ParticlesBackground = ({
     const context = canvas.getContext("2d");
     if (!context) return;
 
+    // Con `prefers-reduced-motion` no arrancamos ningún RAF: el canvas queda vacío y el
+    // wrapper (ParticlesLayer) muestra un gradiente estático en su lugar.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const dotCount = isMobile ? Math.min(dots, MOBILE_MAX_DOTS) : dots;
+    const lineCount = isMobile ? Math.min(lines, MOBILE_MAX_LINES) : lines;
+
     const particles: Particle[] = [];
 
     const resizeCanvas = () => {
@@ -47,7 +61,7 @@ const ParticlesBackground = ({
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    for (let i = 0; i < dots; i++) {
+    for (let i = 0; i < dotCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -65,7 +79,11 @@ const ParticlesBackground = ({
       context.stroke();
     };
 
+    let rafId = 0;
+    let cancelled = false;
+
     const animate = () => {
+      if (cancelled) return;
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = particleColor;
 
@@ -78,7 +96,7 @@ const ParticlesBackground = ({
           const dy = p.y - p2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < lines) drawLine(p, p2);
+          if (distance < lineCount) drawLine(p, p2);
         }
 
         p.x += p.vx;
@@ -88,12 +106,18 @@ const ParticlesBackground = ({
         if (p.y > canvas.height || p.y < 0) p.vy *= -1;
       });
 
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     };
 
+    // `cancelled` + `cancelAnimationFrame` en el cleanup: sin esto el loop sigue vivo después
+    // del unmount y cada remount (scroll largo, cambio de ruta) apila otro callback.
     animate();
 
-    return () => window.removeEventListener("resize", resizeCanvas);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", resizeCanvas);
+    };
   }, [dots, lines, particleSize, particleColor, lineColor]);
 
   return (

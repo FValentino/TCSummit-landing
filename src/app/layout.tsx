@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "@/config/env"; // Fail-fast: valida env vars al inicio
-import Menu from "@/components/common/menu/menu";
-import Footer from "@/components/common/footer/footer";
-
 import { Saira, Orbitron, Inter } from "next/font/google";
 
 const saira = Saira({
@@ -41,13 +37,9 @@ export default function RootLayout({
     <html lang="es" className="overflow-x-hidden">
       <body
         className={`${saira.variable} ${orbitron.variable} ${inter.variable} antialiased 
-        w-full max-w-screen bg-[#002c6b] text-white overflow-x-hidden relative`}
+        w-full max-w-screen bg-radial from-[#002c6b] via-[#19195b] to-[#2D0448] text-white overflow-x-hidden relative`}
       >
-        <Menu/>
-
         {children}
-        
-        <Footer/>
       </body>
     </html>
   );

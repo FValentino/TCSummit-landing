@@ -1,16 +1,8 @@
 "use server";
 
 import { contactSchema } from "@/schemas/contactSchema";
-import resend from "@/client/resend";
-import { env } from "@/config/env";
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+import { sendEmail } from "@/lib/email";
+import { escapeHtml, escapeHtmlMultiline } from "@/lib/html";
 
 export async function contactEmail(data: {
   name: string;
@@ -24,24 +16,17 @@ export async function contactEmail(data: {
   }
 
   const { name, email, message } = parsed.data;
+  const toEmail = process.env.CONTACT_TO_EMAIL ?? "contacto@tcsummit.net";
 
-  try {
-    await resend.emails.send({
-      from: `I&M <${env.FROM_EMAIL}>`,
-      to: [env.TO_EMAIL],
-      replyTo: email,
-      subject: "[Web] Nuevo contacto",
-      html: `
-        <h2>[Web] Nuevo contacto</h2>
-        <p><b>Nombre:</b> ${escapeHtml(name)}</p>
-        <p><b>Email:</b> ${escapeHtml(email)}</p>
-        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
-      `,
-    });
-
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false };
-  }
+  return sendEmail({
+    to: toEmail,
+    subject: "[Web] Nuevo contacto",
+    html: `
+      <h2>[Web] Nuevo contacto</h2>
+      <p><b>Nombre:</b> ${escapeHtml(name)}</p>
+      <p><b>Email:</b> ${escapeHtml(email)}</p>
+      <p>${escapeHtmlMultiline(message)}</p>
+    `,
+    replyTo: email,
+  });
 }

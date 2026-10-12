@@ -21,7 +21,7 @@ export default function IntroductionHeader(){
         <motion.h3
           className="text-3xl lg:text-4xl font-bold text-white"
         >
-          TechnoCrypto Summit 2026: Conectando el Futuro
+          TechnoCrypto Summit 2027: Conectando el Futuro
         </motion.h3>
       </motion.div>
 
@@ -33,12 +33,12 @@ export default function IntroductionHeader(){
         transition={{ duration: 0.8 }}
         className="w-full text-center  mb-16 flex items-center justify-center"
       >
-          <div
-            className="w-10 h-10 bg-gradient-to-br from-[#03f5ff] to-[#0090ff] rounded-full flex items-center justify-center"
-          >
+        <motion.div
+          className="w-10 h-10 bg-gradient-to-br from-[#03f5ff] to-[#0090ff] rounded-full flex items-center justify-center"
+        >
           <span className="text-white font-bold text-4xl">T</span>
-        </div>
-        <p className="text-[white] font-bold text-3xl ms-3">TCSUMMIT 2026</p>
+        </motion.div>
+        <p className="text-[white] font-bold text-3xl ms-3">TCSUMMIT 2027</p>
       </motion.div>
     </>
   )
