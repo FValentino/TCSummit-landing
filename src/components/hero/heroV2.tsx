@@ -10,7 +10,7 @@ export default function HeroV2() {
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-28"
+      className="relative z-10 flex min-h-screen w-full flex-col justify-center items-stretch px-6 pb-20 pt-28"
     >
       <HeroVideo />
       <div className="relative z-10 grid items-center gap-12 lg:grid-cols-2">

@@ -33,7 +33,7 @@ export default function HeroMedia() {
   return (
     <div
       ref={frameRef}
-      className="relative aspect-video w-full overflow-hidden rounded-3xl border border-[#03f5ff]/30 bg-[#001b3d]/40 shadow-2xl"
+      className="relative aspect-video w-full overflow-hidden rounded-3xl h-full flex items-center justify-center"
     >
       {poster.src !== "" ? (
         <Image
@@ -42,8 +42,7 @@ export default function HeroMedia() {
           width={poster.width}
           height={poster.height}
           priority
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="h-full w-full object-contain"
+          className="h-[80%] w-full object-contain"
         />
       ) : (
         <motion.div
