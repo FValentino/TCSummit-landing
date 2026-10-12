@@ -4,6 +4,11 @@
  * TODO_ASSETS tracks what still needs real production. Non-blocking.
  */
 
+import { StaticImageData } from "next/image"
+
+import HERO_IMAGE from "@/assets/images/hero/robot.webp"
+
+
 export type AssetKey =
   | "heroPoster"
   | "heroVideo"
@@ -17,41 +22,95 @@ export type AssetKey =
   | "territorio"
   | "conicetLogo"
 
-export interface AssetEntry {
-  src: string
-  /** Optional intrinsic width — enables aspect-ratio and the CLS budget. */
-  width?: number
-  /** Optional intrinsic height — enables aspect-ratio and the CLS budget. */
-  height?: number
-  /** Poster for video entries (hero). */
-  poster?: string
-  alt: string
-}
+export type AssetEntry =
+  | {
+      type: "image";
+      src: string | StaticImageData;
+      width?: number;
+      height?: number;
+      alt: string;
+    }
+  | {
+      type: "video";
+      src: string;
+      poster?: string;
+      alt: string;
+    };
 
 const PLACEHOLDER = "" // real asset pending — see TODO_ASSETS
 
+const HERO_VIDEO = "/videos/header/backgroundWEBM.webm"
+
 export const assets: Record<AssetKey, AssetEntry> = {
   heroPoster: {
-    src: PLACEHOLDER,
+    type: "image",
+    src: HERO_IMAGE,
     width: 1600,
     height: 900,
     alt: "TCSummit 2027 — próxima edición",
   },
+
   heroVideo: {
-    src: PLACEHOLDER,
+    type: "video",
+    src: HERO_VIDEO,
     poster: PLACEHOLDER,
     alt: "Video de apertura TCSummit 2027",
   },
-  summit: { src: PLACEHOLDER, alt: "TCSummit 2027 — el evento" },
-  ciencia: { src: PLACEHOLDER, alt: "Ciencia — sistema científico-tecnológico" },
-  tecnologia: { src: PLACEHOLDER, alt: "Tecnología — inteligencia artificial y blockchain" },
-  innovacion: { src: PLACEHOLDER, alt: "Innovación — laboratorio de futuro" },
-  educacion: { src: PLACEHOLDER, alt: "Educación — formación y estudiantes" },
-  experiencia: { src: PLACEHOLDER, alt: "Experiencia — vivencia TCSummit" },
-  empresas: { src: PLACEHOLDER, alt: "Empresas — sponsorship" },
-  territorio: { src: PLACEHOLDER, alt: "Territorio — articulación público-privada" },
-  conicetLogo: { src: PLACEHOLDER, alt: "Sistema científico-tecnológico" },
-}
+
+  summit: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "TCSummit 2027 — el evento",
+  },
+
+  ciencia: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Ciencia — sistema científico-tecnológico",
+  },
+
+  tecnologia: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Tecnología — inteligencia artificial y blockchain",
+  },
+
+  innovacion: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Innovación — laboratorio de futuro",
+  },
+
+  educacion: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Educación — formación y estudiantes",
+  },
+
+  experiencia: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Experiencia — vivencia TCSummit",
+  },
+
+  empresas: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Empresas — sponsorship",
+  },
+
+  territorio: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Territorio — articulación público-privada",
+  },
+
+  conicetLogo: {
+    type: "image",
+    src: PLACEHOLDER,
+    alt: "Sistema científico-tecnológico",
+  },
+};
 
 /**
  * TODO(assets): keys awaiting real media production — the §60/§61 launch gate.

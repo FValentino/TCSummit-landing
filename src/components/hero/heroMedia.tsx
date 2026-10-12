@@ -35,7 +35,7 @@ export default function HeroMedia() {
       ref={frameRef}
       className="relative aspect-video w-full overflow-hidden rounded-3xl h-full flex items-center justify-center"
     >
-      {poster.src !== "" ? (
+      {poster.type === "image" && poster.src !== "" ? (
         <Image
           src={poster.src}
           alt={poster.alt}

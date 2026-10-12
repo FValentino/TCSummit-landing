@@ -34,7 +34,7 @@ export default function HeroVideo() {
   return (
     <div ref={frameRef} className="absolute inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0 bg-[#001b3d]/60" aria-hidden="true" />
-      {mountVideo && video.src !== "" ? (
+      {mountVideo && video.type === "video" ? (
         <video
           className="h-full w-full object-cover"
           src={video.src}
