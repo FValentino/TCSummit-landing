@@ -81,7 +81,7 @@ export const EXPERIENCE_ELEMENTS: ExperienceElement[] = [
       body: "Empresas, startups, universidades e instituciones muestran prototipos, productos y tecnologías emergentes.",
       itemsLabel: "Participan",
       items: ["Empresas", "Startups", "Universidades", "Centros de investigación"],
-      cta: { label: "Quiero un stand", href: "#participar" },
+      cta: { label: "Ver la Expo", href: "/expo" },
     },
   },
   {
@@ -94,7 +94,7 @@ export const EXPERIENCE_ELEMENTS: ExperienceElement[] = [
       body: "Equipos que resuelven desafíos reales en pocas horas, con mentoría y foco en el prototipo.",
       itemsLabel: "Áreas",
       items: ["IA", "Blockchain", "Robótica", "Educación", "Ambiente", "Ciudades", "Datos"],
-      cta: { label: "Quiero participar", href: "#participar" },
+      cta: { label: "Ver la Hackathon", href: "/hackathon" },
     },
   },
   {
