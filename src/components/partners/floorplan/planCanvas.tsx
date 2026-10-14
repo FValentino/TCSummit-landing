@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react"
 import { motion, useMotionValue, useReducedMotion } from "framer-motion"
 import PlanHotspot from "./planHotspot"
-import PlanTooltip from "./planTooltip"
 import PlanWall from "./planWall"
 import PlanEntry from "./planEntry"
 import { A11Y_COPY, TOTEM_LABEL, ZONE_LABEL, ZOOM_GLYPH } from "./floorplanCopy"
@@ -69,8 +68,8 @@ function PlanZone({ zone }: { zone: Zone }) {
 
 /** `role="img"` rather than `PlanZone`'s `role="group"`: a zone is a region of the hall to be
  *  read, a totem is a marked object standing on it, and it carries no visible text because two
- *  cells is a thirtieth of the plan's width. No handlers, no focus ring, no tooltip — the whole
- *  treatment is that it is not inventory. */
+ *  cells is a thirtieth of the plan's width. No handlers, no focus ring — the whole
+ * treatment is that it is not inventory. */
 function PlanTotem({ totem }: { totem: Totem }) {
   const { x, y, w, h } = gridToPercent(totem.cell)
   return (
@@ -85,10 +84,8 @@ function PlanTotem({ totem }: { totem: Totem }) {
 
 interface PlanCanvasProps {
   selectedId: string | null
-  hoveredStand?: Stand
   isFilteredOut: (stand: Stand) => boolean
   onSelect: (id: string) => void
-  onHover: (id: string | null) => void
 }
 
 /** `drag` writes `touch-action: none` on the element it owns, which would cancel the
@@ -108,10 +105,8 @@ function useFinePointer() {
 
 export default function PlanCanvas({
   selectedId,
-  hoveredStand,
   isFilteredOut,
   onSelect,
-  onHover,
 }: PlanCanvasProps) {
   const reduced = useReducedMotion()
   const canDrag = useFinePointer()
@@ -216,7 +211,6 @@ export default function PlanCanvas({
               selected={selectedId === stand.id}
               filteredOut={isFilteredOut(stand)}
               onSelect={onSelect}
-              onHover={onHover}
             />
           ))}
         </div>
@@ -238,8 +232,6 @@ export default function PlanCanvas({
             <PlanEntry key={`${entry.column}:${entry.row}`} entry={entry} />
           ))}
         </div>
-
-        <PlanTooltip stand={hoveredStand} zoom={zoom} />
       </motion.div>
 
       {/* Bottom-right: the zoom cluster, nothing else. The legend, the metrics box and the

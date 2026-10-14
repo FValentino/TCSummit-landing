@@ -1,5 +1,5 @@
 import { STAND_PRICING } from "@/components/partners/participate/participateData"
-import { CATEGORY_LABEL, LOCATIONS } from "./floorplanCopy"
+import { CATEGORY_COLOR, CATEGORY_LABEL, LOCATIONS, STATUS_COLOR } from "./floorplanCopy"
 import { assertFloorplanInvariants, type BlockTally } from "./floorplanGuards"
 import { BLOCKS, TOTEMS } from "./floorplanStands"
 import { WALLS } from "./floorplanWalls"
@@ -39,7 +39,54 @@ export type StandCategoryName = StandCategory
 export const STAND_STATUSES = ["disponible", "reservado", "vendido"] as const
 export type StandStatus = (typeof STAND_STATUSES)[number]
 
-export const DEFAULT_STATUS: StandStatus = "disponible"
+/** Narrowed to the literal on purpose: `LEGEND_STATUSES` and the legend's copy map are both
+ *  `Exclude<…>` of this value, and an `Exclude` against the whole enum collapses to `never`.
+ *  `satisfies` is what keeps it checked against the enum without widening it back. */
+export const DEFAULT_STATUS = "disponible" satisfies StandStatus
+
+/** The states a stand can hold other than the default — the only ones that reach
+ *  `STATUS_COLOR`, because the default state paints with its category colour instead. */
+export type NonDefaultStatus = Exclude<StandStatus, typeof DEFAULT_STATUS>
+
+/** Derived, never listed: the legend's status rows are exactly the states the plan paints
+ *  from `STATUS_COLOR`, so a row for the default state would advertise a colour the plan
+ *  never draws, and a fourth state needs no edit in the component that renders these. */
+export const LEGEND_STATUSES: NonDefaultStatus[] = STAND_STATUSES.filter(
+  (status): status is NonDefaultStatus => status !== DEFAULT_STATUS,
+)
+
+/** Nine guards, and the only one that reads colour rather than geometry — which is why it
+ *  lives here and not in `floorplanGuards.ts`: that module is a leaf by contract, and the
+ *  only module that sees both the paint tables is this one. Two entries of the same table
+ *  sharing a hex compiles, builds and renders as a plausible-looking plan, and the legend
+ *  is precisely the surface where it stops being plausible: it prints both entries as
+ *  adjacent rows, so a collision publishes two rows that look identical. Unconditional,
+ *  like the eight. */
+const assertLegendColoursDistinct = (): void => {
+  const painted = [
+    ...STAND_CATEGORIES.map((category) => ({
+      owner: `category ${category}`,
+      colour: CATEGORY_COLOR[category],
+    })),
+    ...LEGEND_STATUSES.map((status) => ({ owner: `state ${status}`, colour: STATUS_COLOR[status] })),
+  ]
+  // Case- and whitespace-insensitive: `#22D3EE` and `#22d3ee` are one colour to the eye and
+  // would otherwise be two keys here.
+  const seen = new Map<string, string>()
+  for (const { owner, colour } of painted) {
+    const key = colour.trim().toLowerCase()
+    const taken = seen.get(key)
+    if (taken !== undefined) {
+      throw new Error(
+        `Legend colour collision: ${owner} paints ${colour}, already used by ${taken} — the ` +
+          `legend would print two rows that look identical`,
+      )
+    }
+    seen.set(key, owner)
+  }
+}
+
+assertLegendColoursDistinct()
 
 const STAND_STATUS_OVERRIDES: Partial<Record<string, StandStatus>> = {
   "platino-03": "reservado",
