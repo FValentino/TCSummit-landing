@@ -158,7 +158,7 @@ export default function Hero() {
                 transition={{
                   boxShadow: { duration: 2, repeat: Number.POSITIVE_INFINITY },
                 }}
-              onClick={()=>{router.push("/new-feature")}}
+              onClick={()=>{router.push("#contacto")}}
               >
                 Comprar entradas
               </motion.button>

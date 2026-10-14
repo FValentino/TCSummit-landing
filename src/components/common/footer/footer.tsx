@@ -1,4 +1,6 @@
-import { NAV_LINKS } from '@/components/common/navLinks'
+import Link from 'next/link'
+
+import { DEPTH_LINKS, NAV_LINKS } from '@/components/common/navLinks'
 
 /** Full chrome footer: brand block, anchor navigation and the closing CTA. A server
  *  component on purpose — no motion, no client state, nothing that needs hydration. */
@@ -8,7 +10,7 @@ export default function Footer() {
       className="relative z-30 border-t border-[#03f5ff]/30 bg-black/60 py-12 backdrop-blur-xl"
       aria-label="Pie de página"
     >
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div
             className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#03f5ff] to-[#0090ff]"
@@ -36,6 +38,24 @@ export default function Footer() {
                 >
                   {link.label}
                 </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav aria-label="Secciones del evento">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#03f5ff]">
+            Profundizar
+          </h2>
+          <ul className="space-y-2">
+            {DEPTH_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-gray-300 transition-colors hover:text-[#03f5ff]"
+                >
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>

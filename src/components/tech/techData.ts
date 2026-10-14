@@ -42,3 +42,9 @@ export const BLOCKCHAIN = {
   ],
   message: "Tecnología para experimentar, comprender y aplicar.",
 } as const
+
+/** §28 teaser — routes to `/tcst` only when the legal gate is open (spec legal-gates §55). */
+export const TCST_TEASER = {
+  label: "Conocé TCST",
+  href: "/tcst",
+} as const

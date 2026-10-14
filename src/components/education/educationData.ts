@@ -142,3 +142,27 @@ export const VOCACIONES_DETAIL: DetailContent = {
   footnote: "Tal vez el futuro de alguien comience en el Summit.",
   cta: { label: "Quiero participar", href: "#participar" },
 }
+
+/** Contact channel absorbed from the retired `/estudiantes` route (spec publics-depth). */
+export const ESTUDIANTES_EMAIL = "estudiantes@tcsummit.net"
+
+export const FOLD_CTA = "Quiero participar"
+
+/** Folded `/estudiantes` narrative: the student CTA that used to live on its own route now
+ *  renders inside `#educacion`, with the registration paths and the transport note preserved. */
+export const EDUCATION_FOLD = {
+  kicker: "Estudiantes",
+  headline: "¿Sos estudiante secundario o universitario?",
+  lead: "El futuro tiene nombre y apellido, y puede estar hoy en un aula. Charlas que inspiran, ciencia para experimentar y contacto directo con quienes construyen tecnología.",
+  paths: [
+    {
+      title: "Registro institucional",
+      body: "Tu colegio o facultad recibe un código de acceso para participar.",
+    },
+    {
+      title: "Estudiante independiente",
+      body: "Escribinos a estudiantes@tcsummit.net y te contamos cómo sumarte.",
+    },
+  ],
+  note: "*Las plazas de transporte se asignan por orden de inscripción.",
+} as const

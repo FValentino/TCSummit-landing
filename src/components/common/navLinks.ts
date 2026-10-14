@@ -29,3 +29,21 @@ export const NAV_LINKS: NavLink[] = flags.homepageV2 ? CHAPTER_LINKS : LEGACY_LI
 
 /** Anchor ids for the scrollspy to observe, in visual order. */
 export const NAV_IDS: string[] = NAV_LINKS.map((link) => link.id)
+
+export interface RouteLink {
+  href: string
+  label: string
+}
+
+/** Depth routes (spec publics-depth "Route inventory"): the long/legal content that lives on
+ *  its own page instead of a modal. Consumed by the footer; the sticky menu stays in-page.
+ *  TCST is gated by `tcstEnabled` because mentioning the token on the site is the legal gate. */
+const DEPTH_LINKS_BASE: RouteLink[] = [
+  { href: "/speakers", label: "Speakers" },
+  { href: "/hackathon", label: "Hackathon" },
+  { href: "/expo", label: "Expo" },
+]
+
+export const DEPTH_LINKS: RouteLink[] = flags.tcstEnabled
+  ? [...DEPTH_LINKS_BASE, { href: "/tcst", label: "TCST" }]
+  : DEPTH_LINKS_BASE

@@ -1,20 +1,7 @@
-import Hero from '@/components/students/hero/hero'
-import Introduction from '@/components/students/introduction/introduction'
-import Oportunities from '@/components/students/oportunities/oportunities'
-import Activities from '@/components/students/activities/activities'
-import ParticlesBackground from '@/components/utils/ParticlesBackground'
+import { permanentRedirect } from "next/navigation"
 
-export default function StudentsPage() {
-  return (
-    <main className="w-full">
-      <ParticlesBackground dots={50} lines={0}>
-        <Hero />
-      </ParticlesBackground>
-      <ParticlesBackground dots={300} lines={100}>
-        <Introduction />
-        <Oportunities />
-        <Activities />
-      </ParticlesBackground>
-    </main>
-  )
+/** `/estudiantes` folded into `#educacion` (spec publics-depth; resolved decision 3). The route
+ *  stays alive as a permanent redirect so existing links and bookmarks keep working. */
+export default function EstudiantesPage() {
+  permanentRedirect("/#educacion")
 }

@@ -3,14 +3,14 @@
 /**
  * `#educacion` chapter (spec homepage-narrative, brief §17–§21; spec publics-depth "Overlap —
  * /estudiantes disposition"). Client island: each teaser's "Conocé más" opens its §18–§21 detail
- * without navigating. The chapter is the fold target for `/estudiantes` content, which migrates in
- * S8 together with the `permanentRedirect('/#educacion')`; this module owns the narrative now so
- * that move is purely mechanical. Entrance motion is disabled under `prefers-reduced-motion`.
+ * without navigating, and the folded `/estudiantes` content renders inline via `EstudiantesFold`.
+ * Entrance motion is disabled under `prefers-reduced-motion`.
  */
 
 import { useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 
+import EstudiantesFold from "./estudiantesFold"
 import EstudiantesModal from "./estudiantesModal"
 import UniversitariosModal from "./universitariosModal"
 import UniversidadesModal from "./universidadesModal"
@@ -81,6 +81,7 @@ export default function EducationV2() {
         ))}
       </ul>
 
+      <EstudiantesFold />
       <EstudiantesModal open={active === "estudiantes"} onClose={close} />
       <UniversitariosModal open={active === "universitarios"} onClose={close} />
       <UniversidadesModal open={active === "universidades"} onClose={close} />
