@@ -3,20 +3,17 @@ import AudienceSelector from "@/components/publics/AudienceSelector"
 
 import { HERO } from "./heroData"
 import HeroMedia from "./heroMedia"
+import HeroVideo from "./heroVideo"
 
-/**
- * `#hero` chapter (spec homepage-narrative, audience-selection). Server-rendered copy owns the
- * single `<h1>`; the audience selector and CTA are client islands so the static shell ships with
- * minimal JS. There is no auto-scroll and no preselected chip on load (spec §audience-neutral).
- */
 export default function HeroV2() {
   return (
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-center px-6 pb-20 pt-28"
+      className="relative z-10 flex min-h-screen w-full flex-col justify-center items-stretch px-6 pb-20 pt-28"
     >
-      <div className="grid items-center gap-12 lg:grid-cols-2">
+      <HeroVideo />
+      <div className="relative z-10 grid items-center gap-12 lg:grid-cols-2">
         <div className="space-y-6 text-center lg:text-left">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
             {HERO.eyebrow}
