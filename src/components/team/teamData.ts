@@ -6,8 +6,6 @@ import profileDamian from "@/assets/images/team/Damian.webp"
 import profileNadia from "@/assets/images/team/Nadia.webp"
 import profileRoly from "@/assets/images/team/roly.webp"
 
-
-Roly Sanova
 export const teamData = [
   {
     id: 1,
