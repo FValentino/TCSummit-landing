@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Menu from "@/components/common/menu/menu";
-import Footer from "@/components/common/footer/footer";
 
 import { Saira, Orbitron, Inter } from "next/font/google";
 
@@ -37,15 +35,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className="overflow-x-hidden">
       <body
-        className={`${saira.variable} ${orbitron.variable} ${inter.variable} antialiased`}
+        className={`${saira.variable} ${orbitron.variable} ${inter.variable} antialiased 
+        w-full max-w-screen bg-[#002c6b] text-white overflow-x-hidden relative`}
       >
-        <Menu/>
-
         {children}
-        
-        <Footer/>
       </body>
     </html>
   );

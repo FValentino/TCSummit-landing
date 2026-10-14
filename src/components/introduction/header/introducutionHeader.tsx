@@ -33,7 +33,7 @@ export default function IntroductionHeader(){
           }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
-          TechnoCrypto Summit 2026: Conectando el Futuro
+          TechnoCrypto Summit 2027: Conectando el Futuro
         </motion.h3>
       </motion.div>
 
@@ -62,7 +62,7 @@ export default function IntroductionHeader(){
         >
           <span className="text-white font-bold text-4xl">T</span>
         </motion.div>
-        <p className="text-[white] font-bold text-3xl ms-3">TCSUMMIT 2026</p>
+        <p className="text-[white] font-bold text-3xl ms-3">TCSUMMIT 2027</p>
       </motion.div>
     </>
   )

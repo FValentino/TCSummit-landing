@@ -9,7 +9,7 @@ export default function Introduction(){
 
   
   return(
-    <section id="acerca-de" className={`w-full mx-auto text-white relative min-h-screen py-4`}>
+    <section id="acerca-de" className={`w-full mx-auto text-white relative min-h-screen py-4 `}>
       <div className="w-[90%] mx-auto relative z-10">
         <IntroductionHeader/>
         <IntroductionDescription/>

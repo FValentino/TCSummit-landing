@@ -163,7 +163,7 @@ export default function Location(){
                   <div className="absolute top-4 left-4 bg-[#012967]/90 backdrop-blur-sm rounded-lg p-3 border border-[#03f5ff]/30">
                     <div className="flex items-center gap-2 text-[#03f5ff]">
                       <MapPin className="w-5 h-5" />
-                      <span className="font-semibold">TC Summit 2026</span>
+                      <span className="font-semibold">TC Summit 2027</span>
                     </div>
                   </div>
                 </div>

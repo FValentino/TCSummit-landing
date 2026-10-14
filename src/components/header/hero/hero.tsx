@@ -44,8 +44,7 @@ export default function Hero() {
               }}
               transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
             >
-              El evento de Tecnología, Criptomonedas e Inteligencia Artificial
-              más grande de Argentina
+              TECNOLOGIA - INTELIGENCIA ARTIFICIAL Y BLOCKCHAINE EN UN MEGA EVENTO SIN PRESEDENTE EN ARGENTINA 
             </motion.p>
 
             <motion.h1
@@ -80,15 +79,15 @@ export default function Hero() {
                   }}
                   transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                 >
-                  2026
+                  2027
                 </motion.span>
               </span>
               
             </motion.h1>
 
             
-            <div className="space-y-4">
-              {/* <motion.div
+            {/* <div className="space-y-4">
+              <motion.div
                 className="flex items-center justify-center space-x-3"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -107,11 +106,10 @@ export default function Hero() {
                 >
                   <MapPin className="w-6 h-6 lg:w-8 lg:h-8 text-[#03f5ff]" />
                 </motion.div>
-                <div className="text-xl text-white md:text-3xl">
-                  <p>Argentina</p>
+                <div className="text-md md:text-xl text-white">
+                  <p>CENTRO DE CONVENCIONES GALA - Resistencia, Chaco</p>
                 </div>
-                
-              </motion.div> */}
+              </motion.div>
 
               <motion.div
                 className="flex items-center justify-center space-x-3"
@@ -132,7 +130,7 @@ export default function Hero() {
                 >
                   <Calendar className="w-4 h-4 lg:w-8 lg:h-8 text-[#0090ff]" />
                 </motion.div>
-                <span className="text-xl text-white md:text-3xl">Octubre 2026</span>
+                <span className="text-md md:text-xl text-white">13, 14 y 15 de agosto 2027</span>
               </motion.div>
             </div>
 
@@ -178,7 +176,7 @@ export default function Hero() {
                 <br />
                 <span className="text-sm font-normal">Haz clic aquí</span>
               </motion.button>
-            </motion.div>
+            </motion.div>*/}
           </motion.div>
 
           {/* Imagen del robot */}

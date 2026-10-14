@@ -71,7 +71,7 @@ export default function IntroductionLocation(){
           }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
         >
-          TECHNOCRYPTO SUMMIT 2026 tiene el objetivo de impulsar y apoyar los distintos proyectos
+          TECHNOCRYPTO SUMMIT 2027 tiene el objetivo de impulsar y apoyar los distintos proyectos
           <br />
           <span className="text-[#fcfef9]">CRIPTOGRÁFICOS, TECNOLÓGICOS Y DE INTELIGENCIA ARTIFICIAL.</span>
         </motion.p>
