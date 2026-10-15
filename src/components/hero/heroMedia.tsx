@@ -1,59 +1,50 @@
 "use client"
-import { useEffect, useRef, useState } from "react"
+
 import Image from "next/image"
 import { motion, useReducedMotion } from "framer-motion"
 
-import { assets } from "@/config/assets"
+import robot from "@/assets/images/hero/robot.webp"
 
+/** Hero visual: the TCS robot floating with the three pulsing energy rings around it. The float
+ *  and the ring pulses are infinite, so they are skipped under `prefers-reduced-motion`. */
 export default function HeroMedia() {
-  const poster = assets.heroPoster
   const reduced = useReducedMotion()
-  const [visible, setVisible] = useState(false)
-  const frameRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const frame = frameRef.current
-    if (frame !== null && typeof IntersectionObserver !== "undefined") {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            setVisible(true)
-            observer.disconnect()
-          }
-        },
-        { rootMargin: "200px" },
-      )
-      observer.observe(frame)
-      return () => observer.disconnect()
-    }
-    const idle = window.setTimeout(() => setVisible(true), 250)
-    return () => window.clearTimeout(idle)
-  }, [])
 
   return (
-    <div
-      ref={frameRef}
-      className="relative aspect-video w-full overflow-hidden rounded-3xl h-full flex items-center justify-center"
+    <motion.div
+      initial={{ opacity: 0, x: 100, scale: 0.8 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ duration: reduced ? 0 : 0.8, delay: reduced ? 0 : 0.4 }}
+      className="relative mb-12 lg:mb-0"
     >
-      {poster.src !== "" ? (
+      <motion.div
+        animate={reduced ? undefined : { y: [0, -20, 0], rotate: [0, 2, -2, 0] }}
+        transition={
+          reduced
+            ? undefined
+            : { duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }
+        }
+        className="relative"
+      >
         <Image
-          src={poster.src}
-          alt={poster.alt}
-          width={poster.width}
-          height={poster.height}
+          src={robot}
+          alt="Robot TCSummit"
+          className="w-full max-w-md mx-auto"
           priority
-          className="h-[80%] w-full object-contain"
         />
-      ) : (
+      </motion.div>
+
+      {/* Círculos de energía */}
+      {[...Array(3)].map((_, i) => (
         <motion.div
-          role="img"
-          aria-label={poster.alt}
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: reduced ? 0 : 0.6 }}
-          className="h-full w-full bg-gradient-to-br from-[#003a8c] via-[#001b3d] to-black"
+          key={i}
+          className="absolute inset-0 border-2 border-[#03f5ff]/30 rounded-full"
+          animate={reduced ? undefined : { scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={
+            reduced ? undefined : { duration: 4, repeat: Number.POSITIVE_INFINITY, delay: i * 0.8 }
+          }
         />
-      )}
-    </div>
+      ))}
+    </motion.div>
   )
 }

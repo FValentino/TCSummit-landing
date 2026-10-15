@@ -1,9 +1,16 @@
 import { flags } from "@/config/flags"
-import { CHAPTERS, PARTICIPAR } from "@/components/common/chapters"
+import { CHAPTERS, GROUPS, PARTICIPAR, type ChapterGroup } from "@/components/common/chapters"
 
 export interface NavLink {
   id: string
   label: string
+}
+
+/** A top-level sticky-menu entry. `links.length === 1` → plain link; otherwise a dropdown. */
+export interface NavGroup {
+  id: string
+  label: string
+  links: NavLink[]
 }
 
 /** Legacy `/` anchors, kept while the immersive home is flag-gated off. */
@@ -16,18 +23,35 @@ const LEGACY_LINKS: NavLink[] = [
   { id: "contacto", label: "Contacto" },
 ]
 
-/** Immersive chapter anchors (spec §1), plus the closing segment. */
-const CHAPTER_LINKS: NavLink[] = [
-  ...CHAPTERS.map((chapter) => ({ id: chapter.id, label: chapter.label })),
-  { id: PARTICIPAR.id, label: PARTICIPAR.label },
-]
+type GroupableChapter = { id: string; label: string; group: ChapterGroup }
 
-/** The sticky-menu and footer link set. Flag-aware so the chrome matches whichever home is
- *  serving — legacy anchors while `homepage-v2` is off, the immersive chapters once it is on.
- *  Single source so menu and footer can never drift apart. */
-export const NAV_LINKS: NavLink[] = flags.homepageV2 ? CHAPTER_LINKS : LEGACY_LINKS
+const ALL_CHAPTERS: GroupableChapter[] = [...CHAPTERS, PARTICIPAR]
 
-/** Anchor ids for the scrollspy to observe, in visual order. */
+/** Immersive menu groups (spec §1). Chapters keep their own anchors; grouping only
+ *  changes how the sticky menu presents them, so deep links keep working. */
+const CHAPTER_GROUPS: NavGroup[] = GROUPS.map((group) => ({
+  id: group.id,
+  label: group.label,
+  links: ALL_CHAPTERS.filter((chapter) => chapter.group === group.id).map((chapter) => ({
+    id: chapter.id,
+    label: chapter.label,
+  })),
+}))
+
+/** Legacy stays flat: one single-link group per anchor renders exactly as before. */
+const LEGACY_GROUPS: NavGroup[] = LEGACY_LINKS.map((link) => ({
+  id: link.id,
+  label: link.label,
+  links: [link],
+}))
+
+/** The sticky-menu structure. Flag-aware so the chrome matches whichever home is serving. */
+export const NAV_GROUPS: NavGroup[] = flags.homepageV2 ? CHAPTER_GROUPS : LEGACY_GROUPS
+
+/** Flat anchor list (document order) for the footer and anything that needs every anchor. */
+export const NAV_LINKS: NavLink[] = NAV_GROUPS.flatMap((group) => group.links)
+
+/** Anchor ids for the scrollspy to observe. */
 export const NAV_IDS: string[] = NAV_LINKS.map((link) => link.id)
 
 export interface RouteLink {
@@ -42,6 +66,7 @@ const DEPTH_LINKS_BASE: RouteLink[] = [
   { href: "/speakers", label: "Speakers" },
   { href: "/hackathon", label: "Hackathon" },
   { href: "/expo", label: "Expo" },
+  { href: "/roadmap", label: "Roadmap" },
 ]
 
 export const DEPTH_LINKS: RouteLink[] = flags.tcstEnabled

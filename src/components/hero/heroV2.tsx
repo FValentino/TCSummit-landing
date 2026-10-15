@@ -10,12 +10,12 @@ export default function HeroV2() {
     <section
       id="hero"
       aria-labelledby="hero-title"
-      className="relative z-10 flex min-h-screen w-full flex-col justify-center items-stretch px-6 pb-20 pt-28"
+      className="relative z-10 flex min-h-screen w-full flex-col justify-center items-stretch px-6 pt-10"
     >
       <HeroVideo />
       <div className="relative z-10 grid items-center gap-12 lg:grid-cols-2">
         <div className="space-y-6 text-center lg:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
+          <p className="hero-glow-soft text-xs font-semibold uppercase tracking-[0.2em] text-[#03f5ff] sm:text-sm">
             {HERO.eyebrow}
           </p>
 
@@ -23,7 +23,17 @@ export default function HeroV2() {
             id="hero-title"
             className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl"
           >
-            {HERO.title}
+            <span className="block">
+              {HERO.title.lead}
+              <span className="hero-glow-strong text-[#03f5ff]">
+                {HERO.title.accent}
+              </span>
+            </span>
+
+            <span className="block">
+              {HERO.title.mid}{" "}
+              <span className="hero-pop text-[#0090ff]">{HERO.title.year}</span>
+            </span>
           </h1>
 
           <p className="mx-auto max-w-xl text-base text-gray-300 sm:text-lg lg:mx-0">

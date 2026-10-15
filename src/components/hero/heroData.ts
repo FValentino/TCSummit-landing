@@ -4,9 +4,16 @@
  */
 
 export const HERO = {
-  eyebrow: "CIENCIA · TECNOLOGÍA · IA · BLOCKCHAIN · INNOVACIÓN · EDUCACIÓN",
-  title: "TechnoCrypto Summit 2027",
-  lead: "El gran encuentro de ciencia, tecnología, inteligencia artificial, blockchain, innovación y educación del Nordeste argentino.",
+  eyebrow: "TECNOLOGÍA · IA · BLOCKCHAIN · CIENCIA · INNOVACIÓN · EDUCACIÓN",
+  /** Split across four parts so the heading can glow "Crypto" and pop "2027"; read together
+   *  they are the title, "TechnoCrypto Summit 2027". */
+  title: {
+    lead: "Techno",
+    accent: "Crypto",
+    mid: "Summit",
+    year: "2027",
+  },
+  lead: "El gran encuentro de tecnología, inteligencia artificial, blockchain,  ciencia e innovación y educación del Nordeste argentino.",
   date: "13 · 14 · 15 de agosto 2027",
   location: "Resistencia · Chaco · Argentina",
   secondaryCta: "Descubrí el summit",

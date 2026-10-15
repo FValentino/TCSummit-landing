@@ -3,11 +3,13 @@
 import {
   useEffect,
   useRef,
+  useSyncExternalStore,
   type KeyboardEvent,
   type PointerEvent,
   type ReactNode,
   type RefObject,
 } from "react"
+import { createPortal } from "react-dom"
 import { motion, useReducedMotion } from "framer-motion"
 import { useScrollLock } from "@/components/common/hooks/useScrollLock"
 
@@ -18,12 +20,23 @@ const FOCUSABLE_SELECTOR = "a[href], button:not([disabled]), [tabindex]:not([tab
 const isContained = (parent: HTMLElement, child: EventTarget | null): boolean =>
   child instanceof Node && parent.contains(child)
 
+/** `document.body` only exists on the client, but the server render and the first client render
+ *  have to agree or hydration mismatches. `useSyncExternalStore` is the hydration-safe read: the
+ *  server snapshot is `false`, so the scrim is withheld until the client has committed. */
+const subscribe = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
+const useHydrated = (): boolean =>
+  useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot)
+
 export type ModalVariant = "center" | "slide-over"
 
 /** Per-variant scrim layout. The dialog surface itself belongs to the consumer, so each
  *  modal keeps full control of its own width, padding and chrome. */
 const SCRIM_LAYOUT: Record<ModalVariant, string> = {
-  center: "items-center justify-center p-4",
+  // Centred in the full viewport; the `min-h-full` wrapper below lets a tall dialog grow and
+  // scroll from the top instead of being clipped, so no fixed-menu offset is needed.
+  center: "items-center justify-center px-4",
   "slide-over": "items-stretch justify-end",
 }
 
@@ -49,7 +62,7 @@ export interface ModalProps {
 /** Shared dialog primitive: scrim, `role="dialog"` + `aria-modal`, focus trap, Escape,
  *  focus restore and background scroll-lock. Extracted from the proven `/partners`
  *  `standModal` so future modals reuse one behaviour instead of re-implementing it. It is
- *  never conditionally mounted — `open` alone drives the enter/leave animation, and the
+ *  never unmounted while open — `open` alone drives the enter/leave animation, and the
  *  scrim stays in the DOM so closing is a render, not an unmount. */
 export default function Modal({
   open,
@@ -64,6 +77,7 @@ export default function Modal({
 }: ModalProps) {
   const reduced = useReducedMotion()
   const releaseScroll = useScrollLock(open)
+  const hydrated = useHydrated()
   const dialogRef = useRef<HTMLDivElement>(null)
   const pressOriginRef = useRef<EventTarget | null>(null)
   const openerRef = useRef<HTMLElement | null>(null)
@@ -143,10 +157,17 @@ export default function Modal({
 
   const transition = reduced ? { duration: 0 } : { duration: 0.18 }
 
-  return (
-    // `inert` rather than `aria-hidden`: it removes the background from the accessibility
-    // tree *and* from focus and hit testing in one attribute. The `z` sits above the site
-    // navigation, or the menu would stay clickable on top of an open dialog.
+  // Before hydration there is no portal target; rendering the scrim inline here would also
+  // mismatch the server output and re-introduce the stacking-context bug below.
+  if (!hydrated) return null
+
+  // Portalled to `body` on purpose. Consumers mount the dialog inside `section` roots that
+  // establish their own stacking context (`relative z-10`), so a `z-[1100]` left inline is
+  // trapped under the root-level fixed menu (`z-1000`) and the menu paints over the dialog's
+  // top edge. Detaching to `body` lets the scrim's z-index compete with the menu in the root
+  // context, where it wins. `inert` rather than `aria-hidden`: it removes the background from
+  // the accessibility tree *and* from focus and hit testing in one attribute.
+  return createPortal(
     <motion.div
       inert={!open}
       onPointerDown={handlePointerDown}
@@ -157,23 +178,28 @@ export default function Modal({
       // `initial` puts `opacity: 0` into the prerendered HTML — without it a closed dialog
       // ships as a full-viewport scrim over the whole page — and the blur is dropped when
       // closed rather than paid for every frame on a phone.
-      className={`fixed inset-0 z-[1100] flex overflow-y-auto ${SCRIM_LAYOUT[variant]} ${
+      className={`fixed inset-0 z-[1100] overflow-y-auto ${
         open ? "bg-black/60 backdrop-blur-sm" : "pointer-events-none"
       }`}
     >
-      <motion.div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={labelledBy}
-        onKeyDown={handleKeyDown}
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.96 }}
-        transition={transition}
-        className={panelClassName}
-      >
-        {children}
-      </motion.div>
-    </motion.div>
+      {/* The flex wrapper is a full viewport tall so a short dialog is centred while a tall one
+       *  grows past the fold instead of being clipped at the top and becoming unreachable. */}
+      <div className={`flex h-auto ${SCRIM_LAYOUT[variant]}`}>
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={labelledBy}
+          onKeyDown={handleKeyDown}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.96 }}
+          transition={transition}
+          className={panelClassName}
+        >
+          {children}
+        </motion.div>
+      </div>
+    </motion.div>,
+    document.body,
   )
 }

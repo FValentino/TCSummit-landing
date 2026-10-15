@@ -8,6 +8,8 @@ type Node = {
   description: string;
   icon: IconType; 
   status: string;
+  /** Legal gate (spec legal-gates): node only publishes while the flag is on. */
+  gated?: "tcst";
 };
 
 export const NODES: Node[] = [
@@ -20,10 +22,16 @@ export const NODES: Node[] = [
   { id: 7, year: "En ejecución", description: "7. Partners y Sponsors", icon: Building, status: "current" },
   { id: 8, year: "En ejecución", description: "8. Expansión de la comunidad", icon: Users, status: "current" },
   { id: 9, year: "En ejecución", description: "9. Presentación oficial. Conferencia de prensa", icon: Mic, status: "current" },
-  { id: 10, year: "En ejecución", description: "10. Desarrollo y lanzamiento del Token Oficial TCST", icon: Coins, status: "current" },
+  { id: 10, year: "En ejecución", description: "10. Desarrollo y lanzamiento del Token Oficial TCST", icon: Coins, status: "current", gated: "tcst" },
   { id: 11, year: "En ejecución", description: "11. Stands en instituciones, shopping y sponsors", icon: Store, status: "current" },
   { id: 12, year: "En ejecución", description: "12. Programa de TV y Redes", icon: Tv, status: "current" },
   { id: 13, year: "En ejecución", description: "13. Conexiones para desarrollar evento en Paraguay, Uruguay y Chile", icon: Globe, status: "current" }  
 
 ];
+
+/** Nodes visible for the current legal state: TCST-gated nodes are filtered out when the
+ *  flag is off (spec legal-gates §55 — no token mention while unauthorized). */
+export function roadmapNodes(tcstEnabled: boolean): Node[] {
+  return NODES.filter((node) => node.gated !== "tcst" || tcstEnabled)
+}
 

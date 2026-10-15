@@ -6,8 +6,10 @@ import HeroV2 from "@/components/hero/heroV2"
 import InnovationV2 from "@/components/innovation/innovationV2"
 import ParticiparV2 from "@/components/participar/participarV2"
 import ParticlesLayer from "@/components/common/ParticlesLayer"
+import RoadmapCta from "@/components/roadmap/roadmapCta"
 import ScienceV2 from "@/components/science/scienceV2"
 import SummitV2 from "@/components/summit/summitV2"
+import TeamV2 from "@/components/team/teamV2"
 import TechV2 from "@/components/tech/techV2"
 import TerritorioV2 from "@/components/territorio/territorioV2"
 import { flags } from "@/config/flags"
@@ -20,7 +22,9 @@ import HomeLegacy from "./page.legacy"
  * otherwise it serves the legacy home (`page.legacy.tsx`) so the flag alone rolls the change
  * back. S4 shipped `#hero` + `#summit`; S5a adds `#ciencia` + `#tecnologia`; S5b adds
  * `#innovacion` + `#educacion`; S6 adds the closing `#experiencia`, `#empresas`, `#territorio`
- * and `#participar`. The order matches `ANCHOR_ORDER` in `common/chapters.ts`.
+ * and `#participar`; S9 adds `#equipo` right after `#summit`, plus the `RoadmapCta` that closes the
+ * Summit + Equipo "project info" block before the thematic axes. The order matches `ANCHOR_ORDER`
+ * in `common/chapters.ts`.
  */
 export default function Home() {
   if (!flags.homepageV2) {
@@ -33,6 +37,8 @@ export default function Home() {
         <ParticlesLayer />
         <HeroV2 />
         <SummitV2 />
+        <TeamV2 />
+        <RoadmapCta />
         <ScienceV2 />
         <TechV2 />
         <InnovationV2 />

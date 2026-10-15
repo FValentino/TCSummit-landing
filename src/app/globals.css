@@ -50,6 +50,63 @@
   }
 }
 
+/* ----------------------------------- */
+/*              HERO GLOW              */
+/* ----------------------------------- */
+
+/* Neon text glows for the `#hero` heading. Pure CSS so the hero shell stays a server
+   component and the effect ships without JavaScript. */
+@keyframes tcs-glow-soft {
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(3, 245, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(3, 245, 255, 0.8);
+  }
+}
+
+@keyframes tcs-glow-strong {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(3, 245, 255, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(3, 245, 255, 1);
+  }
+}
+
+@keyframes tcs-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.hero-glow-soft {
+  animation: tcs-glow-soft 3s ease-in-out infinite;
+}
+
+.hero-glow-strong {
+  animation: tcs-glow-strong 2s ease-in-out infinite;
+}
+
+.hero-pop {
+  display: inline-block;
+  animation: tcs-pop 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow-soft,
+  .hero-glow-strong,
+  .hero-pop {
+    animation: none;
+  }
+}
+
 /* Anchored sections clear the fixed menu when scrolled to. */
 section[id] {
   scroll-margin-top: var(--tcs-nav-height);

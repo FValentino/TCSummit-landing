@@ -19,6 +19,8 @@ export type AssetKey =
 
 export interface AssetEntry {
   src: string
+  /** Optional WebM alternative for video entries; browsers pick the first supported source. */
+  srcWebm?: string
   /** Optional intrinsic width — enables aspect-ratio and the CLS budget. */
   width?: number
   /** Optional intrinsic height — enables aspect-ratio and the CLS budget. */
@@ -38,8 +40,8 @@ export const assets: Record<AssetKey, AssetEntry> = {
     alt: "TCSummit 2027 — próxima edición",
   },
   heroVideo: {
-    src: PLACEHOLDER,
-    poster: PLACEHOLDER,
+    src: "/videos/header/backgroundMP4.mp4",
+    srcWebm: "/videos/header/backgroundWEBM.webm",
     alt: "Video de apertura TCSummit 2027",
   },
   summit: { src: PLACEHOLDER, alt: "TCSummit 2027 — el evento" },
@@ -60,7 +62,6 @@ export const assets: Record<AssetKey, AssetEntry> = {
  */
 export const TODO_ASSETS: AssetKey[] = [
   "heroPoster",
-  "heroVideo",
   "summit",
   "ciencia",
   "tecnologia",

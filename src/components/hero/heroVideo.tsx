@@ -37,14 +37,18 @@ export default function HeroVideo() {
       {mountVideo && video.src !== "" ? (
         <video
           className="h-full w-full object-cover"
-          src={video.src}
           poster={video.poster === "" ? undefined : video.poster}
           autoPlay
           muted
           loop
           playsInline
           preload="none"
-        />
+        >
+          <source src={video.src} type="video/mp4" />
+          {video.srcWebm !== undefined ? (
+            <source src={video.srcWebm} type="video/webm" />
+          ) : null}
+        </video>
       ) : null}
     </div>
   )
