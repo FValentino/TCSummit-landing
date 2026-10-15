@@ -4,6 +4,7 @@ import profileNoelia from "@/assets/images/team/Noelia.webp"
 import profileValentino from "@/assets/images/team/Valentino.webp"
 import profileDamian from "@/assets/images/team/Damian.webp"
 import profileNadia from "@/assets/images/team/Nadia.webp"
+import profileRoly from "@/assets/images/team/roly.webp"
 
 export const teamData = [
   {
@@ -22,27 +23,34 @@ export const teamData = [
   },
   {
     id: 3,
+    name: "Roly Sanova",
+    role: "Chief Experience Officer",
+    img: profileRoly,
+    neonColor: "#b5bbef"
+  },
+  {
+    id: 4,
     name: "Valentino Farías",
     role: "CTO - Chief Technology Officer",
     img: profileValentino,
     neonColor: "#00c6ff" 
   },
   {
-    id: 4,
+    id: 5,
     name: "Damían Ebel",
     role: "CSO - Chief Student Officer",
     img: profileDamian,
     neonColor: "#0090ff"
   },
   {
-    id: 5,
+    id: 6,
     name: "Noelia Borges",
     role: "Legal counsel",
     img: profileNoelia,
     neonColor: "#d7e8f9" 
   },
   {
-    id: 6,
+    id: 7,
     name: "Naide Fernandez",
     role: "Brand designer",
     img: profileNadia,
